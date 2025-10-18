@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="570.0" prefWidth="756.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.controller.RecepcionistaController">
+   <children>
+      <Text layoutX="225.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RECEPCIONISTA" />
+      <Button fx:id="buttonLogout" layoutX="656.0" layoutY="530.0" mnemonicParsing="false" onAction="#logout" text="Cerrar sesión" />
+   </children>
+</AnchorPane>
