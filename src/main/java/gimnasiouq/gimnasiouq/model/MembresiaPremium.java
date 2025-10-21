@@ -10,6 +10,4 @@ public class MembresiaPremium extends Membresia {
 
     public boolean accesoGeneral() { return true; }
     public boolean clasesGrupales() { return true; }
-    public boolean accesoIlimitado() { return false; }
-    public boolean entrenadorPersonal() { return false; }
 }

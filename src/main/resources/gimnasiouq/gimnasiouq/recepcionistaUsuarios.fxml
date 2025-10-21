@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="502.0" prefWidth="741.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.controller.RecepcionistaUsuariosController">
+   <children>
+      <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="474.0" prefWidth="713.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="18.0" text="Nombre:" />
+                  <Label layoutX="356.0" layoutY="18.0" text="Identificación:" />
+                  <Label layoutX="23.0" layoutY="61.0" text="Edad:" />
+                  <Label layoutX="373.0" layoutY="61.0" text="Celular:" />
+                  <TextField fx:id="txtNombre" layoutX="72.0" layoutY="14.0" prefHeight="26.0" prefWidth="250.0" />
+                  <TextField fx:id="txtEdad" layoutX="72.0" layoutY="57.0" prefHeight="26.0" prefWidth="250.0" />
+                  <TextField fx:id="txtIdentificacion" layoutX="440.0" layoutY="14.0" prefHeight="26.0" prefWidth="250.0" />
+                  <TextField fx:id="txtCelular" layoutX="440.0" layoutY="57.0" prefHeight="26.0" prefWidth="250.0" />
+                  <Separator layoutX="14.0" layoutY="151.0" prefHeight="18.0" prefWidth="682.0" />
+                  <Button fx:id="btnNuevo" layoutX="117.0" layoutY="180.0" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
+                  <Button fx:id="btnAgregar" layoutX="316.0" layoutY="180.0" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" />
+                  <Button fx:id="btnActualizar" layoutX="525.0" layoutY="179.0" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" />
+                  <Label layoutX="6.0" layoutY="108.0" text="Membresía:" />
+                  <TextField fx:id="txtMembresia" layoutX="71.0" layoutY="103.0" prefHeight="26.0" prefWidth="250.0" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TableView fx:id="tableUsuario" prefHeight="192.0" prefWidth="712.0">
+                    <columns>
+                      <TableColumn fx:id="tcNombre" prefWidth="153.59996682405472" text="Nombre" />
+                      <TableColumn fx:id="tcIdentificacion" prefWidth="172.8000030517578" text="Identificacion" />
+                        <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="76.7999267578125" text="Edad" />
+                        <TableColumn fx:id="tcCelular" prefWidth="133.60000610351562" text="Celular" />
+                        <TableColumn fx:id="tcMembresía" prefWidth="177.5999755859375" text="Membresía" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="btnEliminar" layoutX="316.0" layoutY="200.0" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

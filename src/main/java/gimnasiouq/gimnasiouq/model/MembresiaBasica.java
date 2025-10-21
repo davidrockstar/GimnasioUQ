@@ -8,4 +8,5 @@ public class MembresiaBasica extends Membresia {
         super("Basica", costo, inicio, fin, true);
     }
 
+    public boolean accesoGeneral() { return true; }
 }

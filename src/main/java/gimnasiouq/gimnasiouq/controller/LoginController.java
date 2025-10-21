@@ -1,8 +1,6 @@
 package gimnasiouq.gimnasiouq.controller;
 
 import gimnasiouq.gimnasiouq.MyApplication;
-import gimnasiouq.gimnasiouq.model.Administador;
-import gimnasiouq.gimnasiouq.model.Recepcionista;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,30 +30,20 @@ public class LoginController {
 
     @FXML
     void login(ActionEvent event) {
-        var user = txtUserLogin.getText();
-        var pass = txtPasswordLogin.getText();
 
-        var recepcionista = new Recepcionista(user, pass);
-        if (recepcionista.validarCredenciales()) {
-            txtUserLogin.clear();
-            txtPasswordLogin.clear();
-            limpiarAdvertenciaExito();
-            MyApplication.goToRecepcionista();
-            return;
-        }
+        String user = txtUserLogin.getText();
+        String pass = txtPasswordLogin.getText();
 
-        var administrador = new Administador(user, pass);
-        if (administrador.validarCredenciales()) {
-            txtUserLogin.clear();
-            txtPasswordLogin.clear();
-            limpiarAdvertenciaExito();
+        if(AdministradorController.validarCredenciales(user, pass)){
             MyApplication.goToAdministrador();
-            return;
+            txtUserLogin.clear();
+        } else if (RecepcionistaController.validarCredenciales(user, pass)) {
+            MyApplication.goToRecepcionista();
+        } else {
+            mostrarVentanaEmergente("Error de autenticación", null, "Credenciales incorrectas", Alert.AlertType.ERROR);
         }
 
-        mostrarError("Usuario o contraseña incorrectas");
-        mostrarVentanaEmergente("Información inválida", "Información inválida",
-                "Credenciales incorrectas", Alert.AlertType.CONFIRMATION);
+
     }
 
     private void mostrarVentanaEmergente(String titulo, String header, String contenido, Alert.AlertType alertType){

@@ -21,7 +21,4 @@ public class Recepcionista {
         return password;
     }
 
-    public boolean validarCredenciales() {
-        return username.equals("Recepcionista") && password.equals("mortadela10");
-    }
 }

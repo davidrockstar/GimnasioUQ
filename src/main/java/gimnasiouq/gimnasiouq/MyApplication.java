@@ -17,7 +17,7 @@ public class MyApplication extends Application {
         mainStage = stage;
 
         var loginUrl = MyApplication.class.getResource("login.fxml");
-        var recepUrl = MyApplication.class.getResource("recepcionista.fxml");
+        var recepUrl = MyApplication.class.getResource("recepcionistaApp.fxml");
         var adminUrl = MyApplication.class.getResource("administrador.fxml");
 
         sceneLogin = new Scene(FXMLLoader.load(loginUrl));

@@ -9,7 +9,4 @@ public class Administador {
         this.password = password;
     }
 
-    public boolean validarCredenciales() {
-        return username.equals("Administrador") && password.equals("jovenesayer777");
-    }
 }

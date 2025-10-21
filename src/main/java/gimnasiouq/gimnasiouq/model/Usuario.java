@@ -1,31 +1,65 @@
 package gimnasiouq.gimnasiouq.model;
 
+import gimnasiouq.gimnasiouq.model.ReservaClase;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public abstract class Usuario {
-    private final String nombre;
-    private final String identificacion;
-    private final int edad;
-    private final String telefono;
-    private Membresia membresia;
+public class Usuario {
+
+    private String nombre;
+    private String identificacion;
+    private String edad;
+    private String celular;
+    private String membresia;
     private final List<ReservaClase> reservas = new ArrayList<>();
 
-    protected Usuario(String nombre, String identificacion, int edad, String telefono) {
+    public Usuario(String nombre, String identificacion, String edad, String celular, String membresia) {
         this.nombre = nombre;
         this.identificacion = identificacion;
         this.edad = edad;
-        this.telefono = telefono;
+        this.celular = celular;
+        this.membresia = membresia;
     }
 
+    // Solo getters y setters
+    public String getNombre() {
+        return nombre;
+    }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getNombre() { return nombre; }
-    public String getIdentificacion() { return identificacion; }
-    public int getEdad() { return edad; }
-    public String getTelefono() { return telefono; }
-    public Membresia getMembresia() { return membresia; }
-    public void setMembresia(Membresia membresia) { this.membresia = membresia; }
-    public List<ReservaClase> getReservas() { return reservas; }
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public String getEdad() {
+        return edad;
+    }
+
+    public void setEdad(String edad) {
+        this.edad = edad;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getMembresia() {
+        return membresia;
+    }
+
+    public void setMembresia(String membresia) {
+        this.membresia = membresia;
+    }
+
+    public List<ReservaClase> getReservas() {
+        return reservas;
+    }
 }
