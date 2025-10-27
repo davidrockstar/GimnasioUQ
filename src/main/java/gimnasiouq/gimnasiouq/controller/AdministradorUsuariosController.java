@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.model.GimnasioUQ;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,11 +12,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import static gimnasiouq.gimnasiouq.util.AdvertenciasConstantes.*;
-
 public class AdministradorUsuariosController {
 
-    AdministradorController AdministradorController;
+    AdministradorController administradorController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario usuarioSeleccionado;
 
@@ -52,7 +49,7 @@ public class AdministradorUsuariosController {
     private TableColumn<Usuario, String> tcIdentificacion;
 
     @FXML
-    private TableColumn<Usuario, String> tcMembresía;
+    private TableColumn<Usuario, String> tcMembresia;
 
     @FXML
     private TableColumn<Usuario, String> tcNombre;
@@ -67,29 +64,35 @@ public class AdministradorUsuariosController {
     private TextField txtIdentificacion;
 
     @FXML
-    private ComboBox <String> comboBoxMembresia;
+    private ComboBox<String> comboBoxMembresia;
 
     @FXML
     private TextField txtNombre;
 
     @FXML
-    void onActualizar(ActionEvent event) {}
+    void onActualizar(ActionEvent event) {
+        actualizarUsuario();
+    }
 
     @FXML
-    void onAgregar(ActionEvent event) {agregarUsuario();}
+    void onAgregar(ActionEvent event) {
+        agregarUsuario();
+    }
 
     @FXML
-    void onEliminar(ActionEvent event) {}
+    void onEliminar(ActionEvent event) {
+        eliminarUsuario();
+    }
 
     @FXML
-    void onNuevo(ActionEvent event) {}
+    void onNuevo(ActionEvent event) {
+        nuevoUsuario();
+    }
 
     @FXML
     void initialize() {
         initView();
-
         comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");
-
     }
 
     private void initView() {
@@ -101,6 +104,7 @@ public class AdministradorUsuariosController {
     }
 
     private void obtenerUsuarios() {
+        listaUsuarios.clear();
         listaUsuarios.addAll(ModelFactory.getInstance().obtenerUsuarios());
     }
 
@@ -109,7 +113,7 @@ public class AdministradorUsuariosController {
         tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
         tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEdad()));
         tcCelular.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCelular()));
-        tcMembresía.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMembresia()));
+        tcMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMembresia()));
     }
 
     private void listenerSelection() {
@@ -119,36 +123,150 @@ public class AdministradorUsuariosController {
         });
     }
 
+    /**
+     * Método para agregar un nuevo usuario
+     */
     private void agregarUsuario() {
         Usuario usuario = crearUsuario();
 
-        if(datosValidos(usuario)){
-            if(ModelFactory.getInstance().agregarUsuario(usuario)){
+        if (datosValidos(usuario)) {
+            if (ModelFactory.getInstance().agregarUsuario(usuario)) {
                 listaUsuarios.add(usuario);
-                mostrarVentanaEmergente("Usuario agregado", "Éxito", "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
+                limpiarCampos();
+
+                // Notificar al controlador padre para que actualice otras vistas
+                if (administradorController != null) {
+                    administradorController.notificarActualizacion();
+                }
+
+                mostrarVentanaEmergente("Usuario agregado", "Éxito",
+                        "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
             } else {
-                mostrarVentanaEmergente("Usuario no agregado", "Error", "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
+                mostrarVentanaEmergente("Usuario no agregado", "Error",
+                        "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
             }
         } else {
-            mostrarVentanaEmergente("Datos incompletos", "Error", "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            mostrarVentanaEmergente("Datos incompletos", "Error",
+                    "Por favor complete todos los campos", Alert.AlertType.ERROR);
         }
     }
 
+    /**
+     * Método para actualizar un usuario existente
+     */
+    private void actualizarUsuario() {
+        if (usuarioSeleccionado != null) {
+            Usuario usuarioActualizado = crearUsuario();
 
+            if (datosValidos(usuarioActualizado)) {
+                // Usamos la identificación del usuario seleccionado como clave
+                if (ModelFactory.getInstance().actualizarUsuario(
+                        usuarioSeleccionado.getIdentificacion(), usuarioActualizado)) {
 
-    private boolean datosValidos(Usuario usuario) {
-        if (usuario.getNombre().isEmpty() || usuario.getIdentificacion().isEmpty()
-                || usuario.getEdad().isEmpty() || usuario.getCelular().isEmpty()
-                || usuario.getMembresia().isEmpty()) {
-            return false;} else {return true;}}
+                    // Actualizamos la lista observable
+                    int index = listaUsuarios.indexOf(usuarioSeleccionado);
+                    if (index >= 0) {
+                        listaUsuarios.set(index, usuarioActualizado);
+                    }
 
-    private Usuario crearUsuario(){
-        return new Usuario(txtNombre.getText(), txtIdentificacion.getText(),
-                txtEdad.getText(), txtCelular.getText(), comboBoxMembresia.getValue());
+                    tableUsuario.refresh();
+                    limpiarCampos();
+                    mostrarVentanaEmergente("Usuario actualizado", "Éxito",
+                            "El usuario se actualizó correctamente", Alert.AlertType.INFORMATION);
+                } else {
+                    mostrarVentanaEmergente("Usuario no actualizado", "Error",
+                            "No se pudo actualizar el usuario. Verifique que la nueva identificación no exista",
+                            Alert.AlertType.ERROR);
+                }
+            } else {
+                mostrarVentanaEmergente("Datos incompletos", "Error",
+                        "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            }
+        } else {
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
+                    "Debe seleccionar un usuario de la tabla para actualizarlo", Alert.AlertType.WARNING);
+        }
     }
 
+    /**
+     * Método para eliminar un usuario
+     */
+    private void eliminarUsuario() {
+        if (usuarioSeleccionado != null) {
+            // Confirmación antes de eliminar
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar eliminación");
+            confirmacion.setHeaderText("¿Está seguro?");
+            confirmacion.setContentText("¿Desea eliminar al usuario " +
+                    usuarioSeleccionado.getNombre() + " con identificación " +
+                    usuarioSeleccionado.getIdentificacion() + "?");
+
+            confirmacion.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    if (ModelFactory.getInstance().eliminarUsuario(usuarioSeleccionado.getIdentificacion())) {
+                        listaUsuarios.remove(usuarioSeleccionado);
+                        limpiarCampos();
+                        usuarioSeleccionado = null;
+                        mostrarVentanaEmergente("Usuario eliminado", "Éxito",
+                                "El usuario se eliminó correctamente", Alert.AlertType.INFORMATION);
+                    } else {
+                        mostrarVentanaEmergente("Usuario no eliminado", "Error",
+                                "No se pudo eliminar el usuario", Alert.AlertType.ERROR);
+                    }
+                }
+            });
+        } else {
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
+                    "Debe seleccionar un usuario de la tabla para eliminarlo", Alert.AlertType.WARNING);
+        }
+    }
+
+    /**
+     * Método para limpiar los campos del formulario
+     */
+    private void nuevoUsuario() {
+        limpiarCampos();
+        usuarioSeleccionado = null;
+        tableUsuario.getSelectionModel().clearSelection();
+    }
+
+    /**
+     * Limpia todos los campos del formulario
+     */
+    private void limpiarCampos() {
+        txtNombre.clear();
+        txtIdentificacion.clear();
+        txtEdad.clear();
+        txtCelular.clear();
+        comboBoxMembresia.setValue(null);
+    }
+
+    private boolean datosValidos(Usuario usuario) {
+        return usuario.getNombre() != null && !usuario.getNombre().isEmpty() &&
+                usuario.getIdentificacion() != null && !usuario.getIdentificacion().isEmpty() &&
+                usuario.getEdad() != null && !usuario.getEdad().isEmpty() &&
+                usuario.getCelular() != null && !usuario.getCelular().isEmpty() &&
+                usuario.getMembresia() != null && !usuario.getMembresia().isEmpty();
+    }
+
+    /**
+     * Crea un objeto Usuario con los datos del formulario
+     */
+    private Usuario crearUsuario() {
+        return new Usuario(
+                txtNombre.getText(),
+                txtIdentificacion.getText(),
+                txtEdad.getText(),
+                txtCelular.getText(),
+                comboBoxMembresia.getValue()
+        );
+    }
+
+    /**
+     * Muestra la información del usuario seleccionado en los campos
+     */
     private void mostrarInformacionUsuario(Usuario usuarioSeleccionado) {
-        if(usuarioSeleccionado != null) {
+        if (usuarioSeleccionado != null) {
             txtNombre.setText(usuarioSeleccionado.getNombre());
             txtIdentificacion.setText(usuarioSeleccionado.getIdentificacion());
             txtEdad.setText(usuarioSeleccionado.getEdad());
@@ -157,7 +275,10 @@ public class AdministradorUsuariosController {
         }
     }
 
-    private void mostrarVentanaEmergente(String titulo, String header, String contenido, Alert.AlertType alertType){
+    /**
+     * Muestra una ventana emergente con un mensaje
+     */
+    private void mostrarVentanaEmergente(String titulo, String header, String contenido, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(titulo);
         alert.setHeaderText(header);
@@ -165,4 +286,11 @@ public class AdministradorUsuariosController {
         alert.showAndWait();
     }
 
+    /**
+     * Refresca la tabla con los datos actuales del modelo
+     */
+    public void refrescarTabla() {
+        obtenerUsuarios();
+        tableUsuario.refresh();
+    }
 }

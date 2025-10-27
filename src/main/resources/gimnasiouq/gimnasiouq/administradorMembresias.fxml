@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="522.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.controller.AdministradorMembresiasController">
+    <children>
+        <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <GridPane alignment="CENTER" vgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="Plan:" />
+                        <ComboBox fx:id="comboBoxPlanMembresia" maxWidth="1.7976931348623157E308" promptText="Seleccione un plan de membresía" GridPane.columnIndex="1">
+                            <GridPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </GridPane.margin></ComboBox>
+                        <Label text="Costo:" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtCosto" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </GridPane.margin></TextField>
+                        <TextField fx:id="txtFechaInicio" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3">
+                            <GridPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </GridPane.margin></TextField>
+                        <Label text="Fecha Inicio:" textAlignment="JUSTIFY" GridPane.columnIndex="2" />
+                        <Label text="Fecha Fin:" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtFechaFin" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </GridPane.margin></TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                </GridPane>
+                <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
+                        <Button fx:id="btnAsignar" mnemonicParsing="false" onAction="#onAsignar" prefWidth="80.0" text="Asignar" GridPane.columnIndex="1" />
+                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2" />
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
+                    </children>
+                </GridPane>
+                <Separator prefHeight="18.0" prefWidth="682.0" />
+                <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="730.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="tcNombre" prefWidth="90.0" text="Nombre" />
+                        <TableColumn fx:id="tcIdentificacion" prefWidth="104.00003814697266" text="Identificación" />
+                        <TableColumn fx:id="tcFechaInicio" minWidth="0.0" prefWidth="96.80000305175781" text="Fecha Inicio" />
+                        <TableColumn fx:id="tcFechaFin" prefWidth="108.0" text="Fecha Fin" />
+                        <TableColumn fx:id="tcPlanMembresia" prefWidth="105.5999755859375" text="Plan" />
+                        <TableColumn fx:id="tcCosto" prefWidth="120.79998779296875" text="Costo (COP)" />
+                        <TableColumn fx:id="tcEstado" prefWidth="123.2000732421875" text="Estado" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -26,6 +26,9 @@ public class RecepcionistaController {
     private RecepcionistaControlAccesoController recepcionistaControlAccesoController;
 
     @FXML
+    private RecepcionistaReservaClasesController reservaClasesController;
+
+    @FXML
     void cerrarSesion(ActionEvent event) {
         MyApplication.mainStage.setScene(MyApplication.sceneLogin);
     }
@@ -47,6 +50,7 @@ public class RecepcionistaController {
                         if (recepcionistaMembresiasController != null) {
                             recepcionistaMembresiasController.refrescarTabla();
                         }
+                        break;
                 }
             }
         });

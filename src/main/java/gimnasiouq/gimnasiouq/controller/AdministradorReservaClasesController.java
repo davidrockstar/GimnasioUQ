@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class RecepcionistaReservaClasesController {
+public class AdministradorReservaClasesController {
 
     // ⭐ NUEVO: Referencia al controlador padre
-    private RecepcionistaController recepcionistaAppController;
+    private AdministradorController administradorController;
 
     @FXML private Button btnConfirmar;
 
@@ -79,13 +79,13 @@ public class RecepcionistaReservaClasesController {
     private void initDataBinding() {
         // Columnas básicas de usuario
         tcNombre.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getNombre()));
+                new SimpleStringProperty(cellData.getValue().getNombre()));
 
         tcIdentificacion.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+                new SimpleStringProperty(cellData.getValue().getIdentificacion()));
 
         tcTipo.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getMembresia()));
+                new SimpleStringProperty(cellData.getValue().getMembresia()));
 
         // ⭐ CAMBIO: Columnas de reserva con datos reales
         tcClase.setCellValueFactory(cellData -> {
@@ -105,10 +105,10 @@ public class RecepcionistaReservaClasesController {
         });
 
         tcFecha.setCellValueFactory(cellData -> {
-                    Usuario usuario = cellData.getValue();
-                    if (!usuario.getReservas().isEmpty()) {
-                        return new SimpleStringProperty(usuario.getReservas().get(0).getFecha());}
-                    return new SimpleStringProperty("Sin fecha");
+            Usuario usuario = cellData.getValue();
+            if (!usuario.getReservas().isEmpty()) {
+                return new SimpleStringProperty(usuario.getReservas().get(0).getFecha());}
+            return new SimpleStringProperty("Sin fecha");
         });
 
         tcEntrenador.setCellValueFactory(cellData -> {
@@ -121,7 +121,7 @@ public class RecepcionistaReservaClasesController {
 
         // ⭐ Columna de ESTADO (ACTIVA/NO ACTIVA)
         tcEstado.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
+                new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
 
         // Estilo para la columna Estado
         tcEstado.setCellFactory(column -> new TableCell<Usuario, String>() {
@@ -245,8 +245,8 @@ public class RecepcionistaReservaClasesController {
         // Refrescar tabla
         tableUsuario.refresh();
 
-        if (recepcionistaAppController != null) {
-            recepcionistaAppController.notificarActualizacion();
+        if (administradorController != null) {
+            administradorController.notificarActualizacion();
         }
 
         mostrarAlerta("Éxito", "Reserva confirmada para " + usuarioSeleccionado.getNombre(),
@@ -262,7 +262,7 @@ public class RecepcionistaReservaClasesController {
 
             // Actualizar en el modelo
             ModelFactory.getInstance().actualizarUsuario(
-                usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
+                    usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
 
             // Refrescar tabla
             tableUsuario.refresh();
@@ -369,9 +369,5 @@ public class RecepcionistaReservaClasesController {
         alert.setTitle(titulo);
         alert.setContentText(contenido);
         alert.showAndWait();
-    }
-
-    public void setRecepcionistaController(RecepcionistaController recepcionistaController) {
-        this.recepcionistaAppController = recepcionistaController;
     }
 }

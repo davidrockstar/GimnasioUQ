@@ -82,4 +82,6 @@ public class ModelFactory {
     public boolean agregarRegistroAcceso(RegistroAcceso registro) {
         return gimnasioUQ.agregarRegistroAcceso(registro);
     }
+
+
 }

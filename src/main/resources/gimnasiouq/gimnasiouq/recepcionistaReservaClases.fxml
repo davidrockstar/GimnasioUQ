@@ -90,7 +90,7 @@
                         <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
                         <Button fx:id="btnConfirmar" mnemonicParsing="false" onAction="#onConfirmar" prefWidth="80.0" text="Confirmar" GridPane.columnIndex="1" />
                         <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
-                  <Button mnemonicParsing="false" text="Actualizar" GridPane.columnIndex="2" />
+                  <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar" GridPane.columnIndex="2" />
                </children>
                <VBox.margin>
                   <Insets />
