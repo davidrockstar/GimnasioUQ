@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="522.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.controller.RecepcionistaReservaClasesController">
+    <children>
+      <VBox alignment="TOP_CENTER" prefHeight="522.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" valignment="CENTER" />
+                  <RowConstraints minHeight="10.0" />
+               </rowConstraints>
+               <children>
+                        <Label text="Clase:" textAlignment="JUSTIFY" />
+                  <ComboBox fx:id="comboBoxClase" maxWidth="1.7976931348623157E308" promptText="Seleccione una clase" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin></ComboBox>
+                        <Label text="Horario:" GridPane.columnIndex="2" />
+                        <ComboBox fx:id="comboBoxHorario" maxWidth="1.7976931348623157E308" promptText="Seleccione un horario" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin></ComboBox>
+                        <Label text="Entrenador:" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="comboBoxEntrenador" maxWidth="1.7976931348623157E308" promptText="Seleccione un entrenador" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin></ComboBox>
+                  <Label text="Fecha" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtFecha" promptText="dd/mm/yyyy" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </GridPane>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="lblBeneficios" text="Beneficios" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
+                  <Label prefHeight="18.0" prefWidth="72.0" text="Beneficios:" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <Separator prefHeight="18.0" prefWidth="682.0" />
+            <GridPane alignment="CENTER" hgap="10.0" VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
+                        <Button fx:id="btnConfirmar" mnemonicParsing="false" onAction="#onConfirmar" prefWidth="80.0" text="Confirmar" GridPane.columnIndex="1" />
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
+                  <Button mnemonicParsing="false" text="Actualizar" GridPane.columnIndex="2" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+                  <Separator prefHeight="18.0" prefWidth="682.0" />
+                  <TableView fx:id="tableUsuario" prefHeight="356.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+                      <columns>
+                          <TableColumn fx:id="tcNombre" prefWidth="114.39995461702347" text="Nombre" />
+                          <TableColumn fx:id="tcIdentificacion" prefWidth="108.79995727539062" text="Identificación" />
+                          <TableColumn fx:id="tcTipo" minWidth="0.0" prefWidth="98.40003967285156" text="Tipo Membresía" />
+                          <TableColumn fx:id="tcClase" prefWidth="112.0" text="Clase" />
+                          <TableColumn fx:id="tcHorarior" prefWidth="76.79998779296875" text="Horario" />
+                  <TableColumn fx:id="tcFecha" prefWidth="75.0" text="Fecha" />
+                          <TableColumn fx:id="tcEntrenador" minWidth="0.0" prefWidth="83.2000732421875" text="Entrenador" />
+                          <TableColumn fx:id="tcEstado" minWidth="0.79998779296875" prefWidth="78.4000244140625" text="Estado" />
+                      </columns>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                  </TableView>
+         </children>
+      </VBox>
+    </children>
+</AnchorPane>

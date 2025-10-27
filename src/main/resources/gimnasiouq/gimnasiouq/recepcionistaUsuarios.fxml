@@ -1,51 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="502.0" prefWidth="741.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.controller.RecepcionistaUsuariosController">
    <children>
-      <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="474.0" prefWidth="713.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <Label layoutX="14.0" layoutY="18.0" text="Nombre:" />
-                  <Label layoutX="356.0" layoutY="18.0" text="Identificación:" />
-                  <Label layoutX="23.0" layoutY="61.0" text="Edad:" />
-                  <Label layoutX="373.0" layoutY="61.0" text="Celular:" />
-                  <TextField fx:id="txtNombre" layoutX="72.0" layoutY="14.0" prefHeight="26.0" prefWidth="250.0" />
-                  <TextField fx:id="txtEdad" layoutX="72.0" layoutY="57.0" prefHeight="26.0" prefWidth="250.0" />
-                  <TextField fx:id="txtIdentificacion" layoutX="440.0" layoutY="14.0" prefHeight="26.0" prefWidth="250.0" />
-                  <TextField fx:id="txtCelular" layoutX="440.0" layoutY="57.0" prefHeight="26.0" prefWidth="250.0" />
-                  <Separator layoutX="14.0" layoutY="151.0" prefHeight="18.0" prefWidth="682.0" />
-                  <Button fx:id="btnNuevo" layoutX="117.0" layoutY="180.0" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
-                  <Button fx:id="btnAgregar" layoutX="316.0" layoutY="180.0" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" />
-                  <Button fx:id="btnActualizar" layoutX="525.0" layoutY="179.0" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" />
-                  <Label layoutX="6.0" layoutY="108.0" text="Membresía:" />
-                  <TextField fx:id="txtMembresia" layoutX="71.0" layoutY="103.0" prefHeight="26.0" prefWidth="250.0" />
+                  <Label text="Nombre:" />
+                  <Label text="Identificación:" GridPane.columnIndex="2" />
+                  <Label text="Edad:" GridPane.rowIndex="1" />
+                  <Label text="Celular:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtNombre" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="txtEdad" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="txtIdentificacion" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="txtCelular" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="Tipo:" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="comboBoxMembresia" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione un tipo de membresía" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
                </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <GridPane alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <TableView fx:id="tableUsuario" prefHeight="192.0" prefWidth="712.0">
-                    <columns>
-                      <TableColumn fx:id="tcNombre" prefWidth="153.59996682405472" text="Nombre" />
-                      <TableColumn fx:id="tcIdentificacion" prefWidth="172.8000030517578" text="Identificacion" />
-                        <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="76.7999267578125" text="Edad" />
-                        <TableColumn fx:id="tcCelular" prefWidth="133.60000610351562" text="Celular" />
-                        <TableColumn fx:id="tcMembresía" prefWidth="177.5999755859375" text="Membresía" />
-                    </columns>
-                  </TableView>
-                  <Button fx:id="btnEliminar" layoutX="316.0" layoutY="200.0" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" />
+                  <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
+                  <Button fx:id="btnAgregar" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" GridPane.columnIndex="1" />
+                  <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2" />
+                  <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
                </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </GridPane>
+            <Separator prefHeight="18.0" prefWidth="682.0" />
+            <TableView fx:id="tableUsuario" maxWidth="1.7976931348623157E308" prefHeight="306.0" prefWidth="742.0" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="tcNombre" prefWidth="153.59996682405472" text="Nombre" />
+                <TableColumn fx:id="tcIdentificacion" prefWidth="172.8000030517578" text="Identificacion" />
+                  <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="91.20001220703125" text="Edad" />
+                  <TableColumn fx:id="tcCelular" prefWidth="156.79998779296875" text="Celular" />
+                  <TableColumn fx:id="tcMembresia" prefWidth="164.80001220703127" text="Membresia" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

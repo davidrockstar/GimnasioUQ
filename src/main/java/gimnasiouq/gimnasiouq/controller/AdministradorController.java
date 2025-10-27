@@ -12,7 +12,7 @@ public class AdministradorController {
     private Button buttonLogout;
 
     @FXML
-    void logout(ActionEvent event) {
+    void cerrarSesion(ActionEvent event) {
         MyApplication.mainStage.setScene(MyApplication.sceneLogin);
     }
 

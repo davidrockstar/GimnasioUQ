@@ -1,7 +1,8 @@
+
 package gimnasiouq.gimnasiouq.model;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GimnasioUQ {
 
@@ -10,6 +11,7 @@ public class GimnasioUQ {
     private List<Administador> listaAdministrador;
     private List<Clase> listaClases;
     private List<Entrenador> listaEntrenador;
+    private List<RegistroAcceso> listaRegistrosAcceso = new ArrayList<>();
 
     public GimnasioUQ() {
         this.listaUsuarios = new ArrayList<>();
@@ -68,12 +70,37 @@ public class GimnasioUQ {
     }
 
     public boolean actualizarUsuario(String identificacion, Usuario usuarioActualizado) {
+        // Verificar que la identificación no sea null
+        if (identificacion == null || identificacion.isEmpty()) {
+            return false;
+        }
+
+        // Buscar el usuario por identificación
         Usuario usuarioExistente = buscarUsuarioPorIdentificacion(identificacion);
-        if (usuarioExistente != null && usuarioActualizado != null) {
-            int index = listaUsuarios.indexOf(usuarioExistente);
-            listaUsuarios.set(index, usuarioActualizado);
+
+        if (usuarioExistente != null) {
+            // Verificar que los datos del usuario actualizado no sean null
+            if (usuarioActualizado.getNombre() == null ||
+                    usuarioActualizado.getIdentificacion() == null ||
+                    usuarioActualizado.getEdad() == null ||
+                    usuarioActualizado.getCelular() == null) {
+                return false;
+            }
+
+            // Actualizar los datos básicos
+            usuarioExistente.setNombre(usuarioActualizado.getNombre());
+            usuarioExistente.setEdad(usuarioActualizado.getEdad());
+            usuarioExistente.setCelular(usuarioActualizado.getCelular());
+            usuarioExistente.setTipoMembresia(usuarioActualizado.getTipoMembresia());
+            
+            // ⭐ Actualizar la membresía completa si existe
+            if (usuarioActualizado.getMembresiaObj() != null) {
+                usuarioExistente.setMembresiaObj(usuarioActualizado.getMembresiaObj());
+            }
+            
             return true;
         }
+        
         return false;
     }
 
@@ -94,5 +121,13 @@ public class GimnasioUQ {
 
     public boolean existeUsuario(String identificacion) {
         return buscarUsuarioPorIdentificacion(identificacion) != null;
+    }
+
+    public List<RegistroAcceso> getListaRegistrosAcceso() {
+        return listaRegistrosAcceso;
+    }
+
+    public boolean agregarRegistroAcceso(RegistroAcceso registro) {
+        return listaRegistrosAcceso.add(registro);
     }
 }
