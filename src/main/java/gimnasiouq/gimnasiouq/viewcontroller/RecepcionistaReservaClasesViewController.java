@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class RecepcionistaReservaClasesController {
+public class RecepcionistaReservaClasesViewController {
 
     // ⭐ NUEVO: Referencia al controlador padre
-    private RecepcionistaController recepcionistaAppController;
+    private RecepcionistaViewController recepcionistaAppController;
 
     @FXML private Button btnConfirmar;
 
@@ -54,7 +54,7 @@ public class RecepcionistaReservaClasesController {
 
     private Usuario usuarioSeleccionado;
     private ReservaClase reservaSeleccionada;
-    private RecepcionistaController recepcionistaController;
+    private RecepcionistaViewController recepcionistaViewController;
 
     @FXML
     void initialize() {
@@ -371,7 +371,7 @@ public class RecepcionistaReservaClasesController {
         alert.showAndWait();
     }
 
-    public void setRecepcionistaController(RecepcionistaController recepcionistaController) {
-        this.recepcionistaAppController = recepcionistaController;
+    public void setRecepcionistaController(RecepcionistaViewController recepcionistaViewController) {
+        this.recepcionistaAppController = recepcionistaViewController;
     }
 }

@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
@@ -12,9 +12,9 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class AdministradorMembresiasController {
+public class AdministradorMembresiasViewController {
 
-    AdministradorController administradorController;
+    AdministradorViewController administradorViewController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario usuarioSeleccionado;
 
@@ -207,8 +207,8 @@ public class AdministradorMembresiasController {
 
                 tableUsuario.refresh();
 
-                if (administradorController != null) {
-                    administradorController.notificarActualizacion();
+                if (administradorViewController != null) {
+                    administradorViewController.notificarActualizacion();
                 }
 
                 mostrarVentanaEmergente("Membresía asignada", "Éxito",

@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.MyApplication;
 import gimnasiouq.gimnasiouq.util.DataUtil;
@@ -10,11 +10,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
-public class AdministradorController {
+public class AdministradorViewController {
 
 
     @FXML
-    private AdministradorUsuariosController administradorUsuariosController;
+    private AdministradorUsuariosViewController administradorUsuariosViewController;
 
     @FXML
     private ComboBox<String> comboSecciones;
@@ -42,6 +42,7 @@ public class AdministradorController {
         comboSecciones.setOnAction(e -> cambiarVista(comboSecciones.getValue()));
     }
 
+    // --- Carga dinámica del contenido según la opción seleccionada ---
     private void cambiarVista(String opcion) {
         // Asigna correctamente las rutas con / inicial y carpeta real
         String fxmlPath = switch (opcion) {
@@ -77,13 +78,14 @@ public class AdministradorController {
     }
 
 
+    // --- Validación de credenciales (tu método original) ---
     public static boolean validarCredenciales(String user, String pass) {
         return user.equals(DataUtil.ADMINISTRADOR) && pass.equals(DataUtil.ADMIN_CONTRASENA);
     }
 
     public void notificarActualizacion() {
-        if (administradorUsuariosController != null) {
-            administradorUsuariosController.refrescarTabla();
+        if (administradorUsuariosViewController != null) {
+            administradorUsuariosViewController.refrescarTabla();
         }
     }
 }

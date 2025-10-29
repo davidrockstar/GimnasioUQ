@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.Entrenador;
@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class AdministradorGestionEntrenadoresController {
+public class AdministradorGestionEntrenadoresViewController {
 
     @FXML private TextField fieldNombre;
     @FXML private TextField fieldIdentificacion;

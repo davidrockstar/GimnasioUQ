@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.RegistroAcceso;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class AdministradorControlAccesoController {
+public class RecepcionistaControlAccesoViewController {
 
     @FXML private Button btnBuscarUsuario;
     @FXML private Button btnEliminar;

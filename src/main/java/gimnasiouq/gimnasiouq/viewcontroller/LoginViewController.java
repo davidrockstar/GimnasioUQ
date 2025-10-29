@@ -1,11 +1,11 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.MyApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class LoginController {
+public class LoginViewController {
 
     @FXML private Button loginButton;
     @FXML private Label txtAdvertencia;
@@ -42,9 +42,9 @@ public class LoginController {
         }
         
         // Validación de credenciales
-        if (AdministradorController.validarCredenciales(user, pass)) {
+        if (AdministradorViewController.validarCredenciales(user, pass)) {
             return "ADMINISTRADOR";
-        } else if (RecepcionistaController.validarCredenciales(user, pass)) {
+        } else if (RecepcionistaViewController.validarCredenciales(user, pass)) {
             return "RECEPCIONISTA";
         } else {
             return "ERROR_CREDENCIALES";

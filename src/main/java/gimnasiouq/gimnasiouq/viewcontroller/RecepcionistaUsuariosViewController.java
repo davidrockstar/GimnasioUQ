@@ -1,4 +1,4 @@
-package gimnasiouq.gimnasiouq.controller;
+package gimnasiouq.gimnasiouq.viewcontroller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,9 +12,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class AdministradorUsuariosController {
+public class RecepcionistaUsuariosViewController {
 
-    AdministradorController administradorController;
+    RecepcionistaViewController recepcionistaAppController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario usuarioSeleccionado;
 
@@ -133,21 +133,21 @@ public class AdministradorUsuariosController {
             if (ModelFactory.getInstance().agregarUsuario(usuario)) {
                 listaUsuarios.add(usuario);
                 limpiarCampos();
-
+                
                 // Notificar al controlador padre para que actualice otras vistas
-                if (administradorController != null) {
-                    administradorController.notificarActualizacion();
+                if (recepcionistaAppController != null) {
+                    recepcionistaAppController.notificarActualizacion();
                 }
-
-                mostrarVentanaEmergente("Usuario agregado", "Éxito",
-                        "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
+                
+                mostrarVentanaEmergente("Usuario agregado", "Éxito", 
+                    "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
             } else {
-                mostrarVentanaEmergente("Usuario no agregado", "Error",
-                        "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
+                mostrarVentanaEmergente("Usuario no agregado", "Error", 
+                    "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
             }
         } else {
-            mostrarVentanaEmergente("Datos incompletos", "Error",
-                    "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            mostrarVentanaEmergente("Datos incompletos", "Error", 
+                "Por favor complete todos los campos", Alert.AlertType.ERROR);
         }
     }
 
@@ -162,29 +162,29 @@ public class AdministradorUsuariosController {
                 // Usamos la identificación del usuario seleccionado como clave
                 if (ModelFactory.getInstance().actualizarUsuario(
                         usuarioSeleccionado.getIdentificacion(), usuarioActualizado)) {
-
+                    
                     // Actualizamos la lista observable
                     int index = listaUsuarios.indexOf(usuarioSeleccionado);
                     if (index >= 0) {
                         listaUsuarios.set(index, usuarioActualizado);
                     }
-
+                    
                     tableUsuario.refresh();
                     limpiarCampos();
-                    mostrarVentanaEmergente("Usuario actualizado", "Éxito",
-                            "El usuario se actualizó correctamente", Alert.AlertType.INFORMATION);
+                    mostrarVentanaEmergente("Usuario actualizado", "Éxito", 
+                        "El usuario se actualizó correctamente", Alert.AlertType.INFORMATION);
                 } else {
-                    mostrarVentanaEmergente("Usuario no actualizado", "Error",
-                            "No se pudo actualizar el usuario. Verifique que la nueva identificación no exista",
-                            Alert.AlertType.ERROR);
+                    mostrarVentanaEmergente("Usuario no actualizado", "Error", 
+                        "No se pudo actualizar el usuario. Verifique que la nueva identificación no exista", 
+                        Alert.AlertType.ERROR);
                 }
             } else {
-                mostrarVentanaEmergente("Datos incompletos", "Error",
-                        "Por favor complete todos los campos", Alert.AlertType.ERROR);
+                mostrarVentanaEmergente("Datos incompletos", "Error", 
+                    "Por favor complete todos los campos", Alert.AlertType.ERROR);
             }
         } else {
-            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla para actualizarlo", Alert.AlertType.WARNING);
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia", 
+                "Debe seleccionar un usuario de la tabla para actualizarlo", Alert.AlertType.WARNING);
         }
     }
 
@@ -197,9 +197,9 @@ public class AdministradorUsuariosController {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar eliminación");
             confirmacion.setHeaderText("¿Está seguro?");
-            confirmacion.setContentText("¿Desea eliminar al usuario " +
-                    usuarioSeleccionado.getNombre() + " con identificación " +
-                    usuarioSeleccionado.getIdentificacion() + "?");
+            confirmacion.setContentText("¿Desea eliminar al usuario " + 
+                usuarioSeleccionado.getNombre() + " con identificación " + 
+                usuarioSeleccionado.getIdentificacion() + "?");
 
             confirmacion.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
@@ -207,17 +207,17 @@ public class AdministradorUsuariosController {
                         listaUsuarios.remove(usuarioSeleccionado);
                         limpiarCampos();
                         usuarioSeleccionado = null;
-                        mostrarVentanaEmergente("Usuario eliminado", "Éxito",
-                                "El usuario se eliminó correctamente", Alert.AlertType.INFORMATION);
+                        mostrarVentanaEmergente("Usuario eliminado", "Éxito", 
+                            "El usuario se eliminó correctamente", Alert.AlertType.INFORMATION);
                     } else {
-                        mostrarVentanaEmergente("Usuario no eliminado", "Error",
-                                "No se pudo eliminar el usuario", Alert.AlertType.ERROR);
+                        mostrarVentanaEmergente("Usuario no eliminado", "Error", 
+                            "No se pudo eliminar el usuario", Alert.AlertType.ERROR);
                     }
                 }
             });
         } else {
-            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla para eliminarlo", Alert.AlertType.WARNING);
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia", 
+                "Debe seleccionar un usuario de la tabla para eliminarlo", Alert.AlertType.WARNING);
         }
     }
 
@@ -254,11 +254,11 @@ public class AdministradorUsuariosController {
      */
     private Usuario crearUsuario() {
         return new Usuario(
-                txtNombre.getText(),
-                txtIdentificacion.getText(),
-                txtEdad.getText(),
-                txtCelular.getText(),
-                comboBoxMembresia.getValue()
+            txtNombre.getText(),
+            txtIdentificacion.getText(),
+            txtEdad.getText(),
+            txtCelular.getText(),
+            comboBoxMembresia.getValue()
         );
     }
 
@@ -292,5 +292,16 @@ public class AdministradorUsuariosController {
     public void refrescarTabla() {
         obtenerUsuarios();
         tableUsuario.refresh();
+    }
+
+    /**
+     * Establece el controlador padre y se registra automáticamente
+     */
+    public void setRecepcionistaAppController(RecepcionistaViewController recepcionistaAppController) {
+        this.recepcionistaAppController = recepcionistaAppController;
+        // ⭐ Registrarse en el controlador padre
+        if (recepcionistaAppController != null) {
+            recepcionistaAppController.setUsuariosController(this);
+        }
     }
 }
