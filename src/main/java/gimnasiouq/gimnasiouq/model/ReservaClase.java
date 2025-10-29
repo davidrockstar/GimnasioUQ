@@ -1,14 +1,16 @@
 package gimnasiouq.gimnasiouq.model;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 public class ReservaClase {
+
     private String clase;
     private String horario;
     private String entrenador;
     private String fecha;
+
+    // Asociar la reserva al usuario que la realizó
+    private String identificacionUsuario;
 
     public ReservaClase(String clase, String horario, String entrenador, String fecha) {
         this.clase = clase;
@@ -17,7 +19,6 @@ public class ReservaClase {
         this.fecha = fecha;
     }
 
-    // Getters y setters
     public String getClase() {
         return clase;
     }
@@ -50,34 +51,33 @@ public class ReservaClase {
         this.fecha = fecha;
     }
 
-    /**
-     * Valida si la fecha de reserva está dentro del rango permitido según el tipo de membresía
-     * @param fechaInicio La fecha de inicio de la membresía
-     * @param tipoMembresia El tipo de membresía (Mensual, Trimestral, Anual)
-     * @return true si la fecha es válida, false en caso contrario
-     */
-    public boolean validarFechaReserva(LocalDate fechaInicio, String tipoMembresia) {
-        try {
-            LocalDate fechaReserva = LocalDate.parse(this.fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            LocalDate fechaFin;
+    // Identificación del usuario dueño de la reserva
+    public String getIdentificacion() {
+        return identificacionUsuario;
+    }
 
-            switch (tipoMembresia.toLowerCase()) {
-                case "mensual":
-                    fechaFin = fechaInicio.plusMonths(1);
-                    break;
-                case "trimestral":
-                    fechaFin = fechaInicio.plusMonths(3);
-                    break;
-                case "anual":
-                    fechaFin = fechaInicio.plusYears(1);
-                    break;
-                default:
-                    return false;
-            }
+    public void setIdentificacion(String identificacionUsuario) {
+        this.identificacionUsuario = identificacionUsuario;
+    }
 
-            return !fechaReserva.isBefore(fechaInicio) && !fechaReserva.isAfter(fechaFin);
-        } catch (DateTimeParseException e) {
-            return false;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReservaClase)) return false;
+        ReservaClase that = (ReservaClase) o;
+        return Objects.equals(clase, that.clase) &&
+               Objects.equals(horario, that.horario) &&
+               Objects.equals(fecha, that.fecha) &&
+               Objects.equals(identificacionUsuario, that.identificacionUsuario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clase, horario, fecha, identificacionUsuario);
+    }
+
+    @Override
+    public String toString() {
+        return clase + " - " + horario + " (" + fecha + ")";
     }
 }

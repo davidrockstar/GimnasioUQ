@@ -11,6 +11,7 @@ public class GimnasioUQ {
     private List<Administador> listaAdministrador;
     private List<Clase> listaClases;
     private List<Entrenador> listaEntrenador;
+
     private List<RegistroAcceso> listaRegistrosAcceso = new ArrayList<>();
 
     public GimnasioUQ() {
@@ -59,6 +60,10 @@ public class GimnasioUQ {
 
     public void setListaEntrenador(List<Entrenador> listaEntrenador) {
         this.listaEntrenador = listaEntrenador;
+    }
+
+    public void setListaRegistrosAcceso(List<RegistroAcceso> listaRegistrosAcceso) {
+        this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
 
     // CRUD de Usuario
@@ -129,5 +134,59 @@ public class GimnasioUQ {
 
     public boolean agregarRegistroAcceso(RegistroAcceso registro) {
         return listaRegistrosAcceso.add(registro);
+    }
+
+    public boolean agregarEntrenador(Entrenador entrenador) {
+        if (entrenador != null && !existeEntrenador(entrenador.getIdentificacion())) {
+            return listaEntrenador.add(entrenador);
+        }
+        return false;
+    }
+
+    private boolean existeEntrenador(String identificacion) {
+        return buscarEntrenadorPorIdentificacion(identificacion) != null;
+    }
+
+    private Entrenador buscarEntrenadorPorIdentificacion(String identificacion) {
+
+        return listaEntrenador.stream()
+                .filter(u -> u.getIdentificacion().equals(identificacion))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean actualizarEntrenador(String identificacion, Entrenador entrenadorActualizado) {
+        if (identificacion == null || identificacion.isEmpty()) {
+            return false;
+        }
+        Entrenador entrenadorExistente = buscarEntrenadorPorIdentificacion(identificacion);
+
+        if (entrenadorExistente != null) {
+            // Verificar que los datos del usuario actualizado no sean null
+            if (entrenadorActualizado.getNombre() == null ||
+                    entrenadorActualizado.getIdentificacion() == null ||
+                    entrenadorActualizado.getEspecialidad() == null ||
+                    entrenadorActualizado.getClasesDisponibles() == null) {
+                return false;
+            }
+
+            // Actualizar los datos básicos
+            entrenadorExistente.setNombre(entrenadorActualizado.getNombre());
+            entrenadorExistente.setIdentificacion(entrenadorActualizado.getIdentificacion());
+            entrenadorExistente.setEspecialidad(entrenadorActualizado.getEspecialidad());
+            entrenadorExistente.setClasesDisponibles(entrenadorActualizado.getClasesDisponibles());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean eliminarEntrenador(String identificacion) {
+        Entrenador entrenador = buscarEntrenadorPorIdentificacion(identificacion);
+        if (entrenador != null) {
+            return listaEntrenador.remove(entrenador);
+        }
+        return false;
     }
 }

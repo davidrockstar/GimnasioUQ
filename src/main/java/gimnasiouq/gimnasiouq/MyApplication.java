@@ -20,6 +20,7 @@ public class MyApplication extends Application {
         var recepUrl = MyApplication.class.getResource("recepcionistaApp.fxml");
         var adminUrl = MyApplication.class.getResource("administrador.fxml");
 
+
         sceneLogin = new Scene(FXMLLoader.load(loginUrl));
         sceneRecepcionista = new Scene(FXMLLoader.load(recepUrl));
         sceneAdministrador = new Scene(FXMLLoader.load(adminUrl));

@@ -22,13 +22,11 @@ public class AdministradorController {
     @FXML
     private AnchorPane contenedorPrincipal;
 
-    // --- Método del botón de cierre de sesión ---
     @FXML
     void cerrarSesion(ActionEvent event) {
         MyApplication.mainStage.setScene(MyApplication.sceneLogin);
     }
 
-    // --- Inicializa el ComboBox y su comportamiento ---
     @FXML
     public void initialize() {
         comboSecciones.getItems().addAll(
@@ -36,13 +34,14 @@ public class AdministradorController {
                 "Asignar Membresías",
                 "Reservar Clases",
                 "Control de Acceso",
-                "Reportes"
+                "Reportes",
+                "Gestión de Entrenadores",
+                "Test"
         );
 
         comboSecciones.setOnAction(e -> cambiarVista(comboSecciones.getValue()));
     }
 
-    // --- Carga dinámica del contenido según la opción seleccionada ---
     private void cambiarVista(String opcion) {
         // Asigna correctamente las rutas con / inicial y carpeta real
         String fxmlPath = switch (opcion) {
@@ -51,6 +50,8 @@ public class AdministradorController {
             case "Reservar Clases" -> "/gimnasiouq/gimnasiouq/administradorReservaClases.fxml";
             case "Control de Acceso" -> "/gimnasiouq/gimnasiouq/administradorControlAcceso.fxml";
             case "Reportes" -> "/gimnasiouq/gimnasiouq/administradorReportes.fxml";
+            case "Gestión de Entrenadores" -> "/gimnasiouq/gimnasiouq/administradorGestionEntrenadores.fxml";
+            case "Test" -> "/gimnasiouq/gimnasiouq/administradorTest.fxml";
             default -> null;
         };
 
@@ -76,7 +77,6 @@ public class AdministradorController {
     }
 
 
-    // --- Validación de credenciales (tu método original) ---
     public static boolean validarCredenciales(String user, String pass) {
         return user.equals(DataUtil.ADMINISTRADOR) && pass.equals(DataUtil.ADMIN_CONTRASENA);
     }

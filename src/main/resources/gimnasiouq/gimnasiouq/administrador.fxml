@@ -18,8 +18,8 @@
         <VBox layoutX="14.0" layoutY="14.0" spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <GridPane>
             <columnConstraints>
-               <ColumnConstraints halignment="CENTER" minWidth="10.0" />
-               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" />
+               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
+               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="385.20001220703125" minWidth="10.0" prefWidth="353.59996337890624" />
             </columnConstraints>
             <rowConstraints>
                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -34,7 +34,7 @@
                     </MenuButton>
             </children>
             <VBox.margin>
-               <Insets left="10.0" right="10.0" top="10.0" />
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
          </GridPane>
          <Separator prefWidth="200.0" />

@@ -12,22 +12,6 @@ public class LoginController {
     @FXML private PasswordField txtPasswordLogin;
     @FXML private ComboBox <String> comboBoxUser;
 
-    private void mostrarError(String mensaje) {
-        txtAdvertencia.setText(mensaje);
-        txtAdvertencia.getStyleClass().remove("advertencia-oculta");
-        if (!txtAdvertencia.getStyleClass().contains("advertencia")) {
-            txtAdvertencia.getStyleClass().add("advertencia");
-        }
-    }
-
-    private void limpiarAdvertenciaExito() {
-        txtAdvertencia.setText("");
-        txtAdvertencia.getStyleClass().remove("advertencia");
-        if (!txtAdvertencia.getStyleClass().contains("advertencia-oculta")) {
-            txtAdvertencia.getStyleClass().add("advertencia-oculta");
-        }
-    }
-
     @FXML
     void login(ActionEvent event) {
 

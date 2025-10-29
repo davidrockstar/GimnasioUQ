@@ -27,6 +27,10 @@ public class Usuario {
         this.membresiaObj = null;
     }
 
+    public Usuario() {
+
+    }
+
     // Getters y Setters básicos
     public String getNombre() {
         return nombre;
