@@ -12,7 +12,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class AdministradorReservaClasesViewController {
+import gimnasiouq.gimnasiouq.mapping.dto.ReservaClaseDto;
+import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
+
+public class AdminReservaClasesViewController {
 
     @FXML private Button btnConfirmar;
     @FXML private Button btnActualizar;
@@ -36,6 +39,9 @@ public class AdministradorReservaClasesViewController {
     @FXML private TableColumn<Usuario, String> tcEstado;
 
     private Usuario usuarioSeleccionado;
+
+    // Controller para reservas
+    private ReservaClaseController reservaController;
 
     @FXML
     void initialize() {
@@ -118,27 +124,28 @@ public class AdministradorReservaClasesViewController {
         String entrenador = comboBoxEntrenador.isDisabled() ? "No disponible" : comboBoxEntrenador.getValue();
         String fechaIngresada = txtFecha.getText();
 
+        LocalDate fecha;
         try {
-            LocalDate fecha = LocalDate.parse(fechaIngresada, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            if (fecha.isBefore(LocalDate.now())) {
-                mostrarAlerta("Error", "La fecha no puede ser menor a hoy", Alert.AlertType.ERROR);
-                return;
-            }
+            fecha = LocalDate.parse(fechaIngresada, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
             mostrarAlerta("Error", "Formato de fecha inválido (use dd/MM/yyyy)", Alert.AlertType.ERROR);
             return;
         }
 
-        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fechaIngresada);
-        reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
+        ReservaClaseDto dto = new ReservaClaseDto(clase, horario, entrenador, fecha, usuarioSeleccionado.getIdentificacion());
 
-        if (usuarioSeleccionado.getReservas().isEmpty()) {
-            usuarioSeleccionado.getReservas().add(reserva);
-        } else {
-            usuarioSeleccionado.getReservas().set(0, reserva);
+        if (reservaController == null) reservaController = new ReservaClaseController();
+
+        if (!reservaController.validarReserva(dto)) {
+            mostrarAlerta("Error", "Datos de reserva inválidos", Alert.AlertType.ERROR);
+            return;
         }
 
-        ModelFactory.getInstance().actualizarUsuario(usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
+        if (!reservaController.agregarReserva(dto)) {
+            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique membresía y rango de fechas", Alert.AlertType.ERROR);
+            return;
+        }
+
         tableUsuario.refresh();
         mostrarAlerta("Éxito", "Reserva registrada", Alert.AlertType.INFORMATION);
         limpiarCampos();
@@ -155,8 +162,15 @@ public class AdministradorReservaClasesViewController {
             mostrarAlerta("Error", "Seleccione un usuario con reserva", Alert.AlertType.ERROR);
             return;
         }
-        usuarioSeleccionado.getReservas().clear();
-        ModelFactory.getInstance().actualizarUsuario(usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
+
+        ReservaClaseDto dto = new ReservaClaseDto(null, null, null, null, usuarioSeleccionado.getIdentificacion());
+        if (reservaController == null) reservaController = new ReservaClaseController();
+
+        if (!reservaController.eliminarReserva(dto)) {
+            mostrarAlerta("Error", "No se pudo eliminar la reserva", Alert.AlertType.ERROR);
+            return;
+        }
+
         tableUsuario.refresh();
         mostrarAlerta("Éxito", "Reserva eliminada", Alert.AlertType.INFORMATION);
         limpiarCampos();
@@ -204,5 +218,10 @@ public class AdministradorReservaClasesViewController {
         alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
+    }
+
+    // Setter para inyección (testabilidad/DI)
+    public void setReservaController(ReservaClaseController controller) {
+        this.reservaController = controller;
     }
 }

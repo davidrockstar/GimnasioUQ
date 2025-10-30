@@ -1,10 +1,9 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
-import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.model.RegistroAcceso;
+import gimnasiouq.gimnasiouq.controller.ControlAccesoController;
+import gimnasiouq.gimnasiouq.model.ControlAcceso;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class AdministradorControlAccesoViewController {
+public class AdminControlAccesoViewController {
 
     @FXML private Button btnBuscarUsuario;
     @FXML private Button btnEliminar;
@@ -23,16 +22,17 @@ public class AdministradorControlAccesoViewController {
     @FXML private Label lblMembresiaActivaNoActiva;
     @FXML private Label lblMembresiaEncontrada;
     @FXML private Label lblNombreEncontrado;
-    @FXML private TableView<RegistroAcceso> tableUsuario;
-    @FXML private TableColumn<RegistroAcceso, String> tcFecha;
-    @FXML private TableColumn<RegistroAcceso, String> tcHora;
-    @FXML private TableColumn<RegistroAcceso, String> tcIdentificacion;
-    @FXML private TableColumn<RegistroAcceso, String> tcNombre;
-    @FXML private TableColumn<RegistroAcceso, String> tcTipoMembresia;
-    @FXML private TableColumn<RegistroAcceso, String> tcEstado;
+    @FXML private TableView<ControlAcceso> tableUsuario;
+    @FXML private TableColumn<ControlAcceso, String> tcFecha;
+    @FXML private TableColumn<ControlAcceso, String> tcHora;
+    @FXML private TableColumn<ControlAcceso, String> tcIdentificacion;
+    @FXML private TableColumn<ControlAcceso, String> tcNombre;
+    @FXML private TableColumn<ControlAcceso, String> tcTipoMembresia;
+    @FXML private TableColumn<ControlAcceso, String> tcEstado;
     @FXML private TextField txtfieldIdentificacion;
 
-    private ObservableList<RegistroAcceso> listaRegistros = FXCollections.observableArrayList();
+    private ControlAccesoController controlAccesoController = new ControlAccesoController();
+    private ObservableList<ControlAcceso> listaRegistros;
     private Usuario usuarioActual;
 
     @FXML
@@ -42,6 +42,7 @@ public class AdministradorControlAccesoViewController {
 
         // Configurar tabla
         initDataBinding();
+        listaRegistros = controlAccesoController.obtenerRegistrosObservable();
         tableUsuario.setItems(listaRegistros);
 
         // Limpiar labels
@@ -72,7 +73,7 @@ public class AdministradorControlAccesoViewController {
                 new SimpleStringProperty(cellData.getValue().getEstado()));
 
         // Estilo para columna Estado
-        tcEstado.setCellFactory(column -> new TableCell<RegistroAcceso, String>() {
+        tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -100,7 +101,7 @@ public class AdministradorControlAccesoViewController {
             return;
         }
 
-        Usuario usuario = ModelFactory.getInstance().buscarUsuario(identificacion.trim());
+        Usuario usuario = controlAccesoController.buscarUsuario(identificacion.trim());
 
         if (usuario != null) {
             usuarioActual = usuario;
@@ -123,44 +124,36 @@ public class AdministradorControlAccesoViewController {
             return;
         }
 
-        if (!usuarioActual.tieneMembresiaActiva()) {
+        // Delegar validación y registro al controller
+        if (!controlAccesoController.validarIngreso(usuarioActual.getIdentificacion())) {
             mostrarAlerta("Membresía Inactiva",
                     "El usuario no puede ingresar. Membresía NO ACTIVA.",
                     Alert.AlertType.ERROR);
             return;
         }
 
-        // Crear registro de acceso
-        RegistroAcceso registro = new RegistroAcceso(
-                LocalDate.now(),
-                LocalTime.now(),
-                usuarioActual.getNombre(),
-                usuarioActual.getIdentificacion(),
-                usuarioActual.getTipoMembresia(),
-                usuarioActual.getEstadoMembresia()
-        );
-
-        // Agregar a la tabla
-        listaRegistros.add(0, registro); // Agregar al inicio
-
-        // Guardar en el modelo
-        ModelFactory.getInstance().agregarRegistroAcceso(registro);
-
-        mostrarAlerta("Ingreso Validado",
-                "Acceso registrado exitosamente para " + usuarioActual.getNombre(),
-                Alert.AlertType.INFORMATION);
-
-        // Limpiar formulario
-        limpiarFormulario();
+        boolean ok = controlAccesoController.registrarIngreso(usuarioActual.getIdentificacion());
+        if (ok) {
+            mostrarAlerta("Ingreso Validado",
+                    "Acceso registrado exitosamente para " + usuarioActual.getNombre(),
+                    Alert.AlertType.INFORMATION);
+            limpiarFormulario();
+        } else {
+            mostrarAlerta("Error", "No se pudo registrar el ingreso", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     void onEliminar(ActionEvent event) {
-        RegistroAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
+        ControlAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
 
         if (registroSeleccionado != null) {
-            listaRegistros.remove(registroSeleccionado);
-            mostrarAlerta("Registro eliminado", "El registro ha sido eliminado", Alert.AlertType.INFORMATION);
+            boolean ok = controlAccesoController.eliminarRegistro(registroSeleccionado);
+            if (ok) {
+                mostrarAlerta("Registro eliminado", "El registro ha sido eliminado", Alert.AlertType.INFORMATION);
+            } else {
+                mostrarAlerta("Error", "No se pudo eliminar el registro", Alert.AlertType.ERROR);
+            }
         } else {
             mostrarAlerta("Error", "Seleccione un registro para eliminar", Alert.AlertType.WARNING);
         }
@@ -195,6 +188,7 @@ public class AdministradorControlAccesoViewController {
         limpiarInformacionUsuario();
         usuarioActual = null;
         btnValidarIngreso.setDisable(true);
+        // Actualizar view bound a la colección observable (ModelFactory ya actualiza la observable)
     }
 
     private void mostrarAlerta(String title, String message, Alert.AlertType alertType) {

@@ -3,7 +3,7 @@ package gimnasiouq.gimnasiouq.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class RegistroAcceso {
+public class ControlAcceso {
     LocalDate fecha;
     LocalTime hora;
     String usuario;
@@ -11,8 +11,8 @@ public class RegistroAcceso {
     String tipoMembresia;
     String estado;
 
-    public RegistroAcceso(LocalDate fecha, LocalTime hora, String usuario,
-                          String identificacion, String tipoMembresia, String estado) {
+    public ControlAcceso(LocalDate fecha, LocalTime hora, String usuario,
+                         String identificacion, String tipoMembresia, String estado) {
         this.fecha = fecha;
         this.hora = hora;
         this.usuario = usuario;

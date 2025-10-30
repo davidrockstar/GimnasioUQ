@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdministradorViewController">
+<AnchorPane prefHeight="600.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdminViewController">
 
     <children>
         <!-- Contenedor vertical principal -->

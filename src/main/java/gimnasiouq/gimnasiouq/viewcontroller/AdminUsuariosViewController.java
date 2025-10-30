@@ -14,9 +14,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class AdministradorUsuariosViewController {
+public class AdminUsuariosViewController {
 
-    AdministradorViewController administradorViewController;
+    AdminViewController adminViewController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario usuarioSeleccionado;
 
@@ -155,8 +155,8 @@ public class AdministradorUsuariosViewController {
                 limpiarCampos();
 
                 // Notificar al controlador padre para que actualice otras vistas
-                if (administradorViewController != null) {
-                    administradorViewController.notificarActualizacion();
+                if (adminViewController != null) {
+                    adminViewController.notificarActualizacion();
                 }
 
                 mostrarVentanaEmergente("Usuario agregado", "Éxito",

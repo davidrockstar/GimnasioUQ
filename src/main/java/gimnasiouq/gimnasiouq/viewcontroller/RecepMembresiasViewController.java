@@ -12,12 +12,12 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class AdministradorMembresiasViewController {
+public class RecepMembresiasViewController {
 
-    AdministradorViewController administradorViewController;
+    RecepViewController recepcionistaAppController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario usuarioSeleccionado;
-
+    
     private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @FXML
@@ -92,7 +92,7 @@ public class AdministradorMembresiasViewController {
     void initialize() {
         initView();
         comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
-
+        
         // Listener para calcular fechas automáticamente
         comboBoxPlanMembresia.setOnAction(e -> calcularFechas());
 
@@ -112,16 +112,16 @@ public class AdministradorMembresiasViewController {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-
+        tcNombre.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcIdentificacion.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        
         tcFechaInicio.setCellValueFactory(cellData -> {
             Usuario usuario = cellData.getValue();
             return new SimpleStringProperty(usuario.getFechaInicioFormateada());
         });
-
+        
         tcFechaFin.setCellValueFactory(cellData -> {
             Usuario usuario = cellData.getValue();
             return new SimpleStringProperty(usuario.getFechaFinFormateada());
@@ -149,10 +149,10 @@ public class AdministradorMembresiasViewController {
 
     private void listenerSelection() {
         tableUsuario.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newSelection) -> {
-                    usuarioSeleccionado = newSelection;
-                    mostrarInformacionUsuario(usuarioSeleccionado);
-                });
+            (observable, oldValue, newSelection) -> {
+                usuarioSeleccionado = newSelection;
+                mostrarInformacionUsuario(usuarioSeleccionado);
+            });
     }
 
     private void asignarMembresia() {
@@ -171,11 +171,11 @@ public class AdministradorMembresiasViewController {
 
         try {
             if (txtFechaInicio.getText() == null || txtFechaInicio.getText().isEmpty() ||
-                    txtFechaFin.getText() == null || txtFechaFin.getText().isEmpty() ||
-                    txtCosto.getText() == null || txtCosto.getText().isEmpty()) {
+                txtFechaFin.getText() == null || txtFechaFin.getText().isEmpty() ||
+                txtCosto.getText() == null || txtCosto.getText().isEmpty()) {
                 mostrarVentanaEmergente("Campos incompletos", "Error",
-                        "Todos los campos son obligatorios. Seleccione un plan primero.",
-                        Alert.AlertType.ERROR);
+                    "Todos los campos son obligatorios. Seleccione un plan primero.", 
+                    Alert.AlertType.ERROR);
                 return;
             }
 
@@ -186,17 +186,17 @@ public class AdministradorMembresiasViewController {
             String tipoMembresia = usuarioSeleccionado.getTipoMembresia();
             if (tipoMembresia == null || tipoMembresia.isEmpty()) {
                 mostrarVentanaEmergente("Tipo de membresía no definido", "Error",
-                        "El usuario debe tener un tipo de membresía asignado (Basica/Premium/VIP)",
-                        Alert.AlertType.ERROR);
+                    "El usuario debe tener un tipo de membresía asignado (Basica/Premium/VIP)", 
+                    Alert.AlertType.ERROR);
                 return;
             }
 
             Membresia membresia = crearMembresia(tipoMembresia, costo, fechaInicio, fechaFin);
-
+            
             if (membresia == null || membresia.getTipo() == null) {
                 mostrarVentanaEmergente("Error al crear membresía", "Error",
-                        "No se pudo crear la membresía correctamente",
-                        Alert.AlertType.ERROR);
+                    "No se pudo crear la membresía correctamente", 
+                    Alert.AlertType.ERROR);
                 return;
             }
 
@@ -207,8 +207,8 @@ public class AdministradorMembresiasViewController {
 
                 tableUsuario.refresh();
 
-                if (administradorViewController != null) {
-                    administradorViewController.notificarActualizacion();
+                if (recepcionistaAppController != null) {
+                    recepcionistaAppController.notificarActualizacion();
                 }
 
                 mostrarVentanaEmergente("Membresía asignada", "Éxito",
@@ -231,7 +231,7 @@ public class AdministradorMembresiasViewController {
     private void actualizarMembresia() {
         if (usuarioSeleccionado == null) {
             mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla", Alert.AlertType.WARNING);
+                "Debe seleccionar un usuario de la tabla", Alert.AlertType.WARNING);
             return;
         }
 
@@ -241,25 +241,25 @@ public class AdministradorMembresiasViewController {
     private void eliminarMembresia() {
         if (usuarioSeleccionado == null) {
             mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla", Alert.AlertType.WARNING);
+                "Debe seleccionar un usuario de la tabla", Alert.AlertType.WARNING);
             return;
         }
 
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar eliminación");
         confirmacion.setHeaderText("¿Está seguro?");
-        confirmacion.setContentText("¿Desea eliminar la membresía del usuario " +
-                usuarioSeleccionado.getNombre() + "?");
+        confirmacion.setContentText("¿Desea eliminar la membresía del usuario " + 
+            usuarioSeleccionado.getNombre() + "?");
 
         confirmacion.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 usuarioSeleccionado.setMembresiaActiva(null);
                 ModelFactory.getInstance().actualizarUsuario(
-                        usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
+                    usuarioSeleccionado.getIdentificacion(), usuarioSeleccionado);
                 tableUsuario.refresh();
                 limpiarCampos();
                 mostrarVentanaEmergente("Membresía eliminada", "Éxito",
-                        "La membresía se eliminó correctamente", Alert.AlertType.INFORMATION);
+                    "La membresía se eliminó correctamente", Alert.AlertType.INFORMATION);
             }
         });
     }
@@ -317,7 +317,7 @@ public class AdministradorMembresiasViewController {
         if (usuario != null) {
             LocalDate fechaInicio = usuario.getFechaInicioMembresia();
             LocalDate fechaFin = usuario.getFechaFinMembresia();
-
+            
             if (fechaInicio != null && fechaFin != null) {
                 txtFechaInicio.setText(fechaInicio.format(formatoFecha));
                 txtFechaFin.setText(fechaFin.format(formatoFecha));
@@ -336,8 +336,8 @@ public class AdministradorMembresiasViewController {
         txtCosto.clear();
     }
 
-    private void mostrarVentanaEmergente(String titulo, String header,
-                                         String contenido, Alert.AlertType alertType) {
+    private void mostrarVentanaEmergente(String titulo, String header, 
+                                        String contenido, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(titulo);
         alert.setHeaderText(header);
@@ -348,5 +348,12 @@ public class AdministradorMembresiasViewController {
     public void refrescarTabla() {
         obtenerUsuarios();
         tableUsuario.refresh();
+    }
+
+    public void setRecepcionistaAppController(RecepViewController recepcionistaAppController) {
+        this.recepcionistaAppController = recepcionistaAppController;
+        if (recepcionistaAppController != null) {
+            recepcionistaAppController.setMembresiasController(this);
+        }
     }
 }

@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class RecepcionistaReservaClasesViewController {
+public class RecepReservaClasesViewController {
 
     // ⭐ NUEVO: Referencia al controlador padre
-    private RecepcionistaViewController recepcionistaAppController;
+    private RecepViewController recepcionistaAppController;
 
     @FXML private Button btnConfirmar;
 
@@ -54,7 +54,7 @@ public class RecepcionistaReservaClasesViewController {
 
     private Usuario usuarioSeleccionado;
     private ReservaClase reservaSeleccionada;
-    private RecepcionistaViewController recepcionistaViewController;
+    private RecepViewController recepViewController;
 
     @FXML
     void initialize() {
@@ -371,7 +371,7 @@ public class RecepcionistaReservaClasesViewController {
         alert.showAndWait();
     }
 
-    public void setRecepcionistaController(RecepcionistaViewController recepcionistaViewController) {
-        this.recepcionistaAppController = recepcionistaViewController;
+    public void setRecepcionistaController(RecepViewController recepViewController) {
+        this.recepcionistaAppController = recepViewController;
     }
 }

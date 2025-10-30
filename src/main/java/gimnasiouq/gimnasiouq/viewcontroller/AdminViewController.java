@@ -10,11 +10,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
-public class AdministradorViewController {
+public class AdminViewController {
 
 
     @FXML
-    private AdministradorUsuariosViewController administradorUsuariosViewController;
+    private AdminUsuariosViewController adminUsuariosViewController;
 
     @FXML
     private ComboBox<String> comboSecciones;
@@ -84,8 +84,8 @@ public class AdministradorViewController {
     }
 
     public void notificarActualizacion() {
-        if (administradorUsuariosViewController != null) {
-            administradorUsuariosViewController.refrescarTabla();
+        if (adminUsuariosViewController != null) {
+            adminUsuariosViewController.refrescarTabla();
         }
     }
 }

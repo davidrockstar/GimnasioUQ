@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class AdministradorGestionEntrenadoresViewController {
+public class AdminGestionEntrenadoresViewController {
 
     @FXML private TextField fieldNombre;
     @FXML private TextField fieldIdentificacion;

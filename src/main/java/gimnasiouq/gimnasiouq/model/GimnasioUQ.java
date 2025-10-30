@@ -1,4 +1,3 @@
-
 package gimnasiouq.gimnasiouq.model;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ public class GimnasioUQ {
     private List<Clase> listaClases;
     private List<Entrenador> listaEntrenador;
 
-    private List<RegistroAcceso> listaRegistrosAcceso = new ArrayList<>();
+    private List<ControlAcceso> listaRegistrosAcceso = new ArrayList<>();
 
     public GimnasioUQ() {
         this.listaUsuarios = new ArrayList<>();
@@ -62,7 +61,7 @@ public class GimnasioUQ {
         this.listaEntrenador = listaEntrenador;
     }
 
-    public void setListaRegistrosAcceso(List<RegistroAcceso> listaRegistrosAcceso) {
+    public void setListaRegistrosAcceso(List<ControlAcceso> listaRegistrosAcceso) {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
 
@@ -128,12 +127,17 @@ public class GimnasioUQ {
         return buscarUsuarioPorIdentificacion(identificacion) != null;
     }
 
-    public List<RegistroAcceso> getListaRegistrosAcceso() {
+    public List<ControlAcceso> getListaRegistrosAcceso() {
         return listaRegistrosAcceso;
     }
 
-    public boolean agregarRegistroAcceso(RegistroAcceso registro) {
+    public boolean agregarRegistroAcceso(ControlAcceso registro) {
         return listaRegistrosAcceso.add(registro);
+    }
+
+    public boolean eliminarRegistroAcceso(ControlAcceso registro) {
+        if (registro == null) return false;
+        return listaRegistrosAcceso.remove(registro);
     }
 
     public boolean agregarEntrenador(Entrenador entrenador) {
@@ -188,5 +192,75 @@ public class GimnasioUQ {
             return listaEntrenador.remove(entrenador);
         }
         return false;
+    }
+
+    // ===== Nuevos métodos para CRUD de Reservas (delegados desde ModelFactory) =====
+    public boolean agregarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || reserva == null) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        return usuario.getReservas().add(reserva);
+    }
+
+    public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || reserva == null) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        if (usuario.getReservas().isEmpty()) {
+            usuario.getReservas().add(reserva);
+        } else {
+            usuario.getReservas().set(0, reserva);
+        }
+        return true;
+    }
+
+    public boolean eliminarReservasUsuario(String identificacionUsuario) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        if (usuario.getReservas() == null || usuario.getReservas().isEmpty()) return false;
+        usuario.getReservas().clear();
+        return true;
+    }
+
+    public List<ReservaClase> obtenerReservasDeUsuarios() {
+        List<ReservaClase> reservas = new ArrayList<>();
+        for (Usuario u : listaUsuarios) {
+            if (u.getReservas() != null && !u.getReservas().isEmpty()) {
+                for (ReservaClase r : u.getReservas()) {
+                    r.setIdentificacion(u.getIdentificacion());
+                    reservas.add(r);
+                }
+            }
+        }
+        return reservas;
+    }
+
+    // ===== Nuevos métodos para CRUD de Membresías (delegados desde ModelFactory) =====
+    public boolean asignarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || membresia == null) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        usuario.setMembresiaActiva(membresia);
+        return true;
+    }
+
+    public boolean actualizarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
+        // En este dominio actualizar es equivalente a asignar (reemplazar)
+        return asignarMembresiaUsuario(identificacionUsuario, membresia);
+    }
+
+    public boolean eliminarMembresiaUsuario(String identificacionUsuario) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        if (usuario.getMembresiaActiva() == null) return false;
+        usuario.setMembresiaActiva(null);
+        return true;
+    }
+
+    public Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        return usuario != null ? usuario.getMembresiaActiva() : null;
     }
 }

@@ -42,9 +42,9 @@ public class LoginViewController {
         }
         
         // Validación de credenciales
-        if (AdministradorViewController.validarCredenciales(user, pass)) {
+        if (AdminViewController.validarCredenciales(user, pass)) {
             return "ADMINISTRADOR";
-        } else if (RecepcionistaViewController.validarCredenciales(user, pass)) {
+        } else if (RecepViewController.validarCredenciales(user, pass)) {
             return "RECEPCIONISTA";
         } else {
             return "ERROR_CREDENCIALES";

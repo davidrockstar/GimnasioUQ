@@ -1,7 +1,7 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.model.RegistroAcceso;
+import gimnasiouq.gimnasiouq.model.ControlAcceso;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class RecepcionistaControlAccesoViewController {
+public class RecepControlAccesoViewController {
 
     @FXML private Button btnBuscarUsuario;
     @FXML private Button btnEliminar;
@@ -23,16 +23,16 @@ public class RecepcionistaControlAccesoViewController {
     @FXML private Label lblMembresiaActivaNoActiva;
     @FXML private Label lblMembresiaEncontrada;
     @FXML private Label lblNombreEncontrado;
-    @FXML private TableView<RegistroAcceso> tableUsuario;
-    @FXML private TableColumn<RegistroAcceso, String> tcFecha;
-    @FXML private TableColumn<RegistroAcceso, String> tcHora;
-    @FXML private TableColumn<RegistroAcceso, String> tcIdentificacion;
-    @FXML private TableColumn<RegistroAcceso, String> tcNombre;
-    @FXML private TableColumn<RegistroAcceso, String> tcTipoMembresia;
-    @FXML private TableColumn<RegistroAcceso, String> tcEstado;
+    @FXML private TableView<ControlAcceso> tableUsuario;
+    @FXML private TableColumn<ControlAcceso, String> tcFecha;
+    @FXML private TableColumn<ControlAcceso, String> tcHora;
+    @FXML private TableColumn<ControlAcceso, String> tcIdentificacion;
+    @FXML private TableColumn<ControlAcceso, String> tcNombre;
+    @FXML private TableColumn<ControlAcceso, String> tcTipoMembresia;
+    @FXML private TableColumn<ControlAcceso, String> tcEstado;
     @FXML private TextField txtfieldIdentificacion;
 
-    private ObservableList<RegistroAcceso> listaRegistros = FXCollections.observableArrayList();
+    private ObservableList<ControlAcceso> listaRegistros = FXCollections.observableArrayList();
     private Usuario usuarioActual;
 
     @FXML
@@ -72,7 +72,7 @@ public class RecepcionistaControlAccesoViewController {
                 new SimpleStringProperty(cellData.getValue().getEstado()));
 
         // Estilo para columna Estado
-        tcEstado.setCellFactory(column -> new TableCell<RegistroAcceso, String>() {
+        tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -131,7 +131,7 @@ public class RecepcionistaControlAccesoViewController {
         }
 
         // Crear registro de acceso
-        RegistroAcceso registro = new RegistroAcceso(
+        ControlAcceso registro = new ControlAcceso(
                 LocalDate.now(),
                 LocalTime.now(),
                 usuarioActual.getNombre(),
@@ -156,7 +156,7 @@ public class RecepcionistaControlAccesoViewController {
 
     @FXML
     void onEliminar(ActionEvent event) {
-        RegistroAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
+        ControlAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
 
         if (registroSeleccionado != null) {
             listaRegistros.remove(registroSeleccionado);

@@ -10,23 +10,23 @@ import javafx.scene.control.TabPane;
 
 import java.util.List;
 
-public class RecepcionistaViewController {
+public class RecepViewController {
 
     @FXML
     private TabPane tabPane;
 
     // Referencias inyectadas automáticamente por JavaFX
     @FXML
-    private RecepcionistaUsuariosViewController recepcionistaUsuariosViewController;
+    private RecepUsuariosViewController recepUsuariosViewController;
 
     @FXML
-    private RecepcionistaMembresiasViewController recepcionistaMembresiasViewController;
+    private RecepMembresiasViewController recepMembresiasViewController;
 
     @FXML
-    private RecepcionistaControlAccesoViewController recepcionistaControlAccesoViewController;
+    private RecepControlAccesoViewController recepControlAccesoViewController;
 
     @FXML
-    private RecepcionistaReservaClasesViewController reservaClasesController;
+    private RecepReservaClasesViewController reservaClasesController;
 
     @FXML
     void cerrarSesion(ActionEvent event) {
@@ -42,13 +42,13 @@ public class RecepcionistaViewController {
 
                 switch (tabName) {
                     case "Registrar Usuarios":
-                        if (recepcionistaUsuariosViewController != null) {
-                            recepcionistaUsuariosViewController.refrescarTabla();
+                        if (recepUsuariosViewController != null) {
+                            recepUsuariosViewController.refrescarTabla();
                         }
                         break;
                     case "Asignar Membresías":
-                        if (recepcionistaMembresiasViewController != null) {
-                            recepcionistaMembresiasViewController.refrescarTabla();
+                        if (recepMembresiasViewController != null) {
+                            recepMembresiasViewController.refrescarTabla();
                         }
                         break;
                 }
@@ -67,26 +67,26 @@ public class RecepcionistaViewController {
     /**
      * Registra el controlador de usuarios
      */
-    public void setUsuariosController(RecepcionistaUsuariosViewController controller) {
-        this.recepcionistaUsuariosViewController = controller;
+    public void setUsuariosController(RecepUsuariosViewController controller) {
+        this.recepUsuariosViewController = controller;
     }
 
     /**
      * Registra el controlador de membresías
      */
-    public void setMembresiasController(RecepcionistaMembresiasViewController controller) {
-        this.recepcionistaMembresiasViewController = controller;
+    public void setMembresiasController(RecepMembresiasViewController controller) {
+        this.recepMembresiasViewController = controller;
     }
 
     /**
      * Notifica a todos los controladores hijos que deben refrescar sus datos
      */
     public void notificarActualizacion() {
-        if (recepcionistaUsuariosViewController != null) {
-            recepcionistaUsuariosViewController.refrescarTabla();
+        if (recepUsuariosViewController != null) {
+            recepUsuariosViewController.refrescarTabla();
         }
-        if (recepcionistaMembresiasViewController != null) {
-            recepcionistaMembresiasViewController.refrescarTabla();
+        if (recepMembresiasViewController != null) {
+            recepMembresiasViewController.refrescarTabla();
         }
     }
 }
