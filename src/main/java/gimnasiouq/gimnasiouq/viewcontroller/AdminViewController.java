@@ -46,13 +46,13 @@ public class AdminViewController {
     private void cambiarVista(String opcion) {
         // Asigna correctamente las rutas con / inicial y carpeta real
         String fxmlPath = switch (opcion) {
-            case "Registrar Usuarios" -> "/gimnasiouq/gimnasiouq/administradorUsuarios.fxml";
-            case "Asignar Membresías" -> "/gimnasiouq/gimnasiouq/administradorMembresias.fxml";
-            case "Reservar Clases" -> "/gimnasiouq/gimnasiouq/administradorReservaClases.fxml";
-            case "Control de Acceso" -> "/gimnasiouq/gimnasiouq/administradorControlAcceso.fxml";
-            case "Reportes" -> "/gimnasiouq/gimnasiouq/administradorReportes.fxml";
-            case "Gestión de Entrenadores" -> "/gimnasiouq/gimnasiouq/administradorGestionEntrenadores.fxml";
-            case "Test" -> "/gimnasiouq/gimnasiouq/administradorTest.fxml";
+            case "Registrar Usuarios" -> "/gimnasiouq/gimnasiouq/adminUsuarios.fxml";
+            case "Asignar Membresías" -> "/gimnasiouq/gimnasiouq/adminMembresias.fxml";
+            case "Reservar Clases" -> "/gimnasiouq/gimnasiouq/adminReservaClases.fxml";
+            case "Control de Acceso" -> "/gimnasiouq/gimnasiouq/adminControlAcceso.fxml";
+            case "Reportes" -> "/gimnasiouq/gimnasiouq/adminReportes.fxml";
+            case "Gestión de Entrenadores" -> "/gimnasiouq/gimnasiouq/adminGestionEntrenadores.fxml";
+            case "Test" -> "/gimnasiouq/gimnasiouq/adminTest.fxml";
             default -> null;
         };
 

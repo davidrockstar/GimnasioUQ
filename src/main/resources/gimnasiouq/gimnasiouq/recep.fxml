@@ -24,7 +24,7 @@
                                   <children>
                                       <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                           <items>
-                                              <fx:include fx:id="recepcionistaUsuarios" source="recepcionistaUsuarios.fxml" />
+                                              <fx:include fx:id="recepcionistaUsuarios" source="recepUsuarios.fxml" />
                                           </items>
                                       </SplitPane>
                                   </children>
@@ -37,7 +37,7 @@
                                   <children>
                                       <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                           <items>
-                                              <fx:include fx:id="recepcionistaMembresias" source="recepcionistaMembresias.fxml" />
+                                              <fx:include fx:id="recepcionistaMembresias" source="recepMembresias.fxml" />
                                           </items>
                                       </SplitPane>
                                   </children>
@@ -50,7 +50,7 @@
                                   <children>
                                       <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                           <items>
-                                              <fx:include source="recepcionistaReservaClases.fxml"/>
+                                              <fx:include source="recepReservaClases.fxml"/>
                                           </items>
                                       </SplitPane>
                                   </children>
@@ -63,7 +63,7 @@
                                   <children>
                                       <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                           <items>
-                                              <fx:include source="recepcionistaControlAcceso.fxml" />
+                                              <fx:include source="recepControlAcceso.fxml" />
                                           </items>
                                       </SplitPane>
                                   </children>
@@ -76,7 +76,7 @@
                                   <children>
                                       <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                           <items>
-                                              <fx:include source="recepcionistaReportes.fxml" />
+                                              <fx:include source="recepReportes.fxml" />
                                           </items>
                                       </SplitPane>
                                   </children>
