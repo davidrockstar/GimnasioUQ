@@ -45,7 +45,6 @@ public class ControlAccesoController {
         return modelFactory.obtenerRegistrosAccesoObservable();
     }
 
-    // Passthrough: buscar usuario por identificación (conveniencia para la vista)
     public Usuario buscarUsuario(String identificacion) {
         if (identificacion == null) return null;
         return modelFactory.buscarUsuario(identificacion);

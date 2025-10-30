@@ -21,8 +21,6 @@ public abstract class Membresia {
 
     }
 
-    // ========== GETTERS Y SETTERS ==========
-
     public String getTipo() {
         return tipo;
     }
@@ -63,19 +61,11 @@ public abstract class Membresia {
         this.activa = activa;
     }
 
-    // ========== MÉTODOS ÚTILES ==========
-
-    /**
-     * Verifica si la membresía está vigente
-     */
     public boolean estaVigente() {
         LocalDate hoy = LocalDate.now();
         return activa && (fin.isAfter(hoy) || fin.isEqual(hoy));
     }
 
-    /**
-     * Obtiene los días restantes de la membresía
-     */
     public long diasRestantes() {
         LocalDate hoy = LocalDate.now();
         if (hoy.isAfter(fin)) {

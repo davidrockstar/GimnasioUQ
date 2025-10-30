@@ -188,7 +188,6 @@ public class AdminControlAccesoViewController {
         limpiarInformacionUsuario();
         usuarioActual = null;
         btnValidarIngreso.setDisable(true);
-        // Actualizar view bound a la colección observable (ModelFactory ya actualiza la observable)
     }
 
     private void mostrarAlerta(String title, String message, Alert.AlertType alertType) {

@@ -6,7 +6,6 @@ import gimnasiouq.gimnasiouq.model.ControlAcceso;
 import gimnasiouq.gimnasiouq.model.ReservaClase;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import gimnasiouq.gimnasiouq.util.DataUtil;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -38,31 +37,40 @@ public class ModelFactory {
     public List<Usuario> obtenerUsuarios() { return gimnasioUQ.getListaUsuarios(); }
 
     public ObservableList<Usuario> obtenerUsuariosObservable() {
-        // Asegurarse que la actualización del ObservableList ocurra en el hilo FX
-        Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return listaUsuariosObservable;
     }
 
     public ObservableList<Entrenador> obtenerEntrenadorObservable(){
-        Platform.runLater(() -> listaEntrenadorObservable.setAll(gimnasioUQ.getListaEntrenador()));
+        listaEntrenadorObservable.setAll(gimnasioUQ.getListaEntrenador());
         return listaEntrenadorObservable;
     }
 
     public boolean agregarUsuario(Usuario usuario) {
         boolean ok = gimnasioUQ.agregarUsuario(usuario);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.add(usuario);
         return ok;
     }
 
     public boolean actualizarUsuario(String identificacion, Usuario usuarioActualizado) {
         boolean ok = gimnasioUQ.actualizarUsuario(identificacion, usuarioActualizado);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) {
+            // Buscar el índice del usuario en la lista observable
+            for (int i = 0; i < listaUsuariosObservable.size(); i++) {
+                if (listaUsuariosObservable.get(i).getIdentificacion().equals(identificacion)) {
+                    listaUsuariosObservable.set(i, usuarioActualizado);
+                    break;
+                }
+            }
+        }
         return ok;
     }
 
     public boolean eliminarUsuario(String identificacion) {
         boolean ok = gimnasioUQ.eliminarUsuario(identificacion);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) {
+            listaUsuariosObservable.removeIf(u -> u.getIdentificacion().equals(identificacion));
+        }
         return ok;
     }
 
@@ -72,7 +80,7 @@ public class ModelFactory {
 
     public boolean agregarEntrenador(Entrenador entrenador) {
         boolean ok = gimnasioUQ.agregarEntrenador(entrenador);
-        if (ok) Platform.runLater(() -> listaEntrenadorObservable.setAll(gimnasioUQ.getListaEntrenador()));
+        if (ok) listaEntrenadorObservable.add(entrenador);
         return ok;
     }
 
@@ -82,18 +90,18 @@ public class ModelFactory {
 
     public boolean agregarRegistroAcceso(ControlAcceso registro) {
         boolean ok = gimnasioUQ.agregarRegistroAcceso(registro);
-        if (ok) Platform.runLater(() -> listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso()));
+        if (ok) listaRegistrosAccesoObservable.add(registro);
         return ok;
     }
 
     public boolean eliminarRegistroAcceso(ControlAcceso registro) {
         boolean ok = gimnasioUQ.eliminarRegistroAcceso(registro);
-        if (ok) Platform.runLater(() -> listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso()));
+        if (ok) listaRegistrosAccesoObservable.remove(registro);
         return ok;
     }
 
     public ObservableList<ControlAcceso> obtenerRegistrosAccesoObservable() {
-        Platform.runLater(() -> listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso()));
+        listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso());
         return listaRegistrosAccesoObservable;
     }
 
@@ -106,19 +114,19 @@ public class ModelFactory {
 
     public boolean agregarReservaAUsuario(String identificacionUsuario, ReservaClase reserva) {
         boolean ok = gimnasioUQ.agregarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
     public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
         boolean ok = gimnasioUQ.actualizarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
     public boolean eliminarReservasUsuario(String identificacionUsuario) {
         boolean ok = gimnasioUQ.eliminarReservasUsuario(identificacionUsuario);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
@@ -129,27 +137,30 @@ public class ModelFactory {
         return reservas;
     }
 
-    // ===== Nuevos métodos para CRUD de Membresías delegando en GimnasioUQ =====
     public boolean asignarMembresiaUsuario(String identificacionUsuario, gimnasiouq.gimnasiouq.model.Membresia membresia) {
         boolean ok = gimnasioUQ.asignarMembresiaUsuario(identificacionUsuario, membresia);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
     public boolean actualizarMembresiaUsuario(String identificacionUsuario, gimnasiouq.gimnasiouq.model.Membresia membresia) {
         boolean ok = gimnasioUQ.actualizarMembresiaUsuario(identificacionUsuario, membresia);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
     public boolean eliminarMembresiaUsuario(String identificacionUsuario) {
         boolean ok = gimnasioUQ.eliminarMembresiaUsuario(identificacionUsuario);
-        if (ok) Platform.runLater(() -> listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios()));
+        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return ok;
     }
 
     public gimnasiouq.gimnasiouq.model.Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
         return gimnasioUQ.obtenerMembresiaUsuario(identificacionUsuario);
+    }
+
+    public gimnasiouq.gimnasiouq.model.Membresia calcularMembresiaPorPlan(String tipoPlan) {
+        return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan);
     }
 
 }

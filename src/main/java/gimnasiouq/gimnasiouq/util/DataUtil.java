@@ -16,7 +16,6 @@ public class DataUtil {
         Usuario usuario2 = new Usuario("Juan", "1094887140", "28", "3110000000", "Premium");
         Usuario usuario3 = new Usuario("Maria", "1094887141", "32", "3001111111", "VIP");
 
-        // Registrar en la lista global
         gimnasioUQ.getListaUsuarios().add(usuario1);
         gimnasioUQ.getListaUsuarios().add(usuario2);
         gimnasioUQ.getListaUsuarios().add(usuario3);

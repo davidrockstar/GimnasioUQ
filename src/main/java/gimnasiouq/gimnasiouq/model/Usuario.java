@@ -17,7 +17,6 @@ public class Usuario {
     private Membresia membresiaObj;
     private final List<ReservaClase> reservas = new ArrayList<>();
 
-    // ⭐ CORREGIDO: Constructor original sin fecha/hora (no pertenecen a Usuario)
     public Usuario(String nombre, String identificacion, String edad, String celular, String membresia) {
         this.nombre = nombre;
         this.identificacion = identificacion;
@@ -31,7 +30,6 @@ public class Usuario {
 
     }
 
-    // Getters y Setters básicos
     public String getNombre() {
         return nombre;
     }
@@ -71,8 +69,6 @@ public class Usuario {
     public List<ReservaClase> getReservas() {
         return reservas;
     }
-
-    // ========== MÉTODOS DE GESTIÓN DE MEMBRESÍAS ==========
 
     public String getTipoMembresia() {
         return tipoMembresia;

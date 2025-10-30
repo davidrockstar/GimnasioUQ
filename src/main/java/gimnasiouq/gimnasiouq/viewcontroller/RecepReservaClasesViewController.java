@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import gimnasiouq.gimnasiouq.mapping.dto.ReservaClaseDto;
 import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 
 public class RecepReservaClasesViewController {
@@ -40,7 +39,6 @@ public class RecepReservaClasesViewController {
 
     private Usuario usuarioSeleccionado;
 
-    // Controller para reservas
     private ReservaClaseController reservaController;
 
     @FXML
@@ -132,16 +130,17 @@ public class RecepReservaClasesViewController {
             return;
         }
 
-        ReservaClaseDto dto = new ReservaClaseDto(clase, horario, entrenador, fecha, usuarioSeleccionado.getIdentificacion());
+        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fecha.toString());
+        reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
 
         if (reservaController == null) reservaController = new ReservaClaseController();
 
-        if (!reservaController.validarReserva(dto)) {
+        if (!reservaController.validarReserva(reserva)) {
             mostrarAlerta("Error", "Datos de reserva inválidos", Alert.AlertType.ERROR);
             return;
         }
 
-        if (!reservaController.agregarReserva(dto)) {
+        if (!reservaController.agregarReserva(reserva)) {
             mostrarAlerta("Error", "No se pudo crear la reserva. Verifique membresía y rango de fechas", Alert.AlertType.ERROR);
             return;
         }
@@ -163,10 +162,9 @@ public class RecepReservaClasesViewController {
             return;
         }
 
-        ReservaClaseDto dto = new ReservaClaseDto(null, null, null, null, usuarioSeleccionado.getIdentificacion());
         if (reservaController == null) reservaController = new ReservaClaseController();
 
-        if (!reservaController.eliminarReserva(dto)) {
+        if (!reservaController.eliminarReserva(usuarioSeleccionado.getIdentificacion())) {
             mostrarAlerta("Error", "No se pudo eliminar la reserva", Alert.AlertType.ERROR);
             return;
         }
@@ -220,8 +218,4 @@ public class RecepReservaClasesViewController {
         alert.showAndWait();
     }
 
-    // Setter para inyección (testabilidad/DI)
-    public void setReservaController(ReservaClaseController controller) {
-        this.reservaController = controller;
-    }
 }

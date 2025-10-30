@@ -9,7 +9,6 @@ public class ReservaClase {
     private String entrenador;
     private String fecha;
 
-    // Asociar la reserva al usuario que la realizó
     private String identificacionUsuario;
 
     public ReservaClase(String clase, String horario, String entrenador, String fecha) {
@@ -51,7 +50,6 @@ public class ReservaClase {
         this.fecha = fecha;
     }
 
-    // Identificación del usuario dueño de la reserva
     public String getIdentificacion() {
         return identificacionUsuario;
     }

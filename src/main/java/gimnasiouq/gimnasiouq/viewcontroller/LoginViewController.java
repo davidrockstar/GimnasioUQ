@@ -17,8 +17,6 @@ public class LoginViewController {
 
         String user = comboBoxUser.getValue();
         String pass = txtPasswordLogin.getText();
-        
-        // Delegar a un método que SÍ se puede testear
         String resultado = procesarLogin(user, pass);
         
         if ("ADMINISTRADOR".equals(resultado)) {
@@ -30,7 +28,6 @@ public class LoginViewController {
         }
     }
 
-    // ⭐ NUEVO: Método testeable que contiene la lógica
     protected String procesarLogin(String user, String pass) {
         // Validación de campos vacíos
         if (user == null || user.trim().isEmpty()) {
@@ -40,8 +37,6 @@ public class LoginViewController {
         if (pass == null || pass.trim().isEmpty()) {
             return "ERROR_PASSWORD_VACIO";
         }
-        
-        // Validación de credenciales
         if (AdminViewController.validarCredenciales(user, pass)) {
             return "ADMINISTRADOR";
         } else if (RecepViewController.validarCredenciales(user, pass)) {

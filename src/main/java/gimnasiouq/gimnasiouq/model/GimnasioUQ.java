@@ -65,7 +65,6 @@ public class GimnasioUQ {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
 
-    // CRUD de Usuario
     public boolean agregarUsuario(Usuario usuario) {
         if (usuario != null && !existeUsuario(usuario.getIdentificacion())) {
             return listaUsuarios.add(usuario);
@@ -74,16 +73,13 @@ public class GimnasioUQ {
     }
 
     public boolean actualizarUsuario(String identificacion, Usuario usuarioActualizado) {
-        // Verificar que la identificación no sea null
         if (identificacion == null || identificacion.isEmpty()) {
             return false;
         }
 
-        // Buscar el usuario por identificación
         Usuario usuarioExistente = buscarUsuarioPorIdentificacion(identificacion);
 
         if (usuarioExistente != null) {
-            // Verificar que los datos del usuario actualizado no sean null
             if (usuarioActualizado.getNombre() == null ||
                     usuarioActualizado.getIdentificacion() == null ||
                     usuarioActualizado.getEdad() == null ||
@@ -91,13 +87,11 @@ public class GimnasioUQ {
                 return false;
             }
 
-            // Actualizar los datos básicos
             usuarioExistente.setNombre(usuarioActualizado.getNombre());
             usuarioExistente.setEdad(usuarioActualizado.getEdad());
             usuarioExistente.setCelular(usuarioActualizado.getCelular());
             usuarioExistente.setTipoMembresia(usuarioActualizado.getTipoMembresia());
-            
-            // ⭐ Actualizar la membresía completa si existe
+
             if (usuarioActualizado.getMembresiaObj() != null) {
                 usuarioExistente.setMembresiaObj(usuarioActualizado.getMembresiaObj());
             }
@@ -194,7 +188,6 @@ public class GimnasioUQ {
         return false;
     }
 
-    // ===== Nuevos métodos para CRUD de Reservas (delegados desde ModelFactory) =====
     public boolean agregarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
         if (identificacionUsuario == null || identificacionUsuario.isEmpty() || reserva == null) return false;
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
@@ -236,7 +229,6 @@ public class GimnasioUQ {
         return reservas;
     }
 
-    // ===== Nuevos métodos para CRUD de Membresías (delegados desde ModelFactory) =====
     public boolean asignarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
         if (identificacionUsuario == null || identificacionUsuario.isEmpty() || membresia == null) return false;
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
@@ -246,7 +238,6 @@ public class GimnasioUQ {
     }
 
     public boolean actualizarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
-        // En este dominio actualizar es equivalente a asignar (reemplazar)
         return asignarMembresiaUsuario(identificacionUsuario, membresia);
     }
 
@@ -262,5 +253,30 @@ public class GimnasioUQ {
     public Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         return usuario != null ? usuario.getMembresiaActiva() : null;
+    }
+
+    public Membresia calcularMembresiaPorPlan(String tipoPlan) {
+        if (tipoPlan == null || tipoPlan.isEmpty()) return null;
+
+        java.time.LocalDate fechaInicio = java.time.LocalDate.now();
+        java.time.LocalDate fechaFin;
+        double costo;
+
+        switch (tipoPlan) {
+            case "Mensual":
+                fechaFin = fechaInicio.plusMonths(1);
+                costo = 50000;
+                return new MembresiaBasica(costo, fechaInicio, fechaFin);
+            case "Trimestral":
+                fechaFin = fechaInicio.plusMonths(3);
+                costo = 135000;
+                return new MembresiaPremium(costo, fechaInicio, fechaFin);
+            case "Anual":
+                fechaFin = fechaInicio.plusYears(1);
+                costo = 540000;
+                return new MembresiaVIP(costo, fechaInicio, fechaFin);
+            default:
+                return null;
+        }
     }
 }

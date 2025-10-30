@@ -15,9 +15,8 @@ public class MembresiaBasica extends Membresia {
         this.accesoGeneral = accesoGeneral;
     }
 
-    // ⭐ CONSTRUCTOR CORREGIDO - Llama al constructor padre correctamente
     public MembresiaBasica(double costo, LocalDate inicio, LocalDate fin) {
-        super("Basica", costo, inicio, fin, true); // ← Agregado super()
+        super("Basica", costo, inicio, fin, true);
         this.accesoGeneral = true;
     }
 
@@ -29,7 +28,6 @@ public class MembresiaBasica extends Membresia {
         this.accesoGeneral = accesoGeneral;
     }
 
-    // ⭐ NUEVO: Método para obtener beneficios como texto
     public String obtenerBeneficios() {
         return "• Acceso general al gimnasio";
     }

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class MembresiaVIP extends Membresia {
 
     public MembresiaVIP(double costo, LocalDate inicio, LocalDate fin) {
-        super("VIP", costo, inicio, fin, true); // ⭐ Llama al constructor padre
+        super("VIP", costo, inicio, fin, true);
     }
 
     public boolean accesoGeneral() { 
@@ -20,7 +20,6 @@ public class MembresiaVIP extends Membresia {
         return true; 
     }
 
-    // ⭐ NUEVO: Método para obtener beneficios como texto
     public String obtenerBeneficios() {
         return "• Acceso general al gimnasio\n• Clases grupales ilimitadas\n• Entrenador personal";
     }

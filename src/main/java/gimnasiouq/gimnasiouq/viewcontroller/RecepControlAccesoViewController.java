@@ -37,15 +37,12 @@ public class RecepControlAccesoViewController {
 
     @FXML
     void initialize() {
-        // Deshabilitar botón de validar ingreso al inicio
         btnValidarIngreso.setDisable(true);
 
-        // Configurar tabla
         initDataBinding();
         listaRegistros = controlAccesoController.obtenerRegistrosObservable();
         tableUsuario.setItems(listaRegistros);
 
-        // Limpiar labels
         limpiarInformacionUsuario();
     }
 
@@ -72,7 +69,6 @@ public class RecepControlAccesoViewController {
         tcEstado.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getEstado()));
 
-        // Estilo para columna Estado
         tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -107,7 +103,6 @@ public class RecepControlAccesoViewController {
             usuarioActual = usuario;
             actualizarInformacionUsuario(usuario);
 
-            // Habilitar botón solo si membresía está activa
             btnValidarIngreso.setDisable(!usuario.tieneMembresiaActiva());
         } else {
             limpiarInformacionUsuario();
@@ -124,7 +119,6 @@ public class RecepControlAccesoViewController {
             return;
         }
 
-        // Delegar validación y registro al controller
         if (!controlAccesoController.validarIngreso(usuarioActual.getIdentificacion())) {
             mostrarAlerta("Membresía Inactiva",
                     "El usuario no puede ingresar. Membresía NO ACTIVA.",
@@ -167,7 +161,6 @@ public class RecepControlAccesoViewController {
         String estado = usuario.getEstadoMembresia();
         lblMembresiaActivaNoActiva.setText(estado);
 
-        // Aplicar color según estado
         if ("ACTIVA".equals(estado)) {
             lblMembresiaActivaNoActiva.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
         } else {
@@ -188,7 +181,6 @@ public class RecepControlAccesoViewController {
         limpiarInformacionUsuario();
         usuarioActual = null;
         btnValidarIngreso.setDisable(true);
-        // Actualizar view bound a la colección observable (ModelFactory ya actualiza la observable)
     }
 
     private void mostrarAlerta(String title, String message, Alert.AlertType alertType) {

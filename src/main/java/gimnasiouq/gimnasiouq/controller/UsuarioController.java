@@ -1,21 +1,18 @@
 package gimnasiouq.gimnasiouq.controller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.mapping.dto.UsuarioDto;
-import gimnasiouq.gimnasiouq.mapping.mappers.GimnasioUqMappingImpl;
+import gimnasiouq.gimnasiouq.model.Usuario;
 
 public class UsuarioController {
 
-    private final GimnasioUqMappingImpl mapper = new GimnasioUqMappingImpl();
-
-    public boolean agregarUsuario(UsuarioDto usuarioDto) {
-        if (usuarioDto == null) return false;
-        return ModelFactory.getInstance().agregarUsuario(mapper.usuarioDtoToUsuario(usuarioDto));
+    public boolean agregarUsuario(Usuario usuario) {
+        if (usuario == null) return false;
+        return ModelFactory.getInstance().agregarUsuario(usuario);
     }
 
-    public boolean actualizarUsuario(String identificacionOriginal, UsuarioDto usuarioDto) {
-        if (identificacionOriginal == null || identificacionOriginal.isEmpty() || usuarioDto == null) return false;
-        return ModelFactory.getInstance().actualizarUsuario(identificacionOriginal, mapper.usuarioDtoToUsuario(usuarioDto));
+    public boolean actualizarUsuario(String identificacionOriginal, Usuario usuario) {
+        if (identificacionOriginal == null || identificacionOriginal.isEmpty() || usuario == null) return false;
+        return ModelFactory.getInstance().actualizarUsuario(identificacionOriginal, usuario);
     }
 
     public boolean eliminarUsuario(String identificacion) {

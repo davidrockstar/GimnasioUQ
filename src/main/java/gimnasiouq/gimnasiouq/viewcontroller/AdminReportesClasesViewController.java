@@ -1,4 +1,4 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
-public class RecepReportesUsuarios {
+public class AdminReportesClasesViewController {
 }

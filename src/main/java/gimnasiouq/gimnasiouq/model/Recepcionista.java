@@ -1,8 +1,5 @@
 package gimnasiouq.gimnasiouq.model;
 
-import java.time.LocalDate;
-import java.util.Objects;
-
 public class Recepcionista {
 
     private final String username;

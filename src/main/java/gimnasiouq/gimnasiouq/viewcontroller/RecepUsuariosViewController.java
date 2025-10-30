@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.mapping.dto.UsuarioDto;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import gimnasiouq.gimnasiouq.controller.UsuarioController;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,11 +15,8 @@ import javafx.scene.control.*;
 
 public class RecepUsuariosViewController {
 
-    AdminViewController adminViewController;
-    ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
+    ObservableList<Usuario> listaUsuarios;
     Usuario usuarioSeleccionado;
-
-    // Controller que delega la lógica de negocio
     private UsuarioController usuarioController;
 
     @FXML
@@ -102,15 +98,13 @@ public class RecepUsuariosViewController {
 
     private void initView() {
         initDataBinding();
-        obtenerUsuarios();
-        tableUsuario.getItems().clear();
+        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
         tableUsuario.setItems(listaUsuarios);
         listenerSelection();
     }
 
     private void obtenerUsuarios() {
-        listaUsuarios.clear();
-        listaUsuarios.addAll(ModelFactory.getInstance().obtenerUsuarios());
+        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
     }
 
     private void initDataBinding() {
@@ -135,29 +129,15 @@ public class RecepUsuariosViewController {
     }
 
     private void agregarUsuario() {
-        UsuarioDto usuarioDto = crearUsuarioDto();
+        Usuario usuario = crearUsuario();
 
-        if (datosValidos(usuarioDto)) {
+        if (datosValidos(usuario)) {
             if (usuarioController == null) {
                 usuarioController = new UsuarioController();
             }
 
-            if (usuarioController.agregarUsuario(usuarioDto)) {
-                // Agregamos el nuevo usuario a la lista observable
-                listaUsuarios.add(new Usuario(
-                        usuarioDto.nombre(),
-                        usuarioDto.identificacion(),
-                        usuarioDto.edad(),
-                        usuarioDto.celular(),
-                        usuarioDto.membresia()
-                ));
-
+            if (usuarioController.agregarUsuario(usuario)) {
                 limpiarCampos();
-
-                // Notificar al controlador padre para que actualice otras vistas
-                if (adminViewController != null) {
-                    adminViewController.notificarActualizacion();
-                }
 
                 mostrarVentanaEmergente("Usuario agregado", "Éxito",
                         "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
@@ -173,28 +153,14 @@ public class RecepUsuariosViewController {
 
     private void actualizarUsuario() {
         if (usuarioSeleccionado != null) {
-            UsuarioDto usuarioActualizado = crearUsuarioDto();
+            Usuario usuarioActualizado = crearUsuario();
 
             if (datosValidos(usuarioActualizado)) {
-                // Usamos la identificación del usuario seleccionado como clave
                 if (usuarioController == null) {
                     usuarioController = new UsuarioController();
                 }
 
                 if (usuarioController.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), usuarioActualizado)) {
-
-                    // Actualizamos la lista observable: reemplazamos el objeto Usuario en la lista
-                    int index = listaUsuarios.indexOf(usuarioSeleccionado);
-                    if (index >= 0) {
-                        listaUsuarios.set(index, new Usuario(
-                                usuarioActualizado.nombre(),
-                                usuarioActualizado.identificacion(),
-                                usuarioActualizado.edad(),
-                                usuarioActualizado.celular(),
-                                usuarioActualizado.membresia()
-                        ));
-                    }
-
                     tableUsuario.refresh();
                     limpiarCampos();
                     mostrarVentanaEmergente("Usuario actualizado", "Éxito",
@@ -216,7 +182,6 @@ public class RecepUsuariosViewController {
 
     private void eliminarUsuario() {
         if (usuarioSeleccionado != null) {
-            // Confirmación antes de eliminar
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar eliminación");
             confirmacion.setHeaderText("¿Está seguro?");
@@ -231,7 +196,6 @@ public class RecepUsuariosViewController {
                     }
 
                     if (usuarioController.eliminarUsuario(usuarioSeleccionado.getIdentificacion())) {
-                        listaUsuarios.remove(usuarioSeleccionado);
                         limpiarCampos();
                         usuarioSeleccionado = null;
                         mostrarVentanaEmergente("Usuario eliminado", "Éxito",
@@ -256,20 +220,17 @@ public class RecepUsuariosViewController {
         comboBoxMembresia.setValue(null);
     }
 
-    // Nuevo: validación para UsuarioDto
-    private boolean datosValidos(UsuarioDto usuario) {
+    private boolean datosValidos(Usuario usuario) {
         return usuario != null &&
-                usuario.nombre() != null && !usuario.nombre().isEmpty() &&
-                usuario.identificacion() != null && !usuario.identificacion().isEmpty() &&
-                usuario.edad() != null && !usuario.edad().isEmpty() &&
-                usuario.celular() != null && !usuario.celular().isEmpty() &&
-                usuario.membresia() != null && !usuario.membresia().isEmpty();
+                usuario.getNombre() != null && !usuario.getNombre().isEmpty() &&
+                usuario.getIdentificacion() != null && !usuario.getIdentificacion().isEmpty() &&
+                usuario.getEdad() != null && !usuario.getEdad().isEmpty() &&
+                usuario.getCelular() != null && !usuario.getCelular().isEmpty() &&
+                usuario.getMembresia() != null && !usuario.getMembresia().isEmpty();
     }
 
-
-    // Nuevo: crea UsuarioDto desde la vista
-    private UsuarioDto crearUsuarioDto() {
-        return new UsuarioDto(
+    private Usuario crearUsuario() {
+        return new Usuario(
                 txtNombre.getText(),
                 txtIdentificacion.getText(),
                 txtEdad.getText(),
@@ -294,10 +255,5 @@ public class RecepUsuariosViewController {
         alert.setHeaderText(header);
         alert.setContentText(contenido);
         alert.showAndWait();
-    }
-
-    public void refrescarTabla() {
-        obtenerUsuarios();
-        tableUsuario.refresh();
     }
 }
