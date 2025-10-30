@@ -1,10 +1,9 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
-import gimnasiouq.gimnasiouq.factory.ModelFactory;
+import gimnasiouq.gimnasiouq.controller.ControlAccesoController;
 import gimnasiouq.gimnasiouq.model.ControlAcceso;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,7 +31,8 @@ public class RecepControlAccesoViewController {
     @FXML private TableColumn<ControlAcceso, String> tcEstado;
     @FXML private TextField txtfieldIdentificacion;
 
-    private ObservableList<ControlAcceso> listaRegistros = FXCollections.observableArrayList();
+    private ControlAccesoController controlAccesoController = new ControlAccesoController();
+    private ObservableList<ControlAcceso> listaRegistros;
     private Usuario usuarioActual;
 
     @FXML
@@ -42,6 +42,7 @@ public class RecepControlAccesoViewController {
 
         // Configurar tabla
         initDataBinding();
+        listaRegistros = controlAccesoController.obtenerRegistrosObservable();
         tableUsuario.setItems(listaRegistros);
 
         // Limpiar labels
@@ -100,7 +101,7 @@ public class RecepControlAccesoViewController {
             return;
         }
 
-        Usuario usuario = ModelFactory.getInstance().buscarUsuario(identificacion.trim());
+        Usuario usuario = controlAccesoController.buscarUsuario(identificacion.trim());
 
         if (usuario != null) {
             usuarioActual = usuario;
@@ -123,35 +124,23 @@ public class RecepControlAccesoViewController {
             return;
         }
 
-        if (!usuarioActual.tieneMembresiaActiva()) {
+        // Delegar validación y registro al controller
+        if (!controlAccesoController.validarIngreso(usuarioActual.getIdentificacion())) {
             mostrarAlerta("Membresía Inactiva",
                     "El usuario no puede ingresar. Membresía NO ACTIVA.",
                     Alert.AlertType.ERROR);
             return;
         }
 
-        // Crear registro de acceso
-        ControlAcceso registro = new ControlAcceso(
-                LocalDate.now(),
-                LocalTime.now(),
-                usuarioActual.getNombre(),
-                usuarioActual.getIdentificacion(),
-                usuarioActual.getTipoMembresia(),
-                usuarioActual.getEstadoMembresia()
-        );
-
-        // Agregar a la tabla
-        listaRegistros.add(0, registro); // Agregar al inicio
-
-        // Guardar en el modelo
-        ModelFactory.getInstance().agregarRegistroAcceso(registro);
-
-        mostrarAlerta("Ingreso Validado",
-                "Acceso registrado exitosamente para " + usuarioActual.getNombre(),
-                Alert.AlertType.INFORMATION);
-
-        // Limpiar formulario
-        limpiarFormulario();
+        boolean ok = controlAccesoController.registrarIngreso(usuarioActual.getIdentificacion());
+        if (ok) {
+            mostrarAlerta("Ingreso Validado",
+                    "Acceso registrado exitosamente para " + usuarioActual.getNombre(),
+                    Alert.AlertType.INFORMATION);
+            limpiarFormulario();
+        } else {
+            mostrarAlerta("Error", "No se pudo registrar el ingreso", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
@@ -159,8 +148,12 @@ public class RecepControlAccesoViewController {
         ControlAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
 
         if (registroSeleccionado != null) {
-            listaRegistros.remove(registroSeleccionado);
-            mostrarAlerta("Registro eliminado", "El registro ha sido eliminado", Alert.AlertType.INFORMATION);
+            boolean ok = controlAccesoController.eliminarRegistro(registroSeleccionado);
+            if (ok) {
+                mostrarAlerta("Registro eliminado", "El registro ha sido eliminado", Alert.AlertType.INFORMATION);
+            } else {
+                mostrarAlerta("Error", "No se pudo eliminar el registro", Alert.AlertType.ERROR);
+            }
         } else {
             mostrarAlerta("Error", "Seleccione un registro para eliminar", Alert.AlertType.WARNING);
         }
@@ -195,6 +188,7 @@ public class RecepControlAccesoViewController {
         limpiarInformacionUsuario();
         usuarioActual = null;
         btnValidarIngreso.setDisable(true);
+        // Actualizar view bound a la colección observable (ModelFactory ya actualiza la observable)
     }
 
     private void mostrarAlerta(String title, String message, Alert.AlertType alertType) {
