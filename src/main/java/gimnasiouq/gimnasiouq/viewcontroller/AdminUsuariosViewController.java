@@ -19,7 +19,6 @@ public class AdminUsuariosViewController {
     ObservableList<Usuario> listaUsuarios;
     Usuario usuarioSeleccionado;
 
-    // Controller que delega la lógica de negocio
     private UsuarioController usuarioController;
 
     @FXML
@@ -95,6 +94,7 @@ public class AdminUsuariosViewController {
 
     @FXML
     void initialize() {
+        usuarioController = new UsuarioController();
         initView();
         comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");
     }
@@ -258,10 +258,5 @@ public class AdminUsuariosViewController {
         alert.setHeaderText(header);
         alert.setContentText(contenido);
         alert.showAndWait();
-    }
-
-    public void refrescarTabla() {
-        obtenerUsuarios();
-        tableUsuario.refresh();
     }
 }
