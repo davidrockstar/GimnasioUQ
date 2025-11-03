@@ -281,12 +281,16 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasTotales() {
+        // Ahora contamos como "membresía existente" cuando el usuario tiene un tipo de membresía
+        // (p. ej. "Básica", "Premium", "VIP") aunque no tenga un objeto Membresia asignado.
         return (int) listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() != null)
+                .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank())
+                        || u.getMembresiaActiva() != null)
                 .count();
     }
 
     public int contarMembresiasConValor() {
+        // Membresías que efectivamente tienen un objeto Membresia asignado y un costo > 0
         return (int) listaUsuarios.stream()
                 .filter(u -> u.getMembresiaActiva() != null)
                 .filter(u -> u.getCostoMembresia() > 0)
@@ -294,13 +298,16 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasSinValor() {
+        // Usuarios que declararon un tipo de membresía (p. ej. seleccionaron Básica/Premium/VIP)
+        // pero no se les ha asignado un objeto Membresia aún (membresiaActiva == null)
         return (int) listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() != null)
-                .filter(u -> u.getCostoMembresia() == 0)
+                .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank()))
+                .filter(u -> u.getMembresiaActiva() == null)
                 .count();
     }
 
     public double calcularIngresosTotalesMembresias() {
+        // Sumar el costo de todas las membresías que tienen un objeto Membresia asignado
         return listaUsuarios.stream()
                 .filter(u -> u.getMembresiaActiva() != null)
                 .mapToDouble(Usuario::getCostoMembresia)
