@@ -20,10 +20,10 @@
          <children>
             <GridPane alignment="CENTER" vgap="10.0">
                <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="CENTER" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -73,7 +73,7 @@
                </children>
             </GridPane>
                     <Separator prefHeight="18.0" prefWidth="682.0" />
-                    <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="730.0" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="tcNombre" prefWidth="90.0" text="Nombre" />
                             <TableColumn fx:id="tcIdentificacion" prefWidth="104.00003814697266" text="Identificación" />
@@ -83,6 +83,9 @@
                             <TableColumn fx:id="tcCosto" prefWidth="120.79998779296875" text="Costo (COP)" />
                   <TableColumn fx:id="tcEstado" prefWidth="123.2000732421875" text="Estado" />
                         </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
                     </TableView>
          </children>
       </VBox>

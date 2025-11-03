@@ -74,6 +74,9 @@
                   <TableColumn fx:id="tcClase" prefWidth="139.20001220703125" text="Clase" />
                   <TableColumn fx:id="tcCelular" prefWidth="145.5999755859375" text="Celular" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </children>
       </VBox>

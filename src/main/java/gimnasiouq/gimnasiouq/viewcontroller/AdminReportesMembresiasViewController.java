@@ -64,22 +64,9 @@ public class AdminReportesMembresiasViewController implements Initializable{
     private void initView() {
         initDataBinding();
         listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
-        // Listener para actualizar indicadores en tiempo real cuando la lista observable cambie
         listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
-            cargarIndicadores();
-        });
+            cargarIndicadores();});
         tableView.setItems(listaUsuarios);
-
-        // Bind de labels a las properties del modelo para actualización automática
-        ModelFactory mf = ModelFactory.getInstance();
-        if (lblMembresiasTotales != null)
-            lblMembresiasTotales.textProperty().bind(mf.membresiasTotalesProperty().asString());
-        if (lblMembresiasConValor != null)
-            lblMembresiasConValor.textProperty().bind(mf.membresiasConValorProperty().asString());
-        if (lblMembresiasSinValor != null)
-            lblMembresiasSinValor.textProperty().bind(mf.membresiasSinValorProperty().asString());
-        if (lblIngresosTotales != null)
-            lblIngresosTotales.textProperty().bind(mf.ingresosTotalesProperty().asString("$%.0f"));
     }
 
     private void initDataBinding() {
@@ -98,17 +85,20 @@ public class AdminReportesMembresiasViewController implements Initializable{
     }
 
     private void cargarIndicadores() {
-        // Dejar la carga manual para compatibilidad; el binding ya actualiza Labels automáticamente.
         int totales = reportesController.obtenerMembresiasTotales();
         int conValor = reportesController.obtenerMembresiasConValor();
         int sinValor = reportesController.obtenerMembresiasSinValor();
         double ingresos = reportesController.obtenerIngresosTotales();
 
-        // Debug: imprimir valores obtenidos para comprobar en tiempo de ejecución
-        System.out.println("[AdminReportesMembresias] indicadores -> totales: " + totales + ", conValor: " + conValor + ", sinValor: " + sinValor + ", ingresos: " + ingresos);
-
-        // Las Labels están bindadas a las properties del ModelFactory y se actualizan automáticamente.
-        // No llamar lbl.setText(...) aquí para evitar excepciones si la propiedad está bindada.
+        ModelFactory mf = ModelFactory.getInstance();
+        if (lblMembresiasTotales != null)
+            lblMembresiasTotales.textProperty().bind(mf.membresiasTotalesProperty().asString());
+        if (lblMembresiasConValor != null)
+            lblMembresiasConValor.textProperty().bind(mf.membresiasConValorProperty().asString());
+        if (lblMembresiasSinValor != null)
+            lblMembresiasSinValor.textProperty().bind(mf.membresiasSinValorProperty().asString());
+        if (lblIngresosTotales != null)
+            lblIngresosTotales.textProperty().bind(mf.ingresosTotalesProperty().asString("$%.0f"));
     }
 
     @FXML

@@ -52,6 +52,9 @@
                   <TableColumn fx:id="tcTipoMembresia" prefWidth="137.5999755859375" text="Tipo Membresia" />
                   <TableColumn fx:id="tcEstado" maxWidth="1.7976931348623157E308" prefWidth="144.80010986328125" text="Estado" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </children></VBox>
    </children>

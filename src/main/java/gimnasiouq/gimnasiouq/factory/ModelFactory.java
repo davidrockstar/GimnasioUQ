@@ -48,10 +48,6 @@ public class ModelFactory {
         actualizarIndicadores();
     }
 
-    public void refrescarIndicadores() {
-        actualizarIndicadores();
-    }
-
     private void actualizarIndicadores() {
         membresiasTotales.set(gimnasioUQ.contarMembresiasTotales());
         membresiasConValor.set(gimnasioUQ.contarMembresiasConValor());
@@ -189,12 +185,8 @@ public class ModelFactory {
         return ok;
     }
 
-    public gimnasiouq.gimnasiouq.model.Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
-        return gimnasioUQ.obtenerMembresiaUsuario(identificacionUsuario);
-    }
-
-    public gimnasiouq.gimnasiouq.model.Membresia calcularMembresiaPorPlan(String tipoPlan) {
-        return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan);
+    public gimnasiouq.gimnasiouq.model.Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoUsuario) {
+        return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan, tipoUsuario);
     }
 
     public int contarMembresiasTotales() {

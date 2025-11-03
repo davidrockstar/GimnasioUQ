@@ -14,7 +14,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdminReportesMembresiasViewController">
     <children>
-        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <GridPane VBox.vgrow="ALWAYS">
                     <columnConstraints>
@@ -44,16 +44,20 @@
                     </VBox.margin>
                 </GridPane>
                 <Separator prefWidth="200.0" />
-                <TableView fx:id="tableView" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableView" maxWidth="1.7976931348623157E308" prefHeight="126.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="tcTipoMembresias" prefWidth="153.5999755859375" text="Tipo Mem." />
-                        <TableColumn fx:id="tcPlanMembresias" prefWidth="162.4000244140625" text="Plan Mem." />
-                        <TableColumn fx:id="tcFechaInicio" prefWidth="132.79998779296875" text="Fecha Inicio" />
-                        <TableColumn fx:id="tcFechaVencimiento" maxWidth="1.7976931348623157E308" prefWidth="151.20001220703125" text="Fecha Vencimiento" />
+                        <TableColumn fx:id="tcTipoMembresias" prefWidth="88.00006103515625" text="Tipo Mem." />
+                        <TableColumn fx:id="tcPlanMembresias" prefWidth="124.0" text="Plan Mem." />
+                        <TableColumn fx:id="tcFechaInicio" prefWidth="120.800048828125" text="Fecha Inicio" />
+                        <TableColumn fx:id="tcFechaVencimiento" maxWidth="1.7976931348623157E308" prefWidth="125.60003662109375" text="Fecha Vencimiento" />
+                        <TableColumn fx:id="tcCosto" prefWidth="138.4000244140625" text="Costo" />
                     </columns>
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
                 </TableView>
             </children></VBox>
     </children>

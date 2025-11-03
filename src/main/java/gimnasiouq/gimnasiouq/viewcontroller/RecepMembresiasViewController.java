@@ -1,4 +1,3 @@
-
 package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.controller.MembresiaController;
@@ -251,7 +250,8 @@ public class RecepMembresiasViewController {
         String plan = comboBoxPlanMembresia.getValue();
         if (plan == null || plan.isEmpty()) return;
 
-        Membresia membresiaCalculada = ModelFactory.getInstance().calcularMembresiaPorPlan(plan);
+        String tipoUsuario = usuarioSeleccionado != null ? usuarioSeleccionado.getTipoMembresia() : null;
+        Membresia membresiaCalculada = ModelFactory.getInstance().calcularMembresiaPorPlan(plan, tipoUsuario);
 
         if (membresiaCalculada != null) {
             txtFechaInicio.setText(membresiaCalculada.getInicio().format(formatoFecha));
@@ -261,10 +261,12 @@ public class RecepMembresiasViewController {
     }
 
     private Membresia crearMembresia() {
-        String tipo = comboBoxPlanMembresia.getValue();
+        String plan = comboBoxPlanMembresia.getValue();
+        String tipoUsuario = usuarioSeleccionado != null ? usuarioSeleccionado.getTipoMembresia() : null;
+
         LocalDate inicio = null;
         LocalDate fin = null;
-        double costo = 0;
+        Double costo = null;
         try {
             if (txtFechaInicio.getText() != null && !txtFechaInicio.getText().isEmpty()) {
                 inicio = LocalDate.parse(txtFechaInicio.getText(), formatoFecha);
@@ -278,16 +280,20 @@ public class RecepMembresiasViewController {
         } catch (Exception ignored) {
         }
 
-        if (tipo != null) {
-            tipo = tipo.trim().toLowerCase();
-            return switch (tipo) {
-                case "mensual" -> new MembresiaBasica(costo, inicio, fin);
-                case "trimestral" -> new MembresiaPremium(costo, inicio, fin);
-                case "anual" -> new MembresiaVIP(costo, inicio, fin);
-                default -> new MembresiaBasica(costo, inicio, fin);
-            };
+        // Si el usuario no proporcionó manualmente fecha/costo, delegar a ModelFactory para crear según plan y tipo
+        if ((inicio == null || fin == null || costo == null) && plan != null) {
+            // Esto calculará inicio/fin/costo según el plan y el tipo del usuario
+            return ModelFactory.getInstance().calcularMembresiaPorPlan(plan, tipoUsuario);
         }
-        return new MembresiaBasica(costo, inicio, fin);
+
+        // Si llegaron valores manuales, crear la subclase correspondiente según el tipo del usuario
+        String tipo = (tipoUsuario == null || tipoUsuario.isBlank()) ? "basica" : tipoUsuario.trim().toLowerCase();
+        double costoFinal = (costo != null) ? costo : 0.0;
+        return switch (tipo) {
+            case "premium" -> new MembresiaPremium(costoFinal, inicio, fin);
+            case "vip" -> new MembresiaVIP(costoFinal, inicio, fin);
+            default -> new MembresiaBasica(costoFinal, inicio, fin);
+        };
     }
 
     private void mostrarInformacionUsuario(Usuario usuario) {

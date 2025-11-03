@@ -51,6 +51,9 @@ public class RecepReportesMembresiasViewController implements Initializable{
     @FXML
     private TableColumn<Usuario, String> tcTipoMembresias;
 
+    @FXML
+    private TableColumn<Usuario, String> tcCosto;
+
     private final ReportesMembresiasController reportesController = new ReportesMembresiasController();
 
     @Override
@@ -62,12 +65,9 @@ public class RecepReportesMembresiasViewController implements Initializable{
     private void initView() {
         initDataBinding();
         listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
-        // Listener para actualizar indicadores en tiempo real cuando la lista observable cambie
         listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
             cargarIndicadores();});
         tableView.setItems(listaUsuarios);
-
-        // Bind de labels a las properties del modelo para actualización automática
 
     }
 
@@ -83,6 +83,9 @@ public class RecepReportesMembresiasViewController implements Initializable{
         }
         if (tcTipoMembresias != null) {
             tcTipoMembresias.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        }
+        if (tcCosto != null) {
+            tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCostoMembresiaFormateado()));
         }
     }
 
@@ -101,12 +104,6 @@ public class RecepReportesMembresiasViewController implements Initializable{
             lblMembresiasSinValor.textProperty().bind(mf.membresiasSinValorProperty().asString());
         if (lblIngresosTotales != null)
             lblIngresosTotales.textProperty().bind(mf.ingresosTotalesProperty().asString("$%.0f"));
-
-        // Debug: imprimir valores obtenidos para comprobar en tiempo de ejecución
-        System.out.println("[RecepReportesMembresias] indicadores -> totales: " + totales + ", conValor: " + conValor + ", sinValor: " + sinValor + ", ingresos: " + ingresos);
-
-        // Las Labels están bindadas a las properties del ModelFactory y se actualizan automáticamente.
-        // No llamar lbl.setText(...) aquí para evitar excepciones si la propiedad está bindada.
     }
 
     @FXML

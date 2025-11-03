@@ -250,7 +250,8 @@ public class AdminMembresiasViewController {
         String plan = comboBoxPlanMembresia.getValue();
         if (plan == null || plan.isEmpty()) return;
 
-        Membresia membresiaCalculada = ModelFactory.getInstance().calcularMembresiaPorPlan(plan);
+        String tipoUsuario = usuarioSeleccionado != null ? usuarioSeleccionado.getTipoMembresia() : null;
+        Membresia membresiaCalculada = ModelFactory.getInstance().calcularMembresiaPorPlan(plan, tipoUsuario);
 
         if (membresiaCalculada != null) {
             txtFechaInicio.setText(membresiaCalculada.getInicio().format(formatoFecha));
@@ -260,10 +261,12 @@ public class AdminMembresiasViewController {
     }
 
     private Membresia crearMembresia() {
-        String tipo = comboBoxPlanMembresia.getValue();
+        String plan = comboBoxPlanMembresia.getValue();
+        String tipoUsuario = usuarioSeleccionado != null ? usuarioSeleccionado.getTipoMembresia() : null;
+
         LocalDate inicio = null;
         LocalDate fin = null;
-        double costo = 0;
+        Double costo = null;
         try {
             if (txtFechaInicio.getText() != null && !txtFechaInicio.getText().isEmpty()) {
                 inicio = LocalDate.parse(txtFechaInicio.getText(), formatoFecha);
@@ -277,16 +280,17 @@ public class AdminMembresiasViewController {
         } catch (Exception ignored) {
         }
 
-        if (tipo != null) {
-            tipo = tipo.trim().toLowerCase();
-            return switch (tipo) {
-                case "mensual" -> new MembresiaBasica(costo, inicio, fin);
-                case "trimestral" -> new MembresiaPremium(costo, inicio, fin);
-                case "anual" -> new MembresiaVIP(costo, inicio, fin);
-                default -> new MembresiaBasica(costo, inicio, fin);
-            };
+        if ((inicio == null || fin == null || costo == null) && plan != null) {
+            return ModelFactory.getInstance().calcularMembresiaPorPlan(plan, tipoUsuario);
         }
-        return new MembresiaBasica(costo, inicio, fin);
+
+        String tipo = (tipoUsuario == null || tipoUsuario.isBlank()) ? "basica" : tipoUsuario.trim().toLowerCase();
+        double costoFinal = (costo != null) ? costo : 0.0;
+        return switch (tipo) {
+            case "premium" -> new MembresiaPremium(costoFinal, inicio, fin);
+            case "vip" -> new MembresiaVIP(costoFinal, inicio, fin);
+            default -> new MembresiaBasica(costoFinal, inicio, fin);
+        };
     }
 
     private void mostrarInformacionUsuario(Usuario usuario) {

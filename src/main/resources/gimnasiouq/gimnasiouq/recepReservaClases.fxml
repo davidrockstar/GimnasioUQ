@@ -20,10 +20,10 @@
          <children>
             <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
                <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" valignment="CENTER" />
@@ -100,7 +100,7 @@
                </padding>
             </GridPane>
                   <Separator prefHeight="18.0" prefWidth="682.0" />
-                  <TableView fx:id="tableUsuario" prefHeight="356.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="tableUsuario" prefHeight="238.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
                       <columns>
                           <TableColumn fx:id="tcNombre" prefWidth="114.39995461702347" text="Nombre" />
                           <TableColumn fx:id="tcIdentificacion" prefWidth="108.79995727539062" text="Identificación" />
@@ -109,11 +109,14 @@
                           <TableColumn fx:id="tcHorarior" prefWidth="76.79998779296875" text="Horario" />
                   <TableColumn fx:id="tcFecha" prefWidth="75.0" text="Fecha" />
                           <TableColumn fx:id="tcEntrenador" minWidth="0.0" prefWidth="83.2000732421875" text="Entrenador" />
-                          <TableColumn fx:id="tcEstado" minWidth="0.79998779296875" prefWidth="78.4000244140625" text="Estado" />
+                          <TableColumn fx:id="tcEstado" minWidth="0.79998779296875" prefWidth="79.19998779296873" text="Estado" />
                       </columns>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
                   </TableView>
          </children>
       </VBox>
