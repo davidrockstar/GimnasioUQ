@@ -163,4 +163,20 @@ public class ModelFactory {
         return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan);
     }
 
+    public int contarMembresiasTotales() {
+        return gimnasioUQ.contarMembresiasTotales();
+    }
+
+    public int contarMembresiasConValor() {
+        return gimnasioUQ.contarMembresiasConValor();
+    }
+
+    public int contarMembresiasSinValor() {
+        return gimnasioUQ.contarMembresiasSinValor();
+    }
+
+    public double calcularIngresosTotalesMembresias() {
+        return gimnasioUQ.calcularIngresosTotalesMembresias();
+    }
+
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.RecepReportesMembresiasViewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdminReportesMembresiasViewController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -37,7 +37,7 @@
                         <Label fx:id="lblMembresiasSinValor" text=" membresiasSinValor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Ingresos totales:" GridPane.rowIndex="3" />
                         <Label fx:id="lblIngresosTotales" text=" ingresosTotales" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Button fx:id="btnExportarPdf" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#onExportarPdf" text="Exportar PDF" GridPane.columnIndex="2" />
+                        <Button fx:id="btnExportarPdf" mnemonicParsing="false" onAction="#onExportarPdf" text="Exportar PDF" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                     </children>
                     <VBox.margin>
                         <Insets left="10.0" right="10.0" />

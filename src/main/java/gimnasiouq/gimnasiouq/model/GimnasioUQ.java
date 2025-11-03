@@ -10,8 +10,7 @@ public class GimnasioUQ {
     private List<Administador> listaAdministrador;
     private List<Clase> listaClases;
     private List<Entrenador> listaEntrenador;
-
-    private List<ControlAcceso> listaRegistrosAcceso = new ArrayList<>();
+    private List<ControlAcceso> listaRegistrosAcceso;
 
     public GimnasioUQ() {
         this.listaUsuarios = new ArrayList<>();
@@ -19,6 +18,7 @@ public class GimnasioUQ {
         this.listaAdministrador = new ArrayList<>();
         this.listaClases = new ArrayList<>();
         this.listaEntrenador = new ArrayList<>();
+        this.listaRegistrosAcceso = new ArrayList<>();
     }
 
     public List<Usuario> getListaUsuarios() {
@@ -278,5 +278,32 @@ public class GimnasioUQ {
             default:
                 return null;
         }
+    }
+
+    public int contarMembresiasTotales() {
+        return (int) listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() != null)
+                .count();
+    }
+
+    public int contarMembresiasConValor() {
+        return (int) listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() != null)
+                .filter(u -> u.getCostoMembresia() > 0)
+                .count();
+    }
+
+    public int contarMembresiasSinValor() {
+        return (int) listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() != null)
+                .filter(u -> u.getCostoMembresia() == 0)
+                .count();
+    }
+
+    public double calcularIngresosTotalesMembresias() {
+        return listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() != null)
+                .mapToDouble(Usuario::getCostoMembresia)
+                .sum();
     }
 }

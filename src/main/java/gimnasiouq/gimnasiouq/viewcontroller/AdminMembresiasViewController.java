@@ -50,7 +50,6 @@ public class AdminMembresiasViewController {
     @FXML
     private TableColumn<Usuario, String> tcNombre;
 
-    // ⭐ NUEVAS COLUMNAS
     @FXML
     private TableColumn<Usuario, String> tcPlanMembresia;
 
