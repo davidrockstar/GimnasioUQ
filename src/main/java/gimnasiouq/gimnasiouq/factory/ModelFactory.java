@@ -24,11 +24,16 @@ public class ModelFactory {
     private final ObservableList<Entrenador> listaEntrenadorObservable;
     private final ObservableList<ControlAcceso> listaRegistrosAccesoObservable;
 
-    // Properties para indicadores
+    // Properties para indicadores de membresías
     private final IntegerProperty membresiasTotales = new SimpleIntegerProperty(0);
     private final IntegerProperty membresiasConValor = new SimpleIntegerProperty(0);
     private final IntegerProperty membresiasSinValor = new SimpleIntegerProperty(0);
     private final DoubleProperty ingresosTotales = new SimpleDoubleProperty(0.0);
+
+    // Properties para indicadores de usuarios
+    private final IntegerProperty usuariosMembresiaActivas = new SimpleIntegerProperty(0);
+    private final IntegerProperty usuariosMembresiaInactivas = new SimpleIntegerProperty(0);
+    private final IntegerProperty usuariosTotales = new SimpleIntegerProperty(0);
 
     public static ModelFactory getInstance(){
         if (modelFactory == null){
@@ -49,10 +54,16 @@ public class ModelFactory {
     }
 
     private void actualizarIndicadores() {
+        // Indicadores de membresías
         membresiasTotales.set(gimnasioUQ.contarMembresiasTotales());
         membresiasConValor.set(gimnasioUQ.contarMembresiasConValor());
         membresiasSinValor.set(gimnasioUQ.contarMembresiasSinValor());
         ingresosTotales.set(gimnasioUQ.calcularIngresosTotalesMembresias());
+
+        // Indicadores de usuarios
+        usuariosMembresiaActivas.set(gimnasioUQ.contarMembresiasUsuariosActivas());
+        usuariosMembresiaInactivas.set(gimnasioUQ.contarMembresiasUsuariosInactivas());
+        usuariosTotales.set(gimnasioUQ.contarTotalUsuarios());
     }
 
     public List<Usuario> obtenerUsuarios() { return gimnasioUQ.getListaUsuarios(); }
@@ -60,6 +71,10 @@ public class ModelFactory {
     public ObservableList<Usuario> obtenerUsuariosObservable() {
         listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return listaUsuariosObservable;
+    }
+
+    public List<Entrenador> obtenerEntrenadores() {
+        return gimnasioUQ.getListaEntrenador();
     }
 
     public ObservableList<Entrenador> obtenerEntrenadorObservable(){
@@ -106,6 +121,32 @@ public class ModelFactory {
         boolean ok = gimnasioUQ.agregarEntrenador(entrenador);
         if (ok) listaEntrenadorObservable.add(entrenador);
         return ok;
+    }
+
+    public boolean actualizarEntrenador(String identificacion, Entrenador entrenadorActualizado) {
+        boolean ok = gimnasioUQ.actualizarEntrenador(identificacion, entrenadorActualizado);
+        if (ok) {
+            // Actualizar la lista observable
+            for (int i = 0; i < listaEntrenadorObservable.size(); i++) {
+                if (listaEntrenadorObservable.get(i).getIdentificacion().equals(identificacion)) {
+                    listaEntrenadorObservable.set(i, entrenadorActualizado);
+                    break;
+                }
+            }
+        }
+        return ok;
+    }
+
+    public boolean eliminarEntrenador(String identificacion) {
+        boolean ok = gimnasioUQ.eliminarEntrenador(identificacion);
+        if (ok) {
+            listaEntrenadorObservable.removeIf(e -> e.getIdentificacion().equals(identificacion));
+        }
+        return ok;
+    }
+
+    public Entrenador buscarEntrenador(String identificacion) {
+        return gimnasioUQ.buscarEntrenadorPorIdentificacion(identificacion);
     }
 
     public List<ControlAcceso> getListaRegistrosAcceso() {
@@ -205,10 +246,20 @@ public class ModelFactory {
         return gimnasioUQ.calcularIngresosTotalesMembresias();
     }
 
-    // Exponer properties para binding
+    public int contarTotalUsuarios() {return gimnasioUQ.contarTotalUsuarios();}
+
+    public int contarMembresiasUsuariosActivas() {return gimnasioUQ.contarMembresiasUsuariosActivas();}
+
+    public int contarMembresiasUsuariosInactivas() {return gimnasioUQ.contarMembresiasUsuariosInactivas();}
+
+    // REPORTES MEMBRESIAS
     public IntegerProperty membresiasTotalesProperty() { return membresiasTotales; }
     public IntegerProperty membresiasConValorProperty() { return membresiasConValor; }
     public IntegerProperty membresiasSinValorProperty() { return membresiasSinValor; }
     public DoubleProperty ingresosTotalesProperty() { return ingresosTotales; }
+    // REPORTES USUARIOS
+    public IntegerProperty usuariosMembresiaActivasProperty() { return usuariosMembresiaActivas; }
+    public IntegerProperty usuariosMembresiaInativasProperty() { return usuariosMembresiaInactivas; }
+    public IntegerProperty usuariosTotalesProperty() {return usuariosTotales;}
 
 }

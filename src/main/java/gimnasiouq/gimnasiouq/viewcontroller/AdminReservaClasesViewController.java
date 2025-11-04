@@ -11,31 +11,50 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 
 public class AdminReservaClasesViewController {
 
-    @FXML private Button btnConfirmar;
-    @FXML private Button btnActualizar;
-    @FXML private Button btnEliminar;
-    @FXML private Button btnNuevo;
+    @FXML
+    private Button btnConfirmar;
+    @FXML
+    private Button btnActualizar;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Button btnNuevo;
 
-    @FXML private TextField txtFecha;
-    @FXML private ComboBox<String> comboBoxClase;
-    @FXML private ComboBox<String> comboBoxEntrenador;
-    @FXML private ComboBox<String> comboBoxHorario;
-    @FXML private Label lblBeneficios;
+    @FXML
+    private TextField txtFecha;
+    @FXML
+    private ComboBox<String> comboBoxClase;
+    @FXML
+    private ComboBox<String> comboBoxEntrenador;
+    @FXML
+    private ComboBox<String> comboBoxHorario;
+    @FXML
+    private Label lblBeneficios;
 
-    @FXML private TableView<Usuario> tableUsuario;
-    @FXML private TableColumn<Usuario, String> tcNombre;
-    @FXML private TableColumn<Usuario, String> tcIdentificacion;
-    @FXML private TableColumn<Usuario, String> tcTipo;
-    @FXML private TableColumn<Usuario, String> tcClase;
-    @FXML private TableColumn<Usuario, String> tcHorarior;
-    @FXML private TableColumn<Usuario, String> tcFecha;
-    @FXML private TableColumn<Usuario, String> tcEntrenador;
-    @FXML private TableColumn<Usuario, String> tcEstado;
+    @FXML
+    private TableView<Usuario> tableUsuario;
+    @FXML
+    private TableColumn<Usuario, String> tcNombre;
+    @FXML
+    private TableColumn<Usuario, String> tcIdentificacion;
+    @FXML
+    private TableColumn<Usuario, String> tcTipo;
+    @FXML
+    private TableColumn<Usuario, String> tcClase;
+    @FXML
+    private TableColumn<Usuario, String> tcHorarior;
+    @FXML
+    private TableColumn<Usuario, String> tcFecha;
+    @FXML
+    private TableColumn<Usuario, String> tcEntrenador;
+    @FXML
+    private TableColumn<Usuario, String> tcEstado;
 
     private Usuario usuarioSeleccionado;
 
@@ -43,6 +62,8 @@ public class AdminReservaClasesViewController {
 
     @FXML
     void initialize() {
+        reservaController = new ReservaClaseController();
+
         comboBoxClase.getItems().addAll("Yoga", "Spinning", "Zumba");
         comboBoxHorario.getItems().addAll("8:00 AM - 10:00 AM", "10:00 AM - 12:00 PM", "12:00 PM - 2:00 PM");
         comboBoxEntrenador.getItems().clear();
@@ -53,6 +74,8 @@ public class AdminReservaClasesViewController {
         tableUsuario.setItems(listaUsuarios);
         listenerSelection();
         lblBeneficios.setText("Seleccione un usuario");
+
+        cargarEntrenadoresDisponibles();
     }
 
     private void initDataBinding() {
@@ -80,12 +103,51 @@ public class AdminReservaClasesViewController {
         });
     }
 
+    private void cargarEntrenadoresDisponibles() {
+        ObservableList<Entrenador> listaEntrenadores = ModelFactory.getInstance().obtenerEntrenadorObservable();
+        // Actualizar el listener para refrescar el comboBox cuando cambie la lista
+        listaEntrenadores.addListener((javafx.collections.ListChangeListener.Change<? extends Entrenador> c) -> {
+            if (usuarioSeleccionado != null) {
+                actualizarComboBoxEntrenadores();
+            }
+        });
+    }
+
+    private void actualizarComboBoxEntrenadores() {
+        boolean esVIP = "VIP".equalsIgnoreCase(usuarioSeleccionado.getMembresia());
+        comboBoxEntrenador.getItems().clear();
+        comboBoxEntrenador.setDisable(!esVIP);
+
+        if (esVIP) {
+            List<Entrenador> listaEntrenadores = ModelFactory.getInstance().obtenerEntrenadores();
+
+            if (listaEntrenadores.isEmpty()) {
+                comboBoxEntrenador.setDisable(true);
+                mostrarAlerta("Sin entrenadores", "No hay entrenadores disponibles. Por favor, cree un entrenador primero en la sección de Gestión de Entrenadores.", Alert.AlertType.WARNING);
+            } else {
+                for (Entrenador e : listaEntrenadores) {
+                    comboBoxEntrenador.getItems().add(e.getNombre());
+                }
+            }
+        }
+    }
+
     private void prepararEntrenadoresSegunMembresia(Usuario usuario) {
         boolean esVIP = "VIP".equalsIgnoreCase(usuario.getMembresia());
         comboBoxEntrenador.getItems().clear();
         comboBoxEntrenador.setDisable(!esVIP);
+
         if (esVIP) {
-            comboBoxEntrenador.getItems().setAll("Camilo", "Andrés", "Sofía");
+            List<Entrenador> entrenadores = ModelFactory.getInstance().obtenerEntrenadores();
+
+            if (entrenadores.isEmpty()) {
+                comboBoxEntrenador.setDisable(true);
+                mostrarAlerta("Sin entrenadores", "No hay entrenadores disponibles. Por favor, cree un entrenador primero en la sección de Gestión de Entrenadores.", Alert.AlertType.WARNING);
+            } else {
+                for (Entrenador e : entrenadores) {
+                    comboBoxEntrenador.getItems().add(e.getNombre());
+                }
+            }
         }
     }
 
@@ -98,7 +160,8 @@ public class AdminReservaClasesViewController {
             switch (tipoMembresia.toLowerCase()) {
                 case "basica" -> beneficios = "Acceso general al gimnasio";
                 case "premium" -> beneficios = "Acceso general al gimnasio, clases grupales ilimitadas";
-                case "vip" -> beneficios = "Acceso general al gimnasio, clases grupales ilimitadas, entrenador personal";
+                case "vip" ->
+                        beneficios = "Acceso general al gimnasio, clases grupales ilimitadas, entrenador personal";
                 default -> beneficios = "Tipo de membresía no reconocido";
             }
         }
@@ -107,99 +170,164 @@ public class AdminReservaClasesViewController {
 
     @FXML
     void onNuevo(ActionEvent event) {
-        limpiarCampos();
-        tableUsuario.getSelectionModel().clearSelection();
-        comboBoxEntrenador.getItems().clear();
-        comboBoxEntrenador.setDisable(true);
+        nuevaReserva();
     }
 
     @FXML
     void onConfirmar(ActionEvent event) {
-        if (!validarDatos()) return;
-
-        String clase = comboBoxClase.getValue();
-        String horario = comboBoxHorario.getValue();
-        String entrenador = comboBoxEntrenador.isDisabled() ? "No disponible" : comboBoxEntrenador.getValue();
-        String fechaIngresada = txtFecha.getText();
-
-        LocalDate fecha;
-        try {
-            fecha = LocalDate.parse(fechaIngresada, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } catch (DateTimeParseException e) {
-            mostrarAlerta("Error", "Formato de fecha inválido (use dd/MM/yyyy)", Alert.AlertType.ERROR);
-            return;
-        }
-
-        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fecha.toString());
-        reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
-
-        if (reservaController == null) reservaController = new ReservaClaseController();
-
-        if (!reservaController.validarReserva(reserva)) {
-            mostrarAlerta("Error", "Datos de reserva inválidos", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (!reservaController.agregarReserva(reserva)) {
-            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique membresía y rango de fechas", Alert.AlertType.ERROR);
-            return;
-        }
-
-        tableUsuario.refresh();
-        mostrarAlerta("Éxito", "Reserva registrada", Alert.AlertType.INFORMATION);
-        limpiarCampos();
+        confirmarReserva();
     }
 
     @FXML
     void onActualizar(ActionEvent event) {
-        onConfirmar(event);
+        actualizarReserva();
     }
 
     @FXML
     void onEliminar(ActionEvent event) {
-        if (usuarioSeleccionado == null || usuarioSeleccionado.getReservas().isEmpty()) {
-            mostrarAlerta("Error", "Seleccione un usuario con reserva", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (reservaController == null) reservaController = new ReservaClaseController();
-
-        if (!reservaController.eliminarReserva(usuarioSeleccionado.getIdentificacion())) {
-            mostrarAlerta("Error", "No se pudo eliminar la reserva", Alert.AlertType.ERROR);
-            return;
-        }
-
-        tableUsuario.refresh();
-        mostrarAlerta("Éxito", "Reserva eliminada", Alert.AlertType.INFORMATION);
-        limpiarCampos();
+        eliminarReserva();
     }
 
-    private boolean validarDatos() {
+    private void nuevaReserva() {
+        limpiarCampos();
+        tableUsuario.getSelectionModel().clearSelection();
+        usuarioSeleccionado = null;
+    }
+
+    private void confirmarReserva() {
         if (usuarioSeleccionado == null) {
-            mostrarAlerta("Error", "Seleccione un usuario", Alert.AlertType.ERROR);
-            return false;
+            mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
+            return;
         }
-        if (!"ACTIVA".equals(usuarioSeleccionado.getEstadoMembresia())) {
-            mostrarAlerta("Error", "La membresía no está activa", Alert.AlertType.ERROR);
-            return false;
+
+        String clase = comboBoxClase.getValue();
+        String horario = comboBoxHorario.getValue();
+        String fechaIngresada = txtFecha.getText();
+        String entrenador = comboBoxEntrenador.getValue();
+
+        if (clase == null || clase.isEmpty()) {
+            mostrarAlerta("Error", "Debe seleccionar una clase.", Alert.AlertType.ERROR);
+            return;
         }
-        if (comboBoxClase.getValue() == null) {
-            mostrarAlerta("Error", "Seleccione una clase", Alert.AlertType.ERROR);
-            return false;
+
+        if (horario == null || horario.isEmpty()) {
+            mostrarAlerta("Error", "Debe seleccionar un horario.", Alert.AlertType.ERROR);
+            return;
         }
-        if (comboBoxHorario.getValue() == null) {
-            mostrarAlerta("Error", "Seleccione un horario", Alert.AlertType.ERROR);
-            return false;
+
+        if (fechaIngresada == null || fechaIngresada.isEmpty()) {
+            mostrarAlerta("Error", "Debe ingresar una fecha (formato: yyyy-MM-dd).", Alert.AlertType.ERROR);
+            return;
         }
-        if (!comboBoxEntrenador.isDisabled() && comboBoxEntrenador.getValue() == null) {
-            mostrarAlerta("Error", "Seleccione un entrenador", Alert.AlertType.ERROR);
-            return false;
+
+        // Si es VIP y no seleccionó entrenador
+        boolean esVIP = "VIP".equalsIgnoreCase(usuarioSeleccionado.getMembresia());
+        if (esVIP && (entrenador == null || entrenador.isEmpty())) {
+            mostrarAlerta("Error", "Los usuarios VIP deben seleccionar un entrenador.", Alert.AlertType.ERROR);
+            return;
         }
-        if (txtFecha.getText() == null || txtFecha.getText().isEmpty()) {
-            mostrarAlerta("Error", "Ingrese una fecha", Alert.AlertType.ERROR);
-            return false;
+
+        // Si no es VIP, no debe tener entrenador
+        if (!esVIP) {
+            entrenador = "Sin entrenador";
         }
-        return true;
+
+        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fechaIngresada);
+        reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
+
+        boolean exito = reservaController.agregarReserva(reserva);
+
+        if (exito) {
+            mostrarAlerta("Éxito", "Reserva creada exitosamente.", Alert.AlertType.INFORMATION);
+            limpiarCampos();
+            tableUsuario.refresh();
+        } else {
+            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique que el usuario tenga una membresía activa y que la fecha esté dentro del período de la membresía.", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void actualizarReserva() {
+        if (usuarioSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (usuarioSeleccionado.getReservas().isEmpty()) {
+            mostrarAlerta("Error", "El usuario seleccionado no tiene reservas para actualizar.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        String clase = comboBoxClase.getValue();
+        String horario = comboBoxHorario.getValue();
+        String fecha = txtFecha.getText();
+        String entrenador = comboBoxEntrenador.getValue();
+
+        if (clase == null || clase.isEmpty()) {
+            mostrarAlerta("Error", "Debe seleccionar una clase.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (horario == null || horario.isEmpty()) {
+            mostrarAlerta("Error", "Debe seleccionar un horario.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (fecha == null || fecha.isEmpty()) {
+            mostrarAlerta("Error", "Debe ingresar una fecha (formato: yyyy-MM-dd).", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            LocalDate.parse(fecha);
+        } catch (DateTimeParseException e) {
+            mostrarAlerta("Error", "Formato de fecha inválido. Use el formato yyyy-MM-dd.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        boolean esVIP = "VIP".equalsIgnoreCase(usuarioSeleccionado.getMembresia());
+        if (esVIP && (entrenador == null || entrenador.isEmpty())) {
+            mostrarAlerta("Error", "Los usuarios VIP deben seleccionar un entrenador.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (!esVIP) {
+            entrenador = "Sin entrenador";
+        }
+
+        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fecha);
+        reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
+
+        boolean exito = reservaController.actualizarReserva(reserva);
+
+        if (exito) {
+            mostrarAlerta("Éxito", "Reserva actualizada exitosamente.", Alert.AlertType.INFORMATION);
+            limpiarCampos();
+            tableUsuario.refresh();
+        } else {
+            mostrarAlerta("Error", "No se pudo actualizar la reserva.", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void eliminarReserva() {
+        if (usuarioSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (usuarioSeleccionado.getReservas().isEmpty()) {
+            mostrarAlerta("Error", "El usuario seleccionado no tiene reservas para eliminar.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        boolean exito = reservaController.eliminarReserva(usuarioSeleccionado.getIdentificacion());
+
+        if (exito) {
+            mostrarAlerta("Éxito", "Reserva eliminada exitosamente.", Alert.AlertType.INFORMATION);
+            limpiarCampos();
+            tableUsuario.refresh();
+        } else {
+            mostrarAlerta("Error", "No se pudo eliminar la reserva.", Alert.AlertType.ERROR);
+        }
     }
 
     private void limpiarCampos() {

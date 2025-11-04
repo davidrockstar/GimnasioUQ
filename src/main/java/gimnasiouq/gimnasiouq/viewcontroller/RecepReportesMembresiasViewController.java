@@ -54,7 +54,7 @@ public class RecepReportesMembresiasViewController implements Initializable{
     @FXML
     private TableColumn<Usuario, String> tcCosto;
 
-    private final ReportesMembresiasController reportesController = new ReportesMembresiasController();
+    private final ReportesMembresiasController reportesMembresiasController = new ReportesMembresiasController();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,20 +90,14 @@ public class RecepReportesMembresiasViewController implements Initializable{
     }
 
     private void cargarIndicadores() {
-        int totales = reportesController.obtenerMembresiasTotales();
-        int conValor = reportesController.obtenerMembresiasConValor();
-        int sinValor = reportesController.obtenerMembresiasSinValor();
-        double ingresos = reportesController.obtenerIngresosTotales();
-
-        ModelFactory mf = ModelFactory.getInstance();
         if (lblMembresiasTotales != null)
-            lblMembresiasTotales.textProperty().bind(mf.membresiasTotalesProperty().asString());
+            lblMembresiasTotales.textProperty().bind(reportesMembresiasController.membresiasTotalesProperty().asString());
         if (lblMembresiasConValor != null)
-            lblMembresiasConValor.textProperty().bind(mf.membresiasConValorProperty().asString());
+            lblMembresiasConValor.textProperty().bind(reportesMembresiasController.membresiasConValorProperty().asString());
         if (lblMembresiasSinValor != null)
-            lblMembresiasSinValor.textProperty().bind(mf.membresiasSinValorProperty().asString());
+            lblMembresiasSinValor.textProperty().bind(reportesMembresiasController.membresiasSinValorProperty().asString());
         if (lblIngresosTotales != null)
-            lblIngresosTotales.textProperty().bind(mf.ingresosTotalesProperty().asString("$%.0f"));
+            lblIngresosTotales.textProperty().bind(reportesMembresiasController.ingresosTotalesProperty().asString("$%.0f"));
     }
 
     @FXML

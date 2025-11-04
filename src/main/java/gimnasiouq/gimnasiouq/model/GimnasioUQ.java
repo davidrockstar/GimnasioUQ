@@ -1,5 +1,7 @@
 package gimnasiouq.gimnasiouq.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +137,10 @@ public class GimnasioUQ {
     }
 
     public boolean agregarEntrenador(Entrenador entrenador) {
-        if (entrenador != null && !existeEntrenador(entrenador.getIdentificacion())) {
+        if (!validarEntrenador(entrenador)) {
+            return false;
+        }
+        if (!existeEntrenador(entrenador.getIdentificacion())) {
             return listaEntrenador.add(entrenador);
         }
         return false;
@@ -145,34 +150,42 @@ public class GimnasioUQ {
         return buscarEntrenadorPorIdentificacion(identificacion) != null;
     }
 
-    private Entrenador buscarEntrenadorPorIdentificacion(String identificacion) {
-
+    public Entrenador buscarEntrenadorPorIdentificacion(String identificacion) {
         return listaEntrenador.stream()
                 .filter(u -> u.getIdentificacion().equals(identificacion))
                 .findFirst()
                 .orElse(null);
     }
 
+    private boolean validarEntrenador(Entrenador entrenador) {
+        if (entrenador == null) return false;
+        if (entrenador.getNombre() == null || entrenador.getNombre().isEmpty()) return false;
+        if (entrenador.getIdentificacion() == null || entrenador.getIdentificacion().isEmpty()) return false;
+        if (entrenador.getEspecialidad() == null || entrenador.getEspecialidad().isEmpty()) return false;
+        if (entrenador.getCorreo() == null || entrenador.getCorreo().isEmpty()) return false;
+        if (entrenador.getCelular() == null || entrenador.getCelular().isEmpty()) return false;
+        return true;
+    }
+
     public boolean actualizarEntrenador(String identificacion, Entrenador entrenadorActualizado) {
         if (identificacion == null || identificacion.isEmpty()) {
+            return false;
+        }
+        if (!validarEntrenador(entrenadorActualizado)) {
             return false;
         }
         Entrenador entrenadorExistente = buscarEntrenadorPorIdentificacion(identificacion);
 
         if (entrenadorExistente != null) {
-            // Verificar que los datos del usuario actualizado no sean null
-            if (entrenadorActualizado.getNombre() == null ||
-                    entrenadorActualizado.getIdentificacion() == null ||
-                    entrenadorActualizado.getEspecialidad() == null ||
-                    entrenadorActualizado.getClasesDisponibles() == null) {
-                return false;
-            }
-
             // Actualizar los datos básicos
             entrenadorExistente.setNombre(entrenadorActualizado.getNombre());
             entrenadorExistente.setIdentificacion(entrenadorActualizado.getIdentificacion());
             entrenadorExistente.setEspecialidad(entrenadorActualizado.getEspecialidad());
-            entrenadorExistente.setClasesDisponibles(entrenadorActualizado.getClasesDisponibles());
+            entrenadorExistente.setCorreo(entrenadorActualizado.getCorreo());
+            entrenadorExistente.setCelular(entrenadorActualizado.getCelular());
+            if (entrenadorActualizado.getClasesDisponibles() != null) {
+                entrenadorExistente.setClasesDisponibles(entrenadorActualizado.getClasesDisponibles());
+            }
 
             return true;
         }
@@ -188,15 +201,48 @@ public class GimnasioUQ {
         return false;
     }
 
+    private boolean validarReserva(ReservaClase reserva) {
+        if (reserva == null) return false;
+        if (reserva.getClase() == null || reserva.getClase().isEmpty()) return false;
+        if (reserva.getHorario() == null || reserva.getHorario().isEmpty()) return false;
+        if (reserva.getFecha() == null) return false;
+        if (reserva.getIdentificacion() == null || reserva.getIdentificacion().isEmpty()) return false;
+        return true;
+    }
+
     public boolean agregarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
-        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || reserva == null) return false;
+        if (!validarReserva(reserva)) return false;
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
+        if (!usuario.tieneMembresiaActiva()) return false;
+
+        LocalDate inicio = usuario.getFechaInicioMembresia();
+        LocalDate fin = usuario.getFechaFinMembresia();
+
+        // Intentar parsear la fecha con múltiples formatos
+        LocalDate fecha = null;
+        try {
+            fecha = LocalDate.parse(reserva.getFecha()); // Formato ISO: yyyy-MM-dd
+        } catch (Exception e) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                fecha = LocalDate.parse(reserva.getFecha(), formatter);
+            } catch (Exception ex) {
+                return false; // Si no se puede parsear, retornar false
+            }
+        }
+
+        if (inicio == null || fin == null || fecha == null) return false;
+        if (fecha.isBefore(inicio) || fecha.isAfter(fin)) return false;
+
         return usuario.getReservas().add(reserva);
     }
 
     public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
-        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || reserva == null) return false;
+        if (!validarReserva(reserva)) return false;
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
         if (usuario.getReservas().isEmpty()) {
@@ -339,5 +385,21 @@ public class GimnasioUQ {
                 .filter(u -> u.getMembresiaActiva() != null)
                 .mapToDouble(Usuario::getCostoMembresia)
                 .sum();
+    }
+
+    public int contarTotalUsuarios() {
+        return listaUsuarios.size();
+    }
+
+    public int contarMembresiasUsuariosActivas() {
+        return (int) listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() != null)
+                .count();
+    }
+
+    public int contarMembresiasUsuariosInactivas() {
+        return (int) listaUsuarios.stream()
+                .filter(u -> u.getMembresiaActiva() == null)
+                .count();
     }
 }

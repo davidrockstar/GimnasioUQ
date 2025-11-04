@@ -15,8 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.net.URL;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AdminReportesMembresiasViewController implements Initializable{
@@ -53,7 +51,10 @@ public class AdminReportesMembresiasViewController implements Initializable{
     @FXML
     private TableColumn<Usuario, String> tcTipoMembresias;
 
-    private final ReportesMembresiasController reportesController = new ReportesMembresiasController();
+    @FXML
+    private TableColumn<Usuario, String> tcCosto;
+
+    private final ReportesMembresiasController reportesMembresiasController = new ReportesMembresiasController();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -67,6 +68,7 @@ public class AdminReportesMembresiasViewController implements Initializable{
         listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
             cargarIndicadores();});
         tableView.setItems(listaUsuarios);
+
     }
 
     private void initDataBinding() {
@@ -82,23 +84,20 @@ public class AdminReportesMembresiasViewController implements Initializable{
         if (tcTipoMembresias != null) {
             tcTipoMembresias.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
         }
+        if (tcCosto != null) {
+            tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCostoMembresiaFormateado()));
+        }
     }
 
     private void cargarIndicadores() {
-        int totales = reportesController.obtenerMembresiasTotales();
-        int conValor = reportesController.obtenerMembresiasConValor();
-        int sinValor = reportesController.obtenerMembresiasSinValor();
-        double ingresos = reportesController.obtenerIngresosTotales();
-
-        ModelFactory mf = ModelFactory.getInstance();
         if (lblMembresiasTotales != null)
-            lblMembresiasTotales.textProperty().bind(mf.membresiasTotalesProperty().asString());
+            lblMembresiasTotales.textProperty().bind(reportesMembresiasController.membresiasTotalesProperty().asString());
         if (lblMembresiasConValor != null)
-            lblMembresiasConValor.textProperty().bind(mf.membresiasConValorProperty().asString());
+            lblMembresiasConValor.textProperty().bind(reportesMembresiasController.membresiasConValorProperty().asString());
         if (lblMembresiasSinValor != null)
-            lblMembresiasSinValor.textProperty().bind(mf.membresiasSinValorProperty().asString());
+            lblMembresiasSinValor.textProperty().bind(reportesMembresiasController.membresiasSinValorProperty().asString());
         if (lblIngresosTotales != null)
-            lblIngresosTotales.textProperty().bind(mf.ingresosTotalesProperty().asString("$%.0f"));
+            lblIngresosTotales.textProperty().bind(reportesMembresiasController.ingresosTotalesProperty().asString("$%.0f"));
     }
 
     @FXML

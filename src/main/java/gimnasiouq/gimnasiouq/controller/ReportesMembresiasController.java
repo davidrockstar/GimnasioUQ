@@ -1,6 +1,8 @@
 package gimnasiouq.gimnasiouq.controller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 
 public class ReportesMembresiasController {
 
@@ -10,19 +12,20 @@ public class ReportesMembresiasController {
         this.modelFactory = ModelFactory.getInstance();
     }
 
-    public int obtenerMembresiasTotales() {
-        return modelFactory.contarMembresiasTotales();
+    // Exponer properties para binding
+    public IntegerProperty membresiasTotalesProperty() {
+        return modelFactory.membresiasTotalesProperty();
     }
 
-    public int obtenerMembresiasConValor() {
-        return modelFactory.contarMembresiasConValor();
+    public IntegerProperty membresiasConValorProperty() {
+        return modelFactory.membresiasConValorProperty();
     }
 
-    public int obtenerMembresiasSinValor() {
-        return modelFactory.contarMembresiasSinValor();
+    public IntegerProperty membresiasSinValorProperty() {
+        return modelFactory.membresiasSinValorProperty();
     }
 
-    public double obtenerIngresosTotales() {
-        return modelFactory.calcularIngresosTotalesMembresias();
+    public DoubleProperty ingresosTotalesProperty() {
+        return modelFactory.ingresosTotalesProperty();
     }
 }

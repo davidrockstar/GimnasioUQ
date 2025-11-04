@@ -1,13 +1,24 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
+import gimnasiouq.gimnasiouq.controller.ReportesMembresiasController;
+import gimnasiouq.gimnasiouq.controller.ReportesUsuariosController;
+import gimnasiouq.gimnasiouq.factory.ModelFactory;
+import gimnasiouq.gimnasiouq.model.Usuario;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class RecepReportesUsuariosViewController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class RecepReportesUsuariosViewController implements Initializable {
 
     @FXML
     private Button btnExportarPdf;
@@ -22,19 +33,55 @@ public class RecepReportesUsuariosViewController {
     private Label lblUsuariosSinMensualidadActiva;
 
     @FXML
-    private TableView<?> tableView;
+    private TableView<Usuario> tableView;
 
     @FXML
-    private TableColumn<?, ?> tcEstado;
+    private TableColumn<Usuario, String> tcEstado;
 
     @FXML
-    private TableColumn<?, ?> tcIdentificacion;
+    private TableColumn<Usuario, String> tcIdentificacion;
 
     @FXML
-    private TableColumn<?, ?> tcNombre;
+    private TableColumn<Usuario, String> tcNombre;
 
-    @FXML
-    private TableColumn<?, ?> tcTipoMembresia;
+    ObservableList<Usuario> listaUsuarios;
+    private final ReportesUsuariosController reportesUsuariosController = new ReportesUsuariosController();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        initView();
+        cargarIndicadores();
+    }
+
+    private void initView() {
+        initDataBinding();
+        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
+        listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
+            cargarIndicadores();});
+        tableView.setItems(listaUsuarios);
+
+    }
+
+    private void initDataBinding() {
+        if (tcEstado != null) {
+            tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
+        }
+        if (tcIdentificacion != null) {
+            tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        }
+        if (tcNombre != null) {
+            tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        }
+    }
+
+    private void cargarIndicadores() {
+        if (lblUsuariosMensualidadActiva != null)
+            lblUsuariosMensualidadActiva.textProperty().bind(reportesUsuariosController.usuariosMembresiaActivasProperty().asString());
+        if (lblUsuariosSinMensualidadActiva != null)
+            lblUsuariosSinMensualidadActiva.textProperty().bind(reportesUsuariosController.usuariosMembresiaInactivasProperty().asString());
+        if (lblUsuariosActivos != null)
+            lblUsuariosActivos.textProperty().bind(reportesUsuariosController.usuariosTotalesProperty().asString());
+    }
 
     @FXML
     void onExportarPdf(ActionEvent event) {

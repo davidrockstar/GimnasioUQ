@@ -6,16 +6,16 @@ public class Entrenador {
     private String nombre;
     private String identificacion;
     private String especialidad;
-    private String clasesDisponibles;   // opcional: o relación con objeto Clase
-    private String telefono;
+    private String clasesDisponibles;
+    private String celular;
     private String correo;
 
-    public Entrenador(String nombre, String identificacion, String especialidad, String clasesDisponibles, String telefono, String correo) {
+    public Entrenador(String nombre, String identificacion, String especialidad, String clasesDisponibles, String celular, String correo) {
         this.nombre = nombre;
         this.identificacion = identificacion;
         this.especialidad = especialidad;
         this.clasesDisponibles = clasesDisponibles;
-        this.telefono = telefono;
+        this.celular = celular;
         this.correo = correo;
     }
 
@@ -60,12 +60,12 @@ public class Entrenador {
         this.clasesDisponibles = claseAsignada;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String telefono) {
+        this.celular = telefono;
     }
 
     public String getCorreo() {
