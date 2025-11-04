@@ -3,6 +3,7 @@ module gimnasiouq.gimnasiouq {
     requires javafx.fxml;
     requires javafx.base;
     requires java.desktop;
+    requires net.bytebuddy;
 
     opens gimnasiouq.gimnasiouq.viewcontroller to javafx.fxml;
     opens gimnasiouq.gimnasiouq to javafx.fxml;

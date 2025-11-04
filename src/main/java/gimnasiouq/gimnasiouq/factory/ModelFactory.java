@@ -10,6 +10,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,17 +25,20 @@ public class ModelFactory {
     private final ObservableList<Usuario> listaUsuariosObservable;
     private final ObservableList<Entrenador> listaEntrenadorObservable;
     private final ObservableList<ControlAcceso> listaRegistrosAccesoObservable;
+    private final ObservableList<ReservaClase> listaReservaClasesObservable;
 
     // Properties para indicadores de membresías
     private final IntegerProperty membresiasTotales = new SimpleIntegerProperty(0);
     private final IntegerProperty membresiasConValor = new SimpleIntegerProperty(0);
     private final IntegerProperty membresiasSinValor = new SimpleIntegerProperty(0);
     private final DoubleProperty ingresosTotales = new SimpleDoubleProperty(0.0);
-
     // Properties para indicadores de usuarios
     private final IntegerProperty usuariosMembresiaActivas = new SimpleIntegerProperty(0);
     private final IntegerProperty usuariosMembresiaInactivas = new SimpleIntegerProperty(0);
     private final IntegerProperty usuariosTotales = new SimpleIntegerProperty(0);
+    // Properties para indicadores de clases
+    private final StringProperty claseMasReservada = new SimpleStringProperty("");
+    private final IntegerProperty totalClasesReservadas = new SimpleIntegerProperty(0);
 
     public static ModelFactory getInstance(){
         if (modelFactory == null){
@@ -47,9 +52,9 @@ public class ModelFactory {
         listaUsuariosObservable = FXCollections.observableArrayList(gimnasioUQ.getListaUsuarios());
         listaEntrenadorObservable = FXCollections.observableArrayList(gimnasioUQ.getListaEntrenador());
         listaRegistrosAccesoObservable = FXCollections.observableArrayList(gimnasioUQ.getListaRegistrosAcceso());
-        // Listener para recalcular indicadores cuando la lista observable cambie
+        listaReservaClasesObservable = FXCollections.observableArrayList(gimnasioUQ.getListaReservaClases());
+
         listaUsuariosObservable.addListener((javafx.collections.ListChangeListener.Change<? extends Usuario> c) -> actualizarIndicadores());
-        // Inicializar indicadores basados en los datos actuales
         actualizarIndicadores();
     }
 
@@ -59,11 +64,14 @@ public class ModelFactory {
         membresiasConValor.set(gimnasioUQ.contarMembresiasConValor());
         membresiasSinValor.set(gimnasioUQ.contarMembresiasSinValor());
         ingresosTotales.set(gimnasioUQ.calcularIngresosTotalesMembresias());
-
         // Indicadores de usuarios
         usuariosMembresiaActivas.set(gimnasioUQ.contarMembresiasUsuariosActivas());
         usuariosMembresiaInactivas.set(gimnasioUQ.contarMembresiasUsuariosInactivas());
         usuariosTotales.set(gimnasioUQ.contarTotalUsuarios());
+        // Indicadores de clases
+        claseMasReservada.set(gimnasioUQ.contarClaseMasReservada());
+        totalClasesReservadas.set(gimnasioUQ.contarTotalClasesReservadas());
+
     }
 
     public List<Usuario> obtenerUsuarios() { return gimnasioUQ.getListaUsuarios(); }
@@ -80,6 +88,11 @@ public class ModelFactory {
     public ObservableList<Entrenador> obtenerEntrenadorObservable(){
         listaEntrenadorObservable.setAll(gimnasioUQ.getListaEntrenador());
         return listaEntrenadorObservable;
+    }
+
+    public ObservableList<ReservaClase> obtenerReservasObservable(){
+        listaReservaClasesObservable.setAll(gimnasioUQ.getListaReservaClases());
+        return listaReservaClasesObservable;
     }
 
     public boolean agregarUsuario(Usuario usuario) {
@@ -230,28 +243,6 @@ public class ModelFactory {
         return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan, tipoUsuario);
     }
 
-    public int contarMembresiasTotales() {
-        return gimnasioUQ.contarMembresiasTotales();
-    }
-
-    public int contarMembresiasConValor() {
-        return gimnasioUQ.contarMembresiasConValor();
-    }
-
-    public int contarMembresiasSinValor() {
-        return gimnasioUQ.contarMembresiasSinValor();
-    }
-
-    public double calcularIngresosTotalesMembresias() {
-        return gimnasioUQ.calcularIngresosTotalesMembresias();
-    }
-
-    public int contarTotalUsuarios() {return gimnasioUQ.contarTotalUsuarios();}
-
-    public int contarMembresiasUsuariosActivas() {return gimnasioUQ.contarMembresiasUsuariosActivas();}
-
-    public int contarMembresiasUsuariosInactivas() {return gimnasioUQ.contarMembresiasUsuariosInactivas();}
-
     // REPORTES MEMBRESIAS
     public IntegerProperty membresiasTotalesProperty() { return membresiasTotales; }
     public IntegerProperty membresiasConValorProperty() { return membresiasConValor; }
@@ -261,5 +252,7 @@ public class ModelFactory {
     public IntegerProperty usuariosMembresiaActivasProperty() { return usuariosMembresiaActivas; }
     public IntegerProperty usuariosMembresiaInativasProperty() { return usuariosMembresiaInactivas; }
     public IntegerProperty usuariosTotalesProperty() {return usuariosTotales;}
-
+    // REPORTES CLASES
+    public StringProperty claseMasReservadaProperty() {return claseMasReservada;}
+    public IntegerProperty totalClasesReservadasProperty() {return totalClasesReservadas;}
 }

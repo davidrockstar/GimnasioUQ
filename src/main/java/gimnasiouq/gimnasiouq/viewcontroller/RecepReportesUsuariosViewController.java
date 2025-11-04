@@ -1,6 +1,5 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
-import gimnasiouq.gimnasiouq.controller.ReportesMembresiasController;
 import gimnasiouq.gimnasiouq.controller.ReportesUsuariosController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.Usuario;
@@ -57,7 +56,9 @@ public class RecepReportesUsuariosViewController implements Initializable {
         initDataBinding();
         listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
         listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
-            cargarIndicadores();});
+            cargarIndicadores();
+            tableView.refresh();
+        });
         tableView.setItems(listaUsuarios);
 
     }

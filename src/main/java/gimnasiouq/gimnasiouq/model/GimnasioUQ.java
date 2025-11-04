@@ -2,25 +2,47 @@ package gimnasiouq.gimnasiouq.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class GimnasioUQ {
 
     private List<Usuario> listaUsuarios;
     private List<Recepcionista> listaRecepcionista;
     private List<Administador> listaAdministrador;
-    private List<Clase> listaClases;
+    private List<ReservaClase> listaReservaClases;
     private List<Entrenador> listaEntrenador;
     private List<ControlAcceso> listaRegistrosAcceso;
+    private Map<String, Integer> cuposPorClase;
 
     public GimnasioUQ() {
         this.listaUsuarios = new ArrayList<>();
         this.listaRecepcionista = new ArrayList<>();
         this.listaAdministrador = new ArrayList<>();
-        this.listaClases = new ArrayList<>();
+        this.listaReservaClases = new ArrayList<>();
         this.listaEntrenador = new ArrayList<>();
         this.listaRegistrosAcceso = new ArrayList<>();
+        this.cuposPorClase = new HashMap<>();
+        cuposPorClase.put("Yoga", 5);
+        cuposPorClase.put("Spinning", 5);
+        cuposPorClase.put("Zumba", 5);
+    }
+
+    private LocalDate parseFecha(String fechaStr) {
+        try {
+            return LocalDate.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (DateTimeParseException e) {
+            try {
+                return LocalDate.parse(fechaStr, DateTimeFormatter.ISO_LOCAL_DATE); // yyyy-MM-dd
+            } catch (DateTimeParseException ex) {
+                return null;
+            }
+        }
     }
 
     public List<Usuario> getListaUsuarios() {
@@ -47,12 +69,12 @@ public class GimnasioUQ {
         this.listaAdministrador = listaAdministrador;
     }
 
-    public List<Clase> getListaClases() {
-        return listaClases;
+    public List<ReservaClase> getListaReservaClases() {
+        return listaReservaClases;
     }
 
-    public void setListaClases(List<Clase> listaClases) {
-        this.listaClases = listaClases;
+    public void setListaClases(List<ReservaClase> listaReservaClases) {
+        this.listaReservaClases = listaReservaClases;
     }
 
     public List<Entrenador> getListaEntrenador() {
@@ -214,6 +236,11 @@ public class GimnasioUQ {
         if (!validarReserva(reserva)) return false;
         if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
 
+        long count = obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(reserva.getClase())).count();
+        if (count >= reserva.getCupoMaximo()) {
+            return false;
+        }
+
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
         if (!usuario.tieneMembresiaActiva()) return false;
@@ -221,20 +248,10 @@ public class GimnasioUQ {
         LocalDate inicio = usuario.getFechaInicioMembresia();
         LocalDate fin = usuario.getFechaFinMembresia();
 
-        // Intentar parsear la fecha con múltiples formatos
-        LocalDate fecha = null;
-        try {
-            fecha = LocalDate.parse(reserva.getFecha()); // Formato ISO: yyyy-MM-dd
-        } catch (Exception e) {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                fecha = LocalDate.parse(reserva.getFecha(), formatter);
-            } catch (Exception ex) {
-                return false; // Si no se puede parsear, retornar false
-            }
-        }
+        LocalDate fecha = parseFecha(reserva.getFecha());
+        if (fecha == null) return false;
 
-        if (inicio == null || fin == null || fecha == null) return false;
+        if (inicio == null || fin == null) return false;
         if (fecha.isBefore(inicio) || fecha.isAfter(fin)) return false;
 
         return usuario.getReservas().add(reserva);
@@ -243,8 +260,19 @@ public class GimnasioUQ {
     public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
         if (!validarReserva(reserva)) return false;
         if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
+
+        LocalDate inicio = usuario.getFechaInicioMembresia();
+        LocalDate fin = usuario.getFechaFinMembresia();
+
+        LocalDate fecha = parseFecha(reserva.getFecha());
+        if (fecha == null) return false;
+
+        if (inicio == null || fin == null) return false;
+        if (fecha.isBefore(inicio) || fecha.isAfter(fin)) return false;
+
         if (usuario.getReservas().isEmpty()) {
             usuario.getReservas().add(reserva);
         } else {
@@ -308,11 +336,9 @@ public class GimnasioUQ {
         java.time.LocalDate fechaFin;
         double costo = 0;
 
-        // Normalizar strings
         String plan = tipoPlan.trim().toLowerCase();
         String tipo = (tipoUsuario == null || tipoUsuario.isBlank()) ? "basica" : tipoUsuario.trim().toLowerCase();
 
-        // Duración según plan
         switch (plan) {
             case "mensual" -> fechaFin = fechaInicio.plusMonths(1);
             case "trimestral" -> fechaFin = fechaInicio.plusMonths(3);
@@ -349,13 +375,10 @@ public class GimnasioUQ {
             return new MembresiaVIP(costo, fechaInicio, fechaFin);
         }
 
-        // Por defecto, devolver MembresiaBasica
         return new MembresiaBasica(costo, fechaInicio, fechaFin);
     }
 
     public int contarMembresiasTotales() {
-        // Ahora contamos como "membresía existente" cuando el usuario tiene un tipo de membresía
-        // (p. ej. "Básica", "Premium", "VIP") aunque no tenga un objeto Membresia asignado.
         return (int) listaUsuarios.stream()
                 .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank())
                         || u.getMembresiaActiva() != null)
@@ -363,7 +386,6 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasConValor() {
-        // Membresías que efectivamente tienen un objeto Membresia asignado y un costo > 0
         return (int) listaUsuarios.stream()
                 .filter(u -> u.getMembresiaActiva() != null)
                 .filter(u -> u.getCostoMembresia() > 0)
@@ -371,8 +393,6 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasSinValor() {
-        // Usuarios que declararon un tipo de membresía (p. ej. seleccionaron Básica/Premium/VIP)
-        // pero no se les ha asignado un objeto Membresia aún (membresiaActiva == null)
         return (int) listaUsuarios.stream()
                 .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank()))
                 .filter(u -> u.getMembresiaActiva() == null)
@@ -380,7 +400,6 @@ public class GimnasioUQ {
     }
 
     public double calcularIngresosTotalesMembresias() {
-        // Sumar el costo de todas las membresías que tienen un objeto Membresia asignado
         return listaUsuarios.stream()
                 .filter(u -> u.getMembresiaActiva() != null)
                 .mapToDouble(Usuario::getCostoMembresia)
@@ -401,5 +420,28 @@ public class GimnasioUQ {
         return (int) listaUsuarios.stream()
                 .filter(u -> u.getMembresiaActiva() == null)
                 .count();
+    }
+
+    public String contarClaseMasReservada() {
+        Map<String, Long> conteoClases = obtenerReservasDeUsuarios().stream()
+                .map(ReservaClase::getClase)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        return conteoClases.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("Ninguna");
+    }
+
+    public int contarTotalClasesReservadas() {
+        return obtenerReservasDeUsuarios().size();
+    }
+
+    public int getCupoMaximo(String clase) {
+        return cuposPorClase.getOrDefault(clase, 0);
+    }
+
+    public long getReservasActuales(String clase) {
+        return obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(clase)).count();
     }
 }

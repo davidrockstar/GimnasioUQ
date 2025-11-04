@@ -1,19 +1,15 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-
-import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 
 public class AdminReservaClasesViewController {
 
@@ -216,7 +212,7 @@ public class AdminReservaClasesViewController {
         }
 
         if (fechaIngresada == null || fechaIngresada.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formato: yyyy-MM-dd).", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Debe ingresar una fecha (formatos: dd/MM/yyyy o yyyy-MM-dd).", Alert.AlertType.ERROR);
             return;
         }
 
@@ -259,7 +255,7 @@ public class AdminReservaClasesViewController {
 
         String clase = comboBoxClase.getValue();
         String horario = comboBoxHorario.getValue();
-        String fecha = txtFecha.getText();
+        String fechaIngresada = txtFecha.getText();
         String entrenador = comboBoxEntrenador.getValue();
 
         if (clase == null || clase.isEmpty()) {
@@ -272,15 +268,8 @@ public class AdminReservaClasesViewController {
             return;
         }
 
-        if (fecha == null || fecha.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formato: yyyy-MM-dd).", Alert.AlertType.ERROR);
-            return;
-        }
-
-        try {
-            LocalDate.parse(fecha);
-        } catch (DateTimeParseException e) {
-            mostrarAlerta("Error", "Formato de fecha inválido. Use el formato yyyy-MM-dd.", Alert.AlertType.ERROR);
+        if (fechaIngresada == null || fechaIngresada.isEmpty()) {
+            mostrarAlerta("Error", "Debe ingresar una fecha (formatos: dd/MM/yyyy o yyyy-MM-dd).", Alert.AlertType.ERROR);
             return;
         }
 
@@ -294,7 +283,7 @@ public class AdminReservaClasesViewController {
             entrenador = "Sin entrenador";
         }
 
-        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fecha);
+        ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fechaIngresada);
         reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
 
         boolean exito = reservaController.actualizarReserva(reserva);

@@ -45,10 +45,11 @@
                 <TableView fx:id="tableView" maxWidth="1.7976931348623157E308" prefHeight="220.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="tcClase" prefWidth="98.4000244140625" text="Clase" />
-                        <TableColumn fx:id="tcEntrenador" prefWidth="154.39996337890625" text="Entrenador" />
-                        <TableColumn fx:id="tcTipo" prefWidth="94.4000244140625" text="Tipo" />
-                        <TableColumn fx:id="tcCupoMaximo" prefWidth="128.7999267578125" text="Cupo Maximo" />
-                        <TableColumn fx:id="tcFecha" prefWidth="128.800048828125" text="Fecha" />
+                  <TableColumn fx:id="tcHorario" prefWidth="98.4000244140625" text="Horario" />
+                        <TableColumn fx:id="tcFecha" prefWidth="85.60003662109375" text="Fecha" />
+                        <TableColumn fx:id="tcEntrenador" prefWidth="119.2000732421875" text="Entrenador" />
+                        <TableColumn fx:id="tcIdUsuario" prefWidth="120.79998779296875" text="ID Usuario" />
+                        <TableColumn fx:id="tcCupoMaximo" prefWidth="98.4000244140625" text="Cupo Maximo" />
                     </columns>
                <VBox.margin>
                   <Insets />
