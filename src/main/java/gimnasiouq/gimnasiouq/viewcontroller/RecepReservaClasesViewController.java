@@ -185,10 +185,10 @@ public class RecepReservaClasesViewController {
             beneficios = "Sin membresía asignada";
         } else {
             switch (tipoMembresia.toLowerCase()) {
-                case "basica" -> beneficios = "Acceso general al gimnasio";
-                case "premium" -> beneficios = "Acceso general al gimnasio, clases grupales ilimitadas";
+                case "basica" -> beneficios = "Acceso general a máquinas";
+                case "premium" -> beneficios = "Acceso general a máquinas, clases grupales";
                 case "vip" ->
-                        beneficios = "Acceso general al gimnasio, clases grupales ilimitadas, entrenador personal";
+                        beneficios = "Acceso ilimitado a máquinas, clases grupales ilimitadas, área de spa, entrenador personal";
                 default -> beneficios = "Tipo de membresía no reconocido";
             }
         }
@@ -269,7 +269,8 @@ public class RecepReservaClasesViewController {
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique que el usuario tenga una membresía activa, que la fecha esté dentro del período de la membresía y que la clase no esté llena.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Verifique si la fecha tiene formato dd/mm/yyyy y que no sea inferior a la actual.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Verifique que el usuario tenga una membresía activa y que sea Premium o VIP", Alert.AlertType.ERROR);
         }
     }
 

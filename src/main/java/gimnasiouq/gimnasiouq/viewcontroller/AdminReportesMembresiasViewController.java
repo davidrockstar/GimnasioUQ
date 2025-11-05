@@ -102,9 +102,4 @@ public class AdminReportesMembresiasViewController implements Initializable{
             lblIngresosTotales.textProperty().bind(reportesMembresiasController.ingresosTotalesProperty().asString("$%.0f"));
     }
 
-    @FXML
-    void onExportarPdf(ActionEvent event) {
-
-    }
-
 }

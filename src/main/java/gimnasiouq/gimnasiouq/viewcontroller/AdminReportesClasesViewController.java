@@ -43,9 +43,6 @@ public class AdminReportesClasesViewController {
     @FXML
     private TableColumn<Usuario, String> tcIdUsuario;
 
-    @FXML
-    void onExportarPdf(ActionEvent event) {}
-
     ObservableList<Usuario> listaUsuarios;
 
     private final ReportesClasesController reportesClasesController = new ReportesClasesController();

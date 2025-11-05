@@ -98,9 +98,4 @@ public class AdminReportesUsuariosViewController implements Initializable {
             lblUsuariosActivos.textProperty().bind(reportesUsuariosController.usuariosTotalesProperty().asString());
     }
 
-    @FXML
-    void onExportarPdf(ActionEvent event) {
-
-    }
-
 }

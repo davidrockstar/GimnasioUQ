@@ -13,11 +13,19 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="522.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdminMembresiasViewController">
     <children>
-        <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar membresías">
+                    <font>
+                        <Font name="Arial Bold" size="25.0" />
+                    </font>
+                </Text>
+                <Separator prefHeight="18.0" prefWidth="682.0" />
                 <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
                     <columnConstraints>
                         <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="38.200006103515626" prefWidth="42.200006103515626" />
@@ -55,18 +63,16 @@
                             </GridPane.margin></TextField>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets />
                     </VBox.margin>
-                    <padding>
-                        <Insets top="10.0" />
-                    </padding>
                 </GridPane>
-                <GridPane>
+                <Separator prefHeight="18.0" prefWidth="682.0" />
+                <GridPane hgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" />
+                        <ColumnConstraints halignment="CENTER" />
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -79,7 +85,7 @@
                     </children>
                 </GridPane>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
-                <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="157.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="730.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="tcUsuario" prefWidth="80.79998475313187" text="Usuario" />
                         <TableColumn fx:id="tcNombre" prefWidth="95.199951171875" text="Nombre" />
@@ -95,6 +101,9 @@
                     </columnResizePolicy>
                 </TableView>
             </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
         </VBox>
     </children>
 </AnchorPane>

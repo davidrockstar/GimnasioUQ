@@ -234,13 +234,19 @@ public class GimnasioUQ {
         if (!validarReserva(reserva)) return false;
         if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
 
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+
+        // Regla de negocio: Solo Premium y VIP pueden reservar clases.
+        if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
+            return false;
+        }
+
         long count = obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(reserva.getClase())).count();
         if (count >= reserva.getCupoMaximo()) {
             return false;
         }
 
-        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
-        if (usuario == null) return false;
         if (!usuario.tieneMembresiaActiva()) return false;
 
         LocalDate inicio = usuario.getFechaInicioMembresia();
@@ -261,6 +267,11 @@ public class GimnasioUQ {
 
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
+
+        // Regla de negocio: Solo Premium y VIP pueden reservar clases.
+        if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
+            return false;
+        }
 
         LocalDate inicio = usuario.getFechaInicioMembresia();
         LocalDate fin = usuario.getFechaFinMembresia();

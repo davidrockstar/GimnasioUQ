@@ -97,10 +97,4 @@ public class RecepReportesUsuariosViewController implements Initializable {
         if (lblUsuariosActivos != null)
             lblUsuariosActivos.textProperty().bind(reportesUsuariosController.usuariosTotalesProperty().asString());
     }
-
-    @FXML
-    void onExportarPdf(ActionEvent event) {
-
-    }
-
 }

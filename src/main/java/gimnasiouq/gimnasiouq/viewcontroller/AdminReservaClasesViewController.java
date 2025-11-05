@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class AdminReservaClasesViewController {
@@ -183,10 +184,10 @@ public class AdminReservaClasesViewController {
             beneficios = "Sin membresía asignada";
         } else {
             switch (tipoMembresia.toLowerCase()) {
-                case "basica" -> beneficios = "Acceso general al gimnasio";
-                case "premium" -> beneficios = "Acceso general al gimnasio, clases grupales ilimitadas";
+                case "basica" -> beneficios = "Acceso general a máquinas";
+                case "premium" -> beneficios = "Acceso general a máquinas, clases grupales";
                 case "vip" ->
-                        beneficios = "Acceso general al gimnasio, clases grupales ilimitadas, entrenador personal";
+                        beneficios = "Acceso ilimitado a máquinas, clases grupales ilimitadas, área de spa, entrenador personal";
                 default -> beneficios = "Tipo de membresía no reconocido";
             }
         }
@@ -241,7 +242,7 @@ public class AdminReservaClasesViewController {
         }
 
         if (fechaIngresada == null || fechaIngresada.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formatos: dd/MM/yyyy o yyyy-MM-dd).", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Debe ingresar una fecha (formato: dd/MM/yyyy).", Alert.AlertType.ERROR);
             return;
         }
 
@@ -267,7 +268,8 @@ public class AdminReservaClasesViewController {
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique que el usuario tenga una membresía activa, que la fecha esté dentro del período de la membresía y que la clase no esté llena.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Verifique si la fecha tiene formato dd/mm/yyyy y que no sea inferior a la actual.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Verifique que el usuario tenga una membresía activa y que sea Premium o VIP", Alert.AlertType.ERROR);
         }
     }
 
@@ -298,7 +300,7 @@ public class AdminReservaClasesViewController {
         }
 
         if (fechaIngresada == null || fechaIngresada.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formatos: dd/MM/yyyy o yyyy-MM-dd).", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Debe ingresar una fecha (formato: dd/MM/yyyy).", Alert.AlertType.ERROR);
             return;
         }
 
@@ -322,7 +324,7 @@ public class AdminReservaClasesViewController {
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "No se pudo actualizar la reserva.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo actualizar la reserva. Verifique los datos.", Alert.AlertType.ERROR);
         }
     }
 
