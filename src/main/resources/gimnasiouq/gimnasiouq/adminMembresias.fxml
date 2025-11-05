@@ -16,37 +16,40 @@
 
 <AnchorPane prefHeight="522.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.gimnasiouq.viewcontroller.AdminMembresiasViewController">
     <children>
-        <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <GridPane alignment="CENTER" vgap="10.0">
+                <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" minWidth="10.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-                        <ColumnConstraints halignment="CENTER" minWidth="10.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="38.200006103515626" prefWidth="42.200006103515626" />
+                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="254.40002441406253" prefWidth="310.1999938964844" />
+                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="39.20005493164069" prefWidth="71.19998779296873" />
+                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="167.99997558593748" prefWidth="304.8000122070313" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" />
                     </rowConstraints>
                     <children>
                         <Label text="Plan:" />
-                        <ComboBox fx:id="comboBoxPlanMembresia" maxWidth="1.7976931348623157E308" promptText="Seleccione un plan de membresía" GridPane.columnIndex="1">
+                        <ComboBox fx:id="comboBoxPlanMembresia" maxWidth="1.7976931348623157E308" promptText="Seleccione un plan de membresía" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
                                 <Insets left="10.0" right="10.0" />
                             </GridPane.margin></ComboBox>
                         <Label text="Costo:" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtCosto" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="txtCosto" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
                                 <Insets left="10.0" right="10.0" />
                             </GridPane.margin></TextField>
-                        <TextField fx:id="txtFechaInicio" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3">
+                        <TextField fx:id="txtFechaInicio" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3">
                             <GridPane.margin>
                                 <Insets left="10.0" right="10.0" />
                             </GridPane.margin></TextField>
-                        <Label text="Fecha Inicio:" textAlignment="JUSTIFY" GridPane.columnIndex="2" />
+                        <Label text="Fecha Inicio:" textAlignment="JUSTIFY" GridPane.columnIndex="2">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin></Label>
                         <Label text="Fecha Fin:" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtFechaFin" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="txtFechaFin" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <GridPane.margin>
                                 <Insets left="10.0" right="10.0" />
                             </GridPane.margin></TextField>
@@ -54,6 +57,9 @@
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </VBox.margin>
+                    <padding>
+                        <Insets top="10.0" />
+                    </padding>
                 </GridPane>
                 <GridPane>
                     <columnConstraints>
@@ -73,15 +79,16 @@
                     </children>
                 </GridPane>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
-                <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="157.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="tcNombre" prefWidth="90.0" text="Nombre" />
-                        <TableColumn fx:id="tcIdentificacion" prefWidth="104.00003814697266" text="Identificación" />
-                        <TableColumn fx:id="tcFechaInicio" minWidth="0.0" prefWidth="96.80000305175781" text="Fecha Inicio" />
-                        <TableColumn fx:id="tcFechaFin" prefWidth="108.0" text="Fecha Fin" />
-                        <TableColumn fx:id="tcPlanMembresia" prefWidth="105.5999755859375" text="Plan" />
-                        <TableColumn fx:id="tcCosto" prefWidth="120.79998779296875" text="Costo (COP)" />
-                        <TableColumn fx:id="tcEstado" prefWidth="123.2000732421875" text="Estado" />
+                        <TableColumn fx:id="tcUsuario" prefWidth="80.79998475313187" text="Usuario" />
+                        <TableColumn fx:id="tcNombre" prefWidth="95.199951171875" text="Nombre" />
+                        <TableColumn fx:id="tcIdentificacion" prefWidth="94.40003967285156" text="Identificación" />
+                        <TableColumn fx:id="tcFechaInicio" minWidth="0.0" prefWidth="86.4000244140625" text="Fecha Inicio" />
+                        <TableColumn fx:id="tcFechaFin" prefWidth="89.5999755859375" text="Fecha Fin" />
+                        <TableColumn fx:id="tcPlanMembresia" prefWidth="106.40008544921875" text="Plan" />
+                        <TableColumn fx:id="tcCosto" prefWidth="103.20001220703125" text="Costo (COP)" />
+                        <TableColumn fx:id="tcEstado" prefWidth="89.5999755859375" text="Estado" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

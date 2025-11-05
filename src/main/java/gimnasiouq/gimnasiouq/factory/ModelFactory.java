@@ -1,18 +1,10 @@
 package gimnasiouq.gimnasiouq.factory;
 
-import gimnasiouq.gimnasiouq.model.Entrenador;
-import gimnasiouq.gimnasiouq.model.GimnasioUQ;
-import gimnasiouq.gimnasiouq.model.ControlAcceso;
-import gimnasiouq.gimnasiouq.model.ReservaClase;
-import gimnasiouq.gimnasiouq.model.Usuario;
+import gimnasiouq.gimnasiouq.model.*;
 import gimnasiouq.gimnasiouq.util.DataUtil;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.List;
@@ -52,9 +44,12 @@ public class ModelFactory {
         listaUsuariosObservable = FXCollections.observableArrayList(gimnasioUQ.getListaUsuarios());
         listaEntrenadorObservable = FXCollections.observableArrayList(gimnasioUQ.getListaEntrenador());
         listaRegistrosAccesoObservable = FXCollections.observableArrayList(gimnasioUQ.getListaRegistrosAcceso());
-        listaReservaClasesObservable = FXCollections.observableArrayList(gimnasioUQ.getListaReservaClases());
+        listaReservaClasesObservable = FXCollections.observableArrayList(gimnasioUQ.obtenerReservasDeUsuarios());
 
-        listaUsuariosObservable.addListener((javafx.collections.ListChangeListener.Change<? extends Usuario> c) -> actualizarIndicadores());
+        listaUsuariosObservable.addListener((ListChangeListener.Change<? extends Usuario> c) -> {
+            actualizarIndicadores();
+            listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios());
+        });
         actualizarIndicadores();
     }
 
@@ -91,27 +86,22 @@ public class ModelFactory {
     }
 
     public ObservableList<ReservaClase> obtenerReservasObservable(){
-        listaReservaClasesObservable.setAll(gimnasioUQ.getListaReservaClases());
         return listaReservaClasesObservable;
     }
 
     public boolean agregarUsuario(Usuario usuario) {
         boolean ok = gimnasioUQ.agregarUsuario(usuario);
-        if (ok) listaUsuariosObservable.add(usuario);
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.add(usuario);
+            actualizarIndicadores();
+        }
         return ok;
     }
 
     public boolean actualizarUsuario(String identificacion, Usuario usuarioActualizado) {
         boolean ok = gimnasioUQ.actualizarUsuario(identificacion, usuarioActualizado);
         if (ok) {
-            // Buscar el índice del usuario en la lista observable
-            for (int i = 0; i < listaUsuariosObservable.size(); i++) {
-                if (listaUsuariosObservable.get(i).getIdentificacion().equals(identificacion)) {
-                    listaUsuariosObservable.set(i, usuarioActualizado);
-                    break;
-                }
-            }
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
             actualizarIndicadores();
         }
         return ok;
@@ -192,15 +182,19 @@ public class ModelFactory {
 
     public boolean agregarReservaAUsuario(String identificacionUsuario, ReservaClase reserva) {
         boolean ok = gimnasioUQ.agregarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+            actualizarIndicadores();
+        }
         return ok;
     }
 
     public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
         boolean ok = gimnasioUQ.actualizarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+            actualizarIndicadores();
+        }
         return ok;
     }
 
@@ -212,35 +206,38 @@ public class ModelFactory {
     }
 
     public ObservableList<ReservaClase> obtenerReservasDeUsuariosObservable() {
-        ObservableList<ReservaClase> reservas = FXCollections.observableArrayList();
-        List<ReservaClase> lista = gimnasioUQ.obtenerReservasDeUsuarios();
-        reservas.addAll(lista);
-        return reservas;
+        return listaReservaClasesObservable;
     }
 
     public boolean asignarMembresiaUsuario(String identificacionUsuario, gimnasiouq.gimnasiouq.model.Membresia membresia) {
         boolean ok = gimnasioUQ.asignarMembresiaUsuario(identificacionUsuario, membresia);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+            actualizarIndicadores();
+        }
         return ok;
     }
 
     public boolean actualizarMembresiaUsuario(String identificacionUsuario, gimnasiouq.gimnasiouq.model.Membresia membresia) {
         boolean ok = gimnasioUQ.actualizarMembresiaUsuario(identificacionUsuario, membresia);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+            actualizarIndicadores();
+        }
         return ok;
     }
 
     public boolean eliminarMembresiaUsuario(String identificacionUsuario) {
         boolean ok = gimnasioUQ.eliminarMembresiaUsuario(identificacionUsuario);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+            actualizarIndicadores();
+        }
         return ok;
     }
 
-    public gimnasiouq.gimnasiouq.model.Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoUsuario) {
-        return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan, tipoUsuario);
+    public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
+        return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan, tipoMembresia, usuario);
     }
 
     // REPORTES MEMBRESIAS

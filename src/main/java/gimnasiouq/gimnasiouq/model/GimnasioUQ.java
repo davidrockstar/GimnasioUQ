@@ -117,10 +117,10 @@ public class GimnasioUQ {
             if (usuarioActualizado.getMembresiaObj() != null) {
                 usuarioExistente.setMembresiaObj(usuarioActualizado.getMembresiaObj());
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -327,15 +327,15 @@ public class GimnasioUQ {
         return usuario != null ? usuario.getMembresiaActiva() : null;
     }
 
-    public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoUsuario) {
-        if (tipoPlan == null || tipoPlan.isEmpty()) return null;
+    public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
+        if (tipoPlan == null || tipoPlan.isEmpty() || usuario == null) return null;
 
         java.time.LocalDate fechaInicio = java.time.LocalDate.now();
         java.time.LocalDate fechaFin;
         double costo = 0;
 
         String plan = tipoPlan.trim().toLowerCase();
-        String tipo = (tipoUsuario == null || tipoUsuario.isBlank()) ? "basica" : tipoUsuario.trim().toLowerCase();
+        String tier = (tipoMembresia == null || tipoMembresia.isBlank()) ? "basica" : tipoMembresia.trim().toLowerCase();
 
         switch (plan) {
             case "mensual" -> fechaFin = fechaInicio.plusMonths(1);
@@ -346,30 +346,39 @@ public class GimnasioUQ {
             }
         }
 
-        // Tabla de tarifas por tipo y plan
-        // {Básica = Mensual: 10000, Trimestral: 30000, Anual: 100000}
-        // {Premium = Mensual: 15000, Trimestral: 40000, Anual: 150000}
-        // {VIP = Mensual: 20000, Trimestral: 50000, Anual: 200000}
-        if (tipo.equals("basica") || tipo.equalsIgnoreCase("básica")) {
+        if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
             switch (plan) {
                 case "mensual" -> costo = 10000;
                 case "trimestral" -> costo = 30000;
                 case "anual" -> costo = 100000;
             }
-            return new MembresiaBasica(costo, fechaInicio, fechaFin);
-        } else if (tipo.equals("premium")) {
+        } else if (tier.equals("premium")) {
             switch (plan) {
                 case "mensual" -> costo = 15000;
                 case "trimestral" -> costo = 40000;
                 case "anual" -> costo = 150000;
             }
-            return new MembresiaPremium(costo, fechaInicio, fechaFin);
-        } else if (tipo.equals("vip")) {
+        } else if (tier.equals("vip")) {
             switch (plan) {
                 case "mensual" -> costo = 20000;
                 case "trimestral" -> costo = 50000;
                 case "anual" -> costo = 200000;
             }
+        }
+
+        // Aplicar descuentos según el tipo de usuario
+        if (usuario instanceof Estudiante) {
+            costo *= 0.90; // 10% de descuento
+        } else if (usuario instanceof TrabajadorUQ) {
+            costo *= 0.80; // 20% de descuento
+        }
+
+        // Crear y devolver la membresía correcta
+        if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
+            return new MembresiaBasica(costo, fechaInicio, fechaFin);
+        } else if (tier.equals("premium")) {
+            return new MembresiaPremium(costo, fechaInicio, fechaFin);
+        } else if (tier.equals("vip")) {
             return new MembresiaVIP(costo, fechaInicio, fechaFin);
         }
 

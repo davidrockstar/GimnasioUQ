@@ -11,6 +11,10 @@ public class LoginViewController {
     @FXML private Label txtAdvertencia;
     @FXML private PasswordField txtPasswordLogin;
     @FXML private ComboBox <String> comboBoxUser;
+    @FXML
+    public void initialize() {
+        comboBoxUser.getItems().addAll("Administrador", "Recepcionista");
+    }
 
     @FXML
     void login(ActionEvent event) {
@@ -52,10 +56,5 @@ public class LoginViewController {
         alert.setHeaderText(header);
         alert.setContentText(contenido);
         alert.showAndWait();
-    }
-
-    @FXML
-    public void initialize() {
-        comboBoxUser.getItems().addAll("Administrador", "Recepcionista");
     }
 }

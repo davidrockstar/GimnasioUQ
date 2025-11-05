@@ -3,6 +3,7 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 import gimnasiouq.gimnasiouq.controller.ReportesMembresiasController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.Usuario;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -66,7 +66,9 @@ public class AdminReportesMembresiasViewController implements Initializable{
         initDataBinding();
         listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
         listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
-            cargarIndicadores();});
+            cargarIndicadores();
+            tableView.refresh();
+        });
         tableView.setItems(listaUsuarios);
 
     }

@@ -37,6 +37,8 @@ public class RecepReservaClasesViewController {
     @FXML
     private TableView<Usuario> tableUsuario;
     @FXML
+    private TableColumn<Usuario, String> tcUsuario;
+    @FXML
     private TableColumn<Usuario, String> tcNombre;
     @FXML
     private TableColumn<Usuario, String> tcIdentificacion;
@@ -52,6 +54,7 @@ public class RecepReservaClasesViewController {
     private TableColumn<Usuario, String> tcEntrenador;
     @FXML
     private TableColumn<Usuario, String> tcEstado;
+
 
     private Usuario usuarioSeleccionado;
 
@@ -76,14 +79,41 @@ public class RecepReservaClasesViewController {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
-        tcIdentificacion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIdentificacion()));
-        tcTipo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMembresia()));
-        tcClase.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin clase" : c.getValue().getReservas().get(0).getClase()));
-        tcHorarior.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin horario" : c.getValue().getReservas().get(0).getHorario()));
-        tcFecha.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin fecha" : c.getValue().getReservas().get(0).getFecha()));
-        tcEntrenador.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin entrenador" : c.getValue().getReservas().get(0).getEntrenador()));
-        tcEstado.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEstadoMembresia()));
+        if (tcNombre != null) {
+            tcNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
+        }
+        if (tcIdentificacion != null) {
+            tcIdentificacion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIdentificacion()));
+        }
+        if (tcTipo != null) {
+            tcTipo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMembresia()));
+        }
+        if (tcClase != null) {
+            tcClase.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin clase" : c.getValue().getReservas().get(0).getClase()));
+        }
+        if (tcHorarior != null) {
+            tcHorarior.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin horario" : c.getValue().getReservas().get(0).getHorario()));
+        }
+        if (tcFecha != null) {
+            tcFecha.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin fecha" : c.getValue().getReservas().get(0).getFecha()));
+        }
+        if (tcEntrenador != null) {
+            tcEntrenador.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin entrenador" : c.getValue().getReservas().get(0).getEntrenador()));
+        }
+        if (tcEstado != null) {
+            tcEstado.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEstadoMembresia()));
+        }
+        if (tcUsuario != null) {
+            tcUsuario.setCellValueFactory(cellData -> {
+                if (cellData.getValue() instanceof Estudiante) {
+                    return new SimpleStringProperty("Estudiante");
+                } else if (cellData.getValue() instanceof TrabajadorUQ) {
+                    return new SimpleStringProperty("Trabajador UQ");
+                } else {
+                    return new SimpleStringProperty("Externo");
+                }
+            });
+        }
     }
 
     private void listenerSelection() {
@@ -239,7 +269,7 @@ public class RecepReservaClasesViewController {
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique que el usuario tenga una membresía activa y que la fecha esté dentro del período de la membresía.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo crear la reserva. Verifique que el usuario tenga una membresía activa, que la fecha esté dentro del período de la membresía y que la clase no esté llena.", Alert.AlertType.ERROR);
         }
     }
 
@@ -294,7 +324,7 @@ public class RecepReservaClasesViewController {
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "No se pudo actualizar la reserva.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo actualizar la reserva. Verifique los datos.", Alert.AlertType.ERROR);
         }
     }
 

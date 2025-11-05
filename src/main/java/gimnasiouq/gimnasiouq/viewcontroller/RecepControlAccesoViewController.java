@@ -1,8 +1,8 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.controller.ControlAccesoController;
-import gimnasiouq.gimnasiouq.model.ControlAcceso;
-import gimnasiouq.gimnasiouq.model.Usuario;
+import gimnasiouq.gimnasiouq.factory.ModelFactory;
+import gimnasiouq.gimnasiouq.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +23,7 @@ public class RecepControlAccesoViewController {
     @FXML private Label lblMembresiaEncontrada;
     @FXML private Label lblNombreEncontrado;
     @FXML private TableView<ControlAcceso> tableUsuario;
+    @FXML private TableColumn<ControlAcceso, String> tcUsuario;
     @FXML private TableColumn<ControlAcceso, String> tcFecha;
     @FXML private TableColumn<ControlAcceso, String> tcHora;
     @FXML private TableColumn<ControlAcceso, String> tcIdentificacion;
@@ -47,45 +48,75 @@ public class RecepControlAccesoViewController {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getUsuario()));
+        if (tcNombre != null) {
+            tcNombre.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getUsuario()));
+        }
 
-        tcIdentificacion.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        if (tcIdentificacion != null) {
+            tcIdentificacion.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        }
 
-        tcTipoMembresia.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        if (tcTipoMembresia != null) {
+            tcTipoMembresia.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        }
 
-        tcFecha.setCellValueFactory(cellData -> {
-            LocalDate fecha = cellData.getValue().getFecha();
-            return new SimpleStringProperty(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        });
+        if (tcFecha != null) {
+            tcFecha.setCellValueFactory(cellData -> {
+                LocalDate fecha = cellData.getValue().getFecha();
+                return new SimpleStringProperty(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            });
+        }
 
-        tcHora.setCellValueFactory(cellData -> {
-            LocalTime hora = cellData.getValue().getHora();
-            return new SimpleStringProperty(hora.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-        });
+        if (tcHora != null) {
+            tcHora.setCellValueFactory(cellData -> {
+                LocalTime hora = cellData.getValue().getHora();
+                return new SimpleStringProperty(hora.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+            });
+        }
 
-        tcEstado.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getEstado()));
+        if (tcEstado != null) {
+            tcEstado.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getEstado()));
 
-        tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(item);
-                    if ("ACTIVA".equals(item)) {
-                        setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
                     } else {
-                        setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                        setText(item);
+                        if ("ACTIVA".equals(item)) {
+                            setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                        } else {
+                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        if (tcUsuario != null) {
+            tcUsuario.setCellValueFactory(cellData -> {
+                String id = cellData.getValue().getIdentificacion();
+                if (id == null) return new SimpleStringProperty("N/A");
+
+                Usuario usuario = ModelFactory.getInstance().buscarUsuario(id);
+                if (usuario == null) return new SimpleStringProperty("Desconocido");
+
+                if (usuario instanceof Estudiante) {
+                    return new SimpleStringProperty("Estudiante");
+                } else if (usuario instanceof TrabajadorUQ) {
+                    return new SimpleStringProperty("Trabajador UQ");
+                } else {
+                    return new SimpleStringProperty("Externo");
+                }
+            });
+        }
     }
 
     @FXML

@@ -81,13 +81,14 @@
                     <Separator prefHeight="18.0" prefWidth="682.0" />
                     <TableView fx:id="tableUsuario" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="157.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="tcNombre" prefWidth="90.0" text="Nombre" />
-                            <TableColumn fx:id="tcIdentificacion" prefWidth="104.00003814697266" text="Identificación" />
-                            <TableColumn fx:id="tcFechaInicio" minWidth="0.0" prefWidth="96.80000305175781" text="Fecha Inicio" />
-                            <TableColumn fx:id="tcFechaFin" prefWidth="108.0" text="Fecha Fin" />
-                            <TableColumn fx:id="tcPlanMembresia" prefWidth="105.5999755859375" text="Plan" />
-                            <TableColumn fx:id="tcCosto" prefWidth="120.79998779296875" text="Costo (COP)" />
-                  <TableColumn fx:id="tcEstado" prefWidth="123.2000732421875" text="Estado" />
+                  <TableColumn fx:id="tcUsuario" prefWidth="80.79998475313187" text="Usuario" />
+                            <TableColumn fx:id="tcNombre" prefWidth="95.199951171875" text="Nombre" />
+                            <TableColumn fx:id="tcIdentificacion" prefWidth="94.40003967285156" text="Identificación" />
+                            <TableColumn fx:id="tcFechaInicio" minWidth="0.0" prefWidth="86.4000244140625" text="Fecha Inicio" />
+                            <TableColumn fx:id="tcFechaFin" prefWidth="89.5999755859375" text="Fecha Fin" />
+                            <TableColumn fx:id="tcPlanMembresia" prefWidth="106.40008544921875" text="Plan" />
+                            <TableColumn fx:id="tcCosto" prefWidth="103.20001220703125" text="Costo (COP)" />
+                  <TableColumn fx:id="tcEstado" prefWidth="89.5999755859375" text="Estado" />
                         </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

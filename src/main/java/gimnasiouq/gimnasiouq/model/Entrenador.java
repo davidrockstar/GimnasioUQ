@@ -56,7 +56,6 @@ public class Entrenador {
     }
 
     public void setClasesDisponibles(String claseAsignada) {
-        // corregido: usar el parámetro de método
         this.clasesDisponibles = claseAsignada;
     }
 

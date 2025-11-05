@@ -30,4 +30,8 @@ public class MembresiaController {
         if (!validarMembresia(membresia)) return false;
         return ModelFactory.getInstance().actualizarMembresiaUsuario(identificacionUsuario, membresia);
     }
+
+    public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
+        return ModelFactory.getInstance().calcularMembresiaPorPlan(tipoPlan, tipoMembresia, usuario);
+    }
 }

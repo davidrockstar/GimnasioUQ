@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.model.Usuario;
+import gimnasiouq.gimnasiouq.model.*;
 import gimnasiouq.gimnasiouq.controller.UsuarioController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -41,6 +41,9 @@ public class RecepUsuariosViewController {
     private TableView<Usuario> tableUsuario;
 
     @FXML
+    private TableColumn<Usuario, String> tcUsuario;
+
+    @FXML
     private TableColumn<Usuario, String> tcCelular;
 
     @FXML
@@ -68,6 +71,9 @@ public class RecepUsuariosViewController {
     private ComboBox<String> comboBoxMembresia;
 
     @FXML
+    private ComboBox<String> comboBoxUsuarios;
+
+    @FXML
     private TextField txtNombre;
 
     @FXML
@@ -93,7 +99,8 @@ public class RecepUsuariosViewController {
     @FXML
     void initialize() {
         initView();
-        comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");
+        if (comboBoxMembresia != null){comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");}
+        if (comboBoxUsuarios != null){comboBoxUsuarios.getItems().addAll("Externo", "Estudiante", "TrabajadorUQ");}
     }
 
     private void initView() {
@@ -108,11 +115,32 @@ public class RecepUsuariosViewController {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEdad()));
-        tcCelular.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCelular()));
-        tcMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMembresia()));
+        if (tcNombre != null) {
+            tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        }
+        if (tcIdentificacion != null) {
+            tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        }
+        if (tcEdad != null) {
+            tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEdad()));
+        }
+        if (tcCelular != null) {
+            tcCelular.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCelular()));
+        }
+        if (tcMembresia != null) {
+            tcMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMembresia()));
+        }
+        if (tcUsuario != null) {
+            tcUsuario.setCellValueFactory(cellData -> {
+                if (cellData.getValue() instanceof Estudiante) {
+                    return new SimpleStringProperty("Estudiante");
+                } else if (cellData.getValue() instanceof TrabajadorUQ) {
+                    return new SimpleStringProperty("Trabajador UQ");
+                } else {
+                    return new SimpleStringProperty("Externo");
+                }
+            });
+        }
     }
 
     private void listenerSelection() {
@@ -218,6 +246,7 @@ public class RecepUsuariosViewController {
         txtEdad.clear();
         txtCelular.clear();
         comboBoxMembresia.setValue(null);
+        comboBoxUsuarios.setValue(null);
     }
 
     private boolean datosValidos(Usuario usuario) {
@@ -230,13 +259,37 @@ public class RecepUsuariosViewController {
     }
 
     private Usuario crearUsuario() {
-        return new Usuario(
-                txtNombre.getText(),
-                txtIdentificacion.getText(),
-                txtEdad.getText(),
-                txtCelular.getText(),
-                comboBoxMembresia.getValue()
-        );
+        String tipoUsuario = comboBoxUsuarios.getValue();
+        if (tipoUsuario == null) {
+            mostrarVentanaEmergente("Tipo de usuario no seleccionado", "Error", "Debe seleccionar un tipo de usuario", Alert.AlertType.ERROR);
+            return null;
+        }
+
+        String nombre = txtNombre.getText();
+        String id = txtIdentificacion.getText();
+        String edad = txtEdad.getText();
+        String celular = txtCelular.getText();
+        String membresia = comboBoxMembresia.getValue();
+
+        Usuario nuevoUsuario;
+
+        switch (tipoUsuario) {
+            case "Estudiante":
+                nuevoUsuario = new Estudiante(nombre, id, edad, celular, membresia);
+                break;
+            case "TrabajadorUQ":
+                nuevoUsuario = new TrabajadorUQ(nombre, id, edad, celular, membresia);
+                break;
+            default:
+                nuevoUsuario = new Externo(nombre, id, edad, celular, membresia);
+                break;
+        }
+
+        // Asignar el tipo de membresía seleccionado en la UI.
+        // Esto corrige el valor temporal que pudo haber sido asignado por el constructor.
+        nuevoUsuario.setTipoMembresia(membresia);
+
+        return nuevoUsuario;
     }
 
     private void mostrarInformacionUsuario(Usuario usuarioSeleccionado) {
@@ -246,6 +299,14 @@ public class RecepUsuariosViewController {
             txtEdad.setText(usuarioSeleccionado.getEdad());
             txtCelular.setText(usuarioSeleccionado.getCelular());
             comboBoxMembresia.setValue(usuarioSeleccionado.getMembresia());
+
+            if (usuarioSeleccionado instanceof Estudiante) {
+                comboBoxUsuarios.setValue("Estudiante");
+            } else if (usuarioSeleccionado instanceof TrabajadorUQ) {
+                comboBoxUsuarios.setValue("TrabajadorUQ");
+            } else {
+                comboBoxUsuarios.setValue("Externo");
+            }
         }
     }
 

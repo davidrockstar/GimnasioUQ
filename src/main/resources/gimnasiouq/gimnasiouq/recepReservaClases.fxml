@@ -102,14 +102,15 @@
                   <Separator prefHeight="18.0" prefWidth="682.0" />
                   <TableView fx:id="tableUsuario" prefHeight="238.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
                       <columns>
-                          <TableColumn fx:id="tcNombre" prefWidth="114.39995461702347" text="Nombre" />
-                          <TableColumn fx:id="tcIdentificacion" prefWidth="108.79995727539062" text="Identificación" />
-                          <TableColumn fx:id="tcTipo" minWidth="0.0" prefWidth="98.40003967285156" text="Tipo Membresía" />
-                          <TableColumn fx:id="tcClase" prefWidth="112.0" text="Clase" />
-                          <TableColumn fx:id="tcHorarior" prefWidth="76.79998779296875" text="Horario" />
-                  <TableColumn fx:id="tcFecha" prefWidth="75.0" text="Fecha" />
-                          <TableColumn fx:id="tcEntrenador" minWidth="0.0" prefWidth="83.2000732421875" text="Entrenador" />
-                          <TableColumn fx:id="tcEstado" minWidth="0.79998779296875" prefWidth="79.19998779296873" text="Estado" />
+                  <TableColumn fx:id="tcUsuario" prefWidth="83.19997864961624" text="Usuario" />
+                          <TableColumn fx:id="tcNombre" prefWidth="97.60003662109375" text="Nombre" />
+                          <TableColumn fx:id="tcIdentificacion" prefWidth="118.39997863769531" text="Identificación" />
+                          <TableColumn fx:id="tcTipo" minWidth="0.0" prefWidth="101.5999755859375" text="Tipo Membresía" />
+                          <TableColumn fx:id="tcClase" prefWidth="82.4000244140625" text="Clase" />
+                          <TableColumn fx:id="tcHorarior" prefWidth="74.4000244140625" text="Horario" />
+                  <TableColumn fx:id="tcFecha" prefWidth="77.60003662109375" text="Fecha" />
+                          <TableColumn fx:id="tcEntrenador" minWidth="0.0" prefWidth="80.7999267578125" text="Entrenador" />
+                          <TableColumn fx:id="tcEstado" minWidth="0.79998779296875" prefWidth="58.39990234375" text="Estado" />
                       </columns>
                <VBox.margin>
                   <Insets />

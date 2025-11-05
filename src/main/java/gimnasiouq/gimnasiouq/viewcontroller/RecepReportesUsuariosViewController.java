@@ -2,7 +2,7 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.controller.ReportesUsuariosController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
-import gimnasiouq.gimnasiouq.model.Usuario;
+import gimnasiouq.gimnasiouq.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -33,6 +33,9 @@ public class RecepReportesUsuariosViewController implements Initializable {
 
     @FXML
     private TableView<Usuario> tableView;
+
+    @FXML
+    private TableColumn<Usuario, String> tcUsuario;
 
     @FXML
     private TableColumn<Usuario, String> tcEstado;
@@ -72,6 +75,17 @@ public class RecepReportesUsuariosViewController implements Initializable {
         }
         if (tcNombre != null) {
             tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        }
+        if (tcUsuario != null) {
+            tcUsuario.setCellValueFactory(cellData -> {
+                if (cellData.getValue() instanceof Estudiante) {
+                    return new SimpleStringProperty("Estudiante");
+                } else if (cellData.getValue() instanceof TrabajadorUQ) {
+                    return new SimpleStringProperty("Trabajador UQ");
+                } else {
+                    return new SimpleStringProperty("Externo");
+                }
+            });
         }
     }
 
