@@ -84,20 +84,6 @@
             </plugin>
             
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <argLine>
-                        --add-opens gimnasiouq.gimnasiouq/gimnasiouq.gimnasiouq.controller=ALL-UNNAMED
-                        --add-opens gimnasiouq.gimnasiouq/gimnasiouq.gimnasiouq.model=ALL-UNNAMED
-                        --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
-                        @{argLine}
-                    </argLine>
-                </configuration>
-            </plugin>
-            
-            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>

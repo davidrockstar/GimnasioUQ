@@ -12,13 +12,15 @@ import java.util.stream.Collectors;
 
 public class GimnasioUQ {
 
+    String nombre;
+    String direccion;
+
     private List<Usuario> listaUsuarios;
     private List<Recepcionista> listaRecepcionista;
     private List<Administador> listaAdministrador;
     private List<ReservaClase> listaReservaClases;
     private List<Entrenador> listaEntrenador;
     private List<ControlAcceso> listaRegistrosAcceso;
-    private Map<String, Integer> cuposPorClase;
 
     public GimnasioUQ() {
         this.listaUsuarios = new ArrayList<>();
@@ -27,10 +29,6 @@ public class GimnasioUQ {
         this.listaReservaClases = new ArrayList<>();
         this.listaEntrenador = new ArrayList<>();
         this.listaRegistrosAcceso = new ArrayList<>();
-        this.cuposPorClase = new HashMap<>();
-        cuposPorClase.put("Yoga", 5);
-        cuposPorClase.put("Spinning", 5);
-        cuposPorClase.put("Zumba", 5);
     }
 
     private LocalDate parseFecha(String fechaStr) {
@@ -435,13 +433,5 @@ public class GimnasioUQ {
 
     public int contarTotalClasesReservadas() {
         return obtenerReservasDeUsuarios().size();
-    }
-
-    public int getCupoMaximo(String clase) {
-        return cuposPorClase.getOrDefault(clase, 0);
-    }
-
-    public long getReservasActuales(String clase) {
-        return obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(clase)).count();
     }
 }
