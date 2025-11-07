@@ -30,12 +30,12 @@
                   <Insets />
                </opaqueInsets>
             </Separator>
-            <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+            <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="NEVER">
                <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
+                  <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -49,34 +49,34 @@
                   <Label text="Celular:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <TextField fx:id="txtNombre" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="txtEdad" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="txtIdentificacion" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </TextField>
                   <TextField fx:id="txtCelular" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </TextField>
                   <Label text="Usuario:" GridPane.rowIndex="2" />
                   <ComboBox fx:id="comboBoxUsuarios" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione una clase de usuario" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </ComboBox>
                   <Label text="Tipo:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <ComboBox fx:id="comboBoxMembresia" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione un tipo de membresía" GridPane.columnIndex="3" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets />
                      </GridPane.margin>
                   </ComboBox>
                </children>
@@ -89,12 +89,12 @@
                   <Insets />
                </opaqueInsets>
             </Separator>
-            <GridPane alignment="CENTER">
+            <GridPane alignment="CENTER" hgap="10.0">
                <columnConstraints>
                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-                  <ColumnConstraints halignment="CENTER" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints halignment="CENTER" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" />
+                  <ColumnConstraints halignment="CENTER" percentWidth="0.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />

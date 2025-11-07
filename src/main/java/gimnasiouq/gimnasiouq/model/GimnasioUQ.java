@@ -333,11 +333,6 @@ public class GimnasioUQ {
         return true;
     }
 
-    public Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
-        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
-        return usuario != null ? usuario.getMembresiaActiva() : null;
-    }
-
     public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
         if (tipoPlan == null || tipoPlan.isEmpty() || usuario == null) return null;
 

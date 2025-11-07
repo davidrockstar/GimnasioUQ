@@ -1,6 +1,7 @@
 package gimnasiouq.gimnasiouq.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public abstract class Membresia {
     private String tipo;
@@ -8,6 +9,8 @@ public abstract class Membresia {
     private LocalDate inicio;
     private LocalDate fin;
     private boolean activa;
+    private LocalDate fechaPago;
+    private LocalTime horaPago;
 
     public Membresia(String tipo, double costo, LocalDate inicio, LocalDate fin, boolean activa) {
         this.tipo = tipo;
@@ -15,10 +18,13 @@ public abstract class Membresia {
         this.inicio = inicio;
         this.fin = fin;
         this.activa = activa;
+        this.fechaPago = LocalDate.now();
+        this.horaPago = LocalTime.now();
     }
 
     public Membresia() {
-
+        this.fechaPago = LocalDate.now();
+        this.horaPago = LocalTime.now();
     }
 
     public String getTipo() {
@@ -59,6 +65,14 @@ public abstract class Membresia {
 
     public void setActiva(boolean activa) {
         this.activa = activa;
+    }
+
+    public LocalDate getFechaPago() {
+        return fechaPago;
+    }
+
+    public LocalTime getHoraPago() {
+        return horaPago;
     }
 
     public boolean estaVigente() {

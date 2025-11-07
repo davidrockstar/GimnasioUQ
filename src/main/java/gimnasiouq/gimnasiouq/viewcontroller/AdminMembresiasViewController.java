@@ -3,6 +3,7 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 import gimnasiouq.gimnasiouq.controller.MembresiaController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
+import gimnasiouq.gimnasiouq.util.WindowUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,9 @@ public class AdminMembresiasViewController {
 
     @FXML
     private Button btnNuevo;
+
+    @FXML
+    private Button btnDetalles;
 
     @FXML
     private ComboBox<String> comboBoxPlanMembresia;
@@ -93,12 +97,25 @@ public class AdminMembresiasViewController {
     }
 
     @FXML
+    void onMostrarDetalles(ActionEvent event) {
+        if (usuarioSeleccionado != null) {
+            WindowUtil.mostrarVentanaDetalles(usuarioSeleccionado, tableUsuario.getScene().getWindow());
+        } else {
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
+                    "Debe seleccionar un usuario de la tabla para ver los detalles.",
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
     void initialize() {
         membresiaController = new MembresiaController();
         initView();
         comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
         comboBoxPlanMembresia.setOnAction(e -> calcularFechas());
-
+        if (btnDetalles != null) {
+            btnDetalles.setDisable(true);
+        }
     }
 
     private void initView() {
@@ -167,6 +184,9 @@ public class AdminMembresiasViewController {
                 (observable, oldValue, newSelection) -> {
                     usuarioSeleccionado = newSelection;
                     mostrarInformacionUsuario(usuarioSeleccionado);
+                    if (btnDetalles != null) {
+                        btnDetalles.setDisable(newSelection == null || newSelection.getMembresiaActiva() == null);
+                    }
                 });
     }
 

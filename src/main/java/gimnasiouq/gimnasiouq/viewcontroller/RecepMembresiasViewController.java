@@ -3,6 +3,7 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 import gimnasiouq.gimnasiouq.controller.MembresiaController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
+import gimnasiouq.gimnasiouq.util.WindowUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,9 @@ public class RecepMembresiasViewController {
 
     @FXML
     private Button btnNuevo;
+
+    @FXML
+    private Button btnDetalles;
 
     @FXML
     private ComboBox<String> comboBoxPlanMembresia;
@@ -73,24 +77,19 @@ public class RecepMembresiasViewController {
     private TextField txtFechaInicio;
 
     @FXML
-    void onActualizar(ActionEvent event) {
-        actualizarMembresia();
-    }
+    void onActualizar(ActionEvent event) {actualizarMembresia();}
 
     @FXML
-    void onAsignar(ActionEvent event) {
-        asignarMembresia();
-    }
+    void onAsignar(ActionEvent event) {asignarMembresia();}
 
     @FXML
-    void onEliminar(ActionEvent event) {
-        eliminarMembresia();
-    }
+    void onEliminar(ActionEvent event) {eliminarMembresia();}
 
     @FXML
-    void onNuevo(ActionEvent event) {
-        nuevoRegistro();
-    }
+    void onNuevo(ActionEvent event) {nuevoRegistro();}
+
+    @FXML
+    void onDetalles(ActionEvent event) {mostrarDetalles();}
 
     @FXML
     void initialize() {
@@ -98,7 +97,9 @@ public class RecepMembresiasViewController {
         initView();
         comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
         comboBoxPlanMembresia.setOnAction(e -> calcularFechas());
-
+        if (btnDetalles != null) {
+            btnDetalles.setDisable(true);
+        }
     }
 
     private void initView() {
@@ -106,10 +107,6 @@ public class RecepMembresiasViewController {
         listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
         tableUsuario.setItems(listaUsuarios);
         listenerSelection();
-    }
-
-    private void obtenerUsuarios() {
-        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
     }
 
     private void initDataBinding() {
@@ -167,7 +164,20 @@ public class RecepMembresiasViewController {
                 (observable, oldValue, newSelection) -> {
                     usuarioSeleccionado = newSelection;
                     mostrarInformacionUsuario(usuarioSeleccionado);
+                    if (btnDetalles != null) {
+                        btnDetalles.setDisable(newSelection == null || newSelection.getMembresiaActiva() == null);
+                    }
                 });
+    }
+
+    private void mostrarDetalles(){
+        if (usuarioSeleccionado != null) {
+            WindowUtil.mostrarVentanaDetalles(usuarioSeleccionado, tableUsuario.getScene().getWindow());
+        } else {
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
+                    "Debe seleccionar un usuario de la tabla para ver los detalles.",
+                    Alert.AlertType.WARNING);
+        }
     }
 
     private void asignarMembresia() {
