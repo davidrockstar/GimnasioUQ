@@ -1,6 +1,7 @@
 package gimnasiouq.gimnasiouq.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -83,6 +84,10 @@ public class GimnasioUQ {
         this.listaEntrenador = listaEntrenador;
     }
 
+    public List<ControlAcceso> getListaRegistrosAcceso() {
+        return listaRegistrosAcceso;
+    }
+
     public void setListaRegistrosAcceso(List<ControlAcceso> listaRegistrosAcceso) {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
@@ -143,10 +148,6 @@ public class GimnasioUQ {
         return buscarUsuarioPorIdentificacion(identificacion) != null;
     }
 
-    public List<ControlAcceso> getListaRegistrosAcceso() {
-        return listaRegistrosAcceso;
-    }
-
     public boolean agregarRegistroAcceso(ControlAcceso registro) {
         return listaRegistrosAcceso.add(registro);
     }
@@ -197,7 +198,6 @@ public class GimnasioUQ {
         Entrenador entrenadorExistente = buscarEntrenadorPorIdentificacion(identificacion);
 
         if (entrenadorExistente != null) {
-            // Actualizar los datos básicos
             entrenadorExistente.setNombre(entrenadorActualizado.getNombre());
             entrenadorExistente.setIdentificacion(entrenadorActualizado.getIdentificacion());
             entrenadorExistente.setEspecialidad(entrenadorActualizado.getEspecialidad());
@@ -237,13 +237,12 @@ public class GimnasioUQ {
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
 
-        // Regla de negocio: Solo Premium y VIP pueden reservar clases.
         if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
             return false;
         }
 
         long count = obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(reserva.getClase())).count();
-        if (count >= reserva.getCupoMaximo()) {
+        if (count >= 5) {
             return false;
         }
 
@@ -268,7 +267,6 @@ public class GimnasioUQ {
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
 
-        // Regla de negocio: Solo Premium y VIP pueden reservar clases.
         if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
             return false;
         }
@@ -313,7 +311,7 @@ public class GimnasioUQ {
     }
 
     public boolean asignarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
-        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || membresia == null) return false;
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || !validarMembresia(membresia)) return false;
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
         if (usuario == null) return false;
         usuario.setMembresiaActiva(membresia);
@@ -331,6 +329,11 @@ public class GimnasioUQ {
         if (usuario.getMembresiaActiva() == null) return false;
         usuario.setMembresiaActiva(null);
         return true;
+    }
+
+    public Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        return usuario != null ? usuario.getMembresiaActiva() : null;
     }
 
     public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
@@ -372,14 +375,12 @@ public class GimnasioUQ {
             }
         }
 
-        // Aplicar descuentos según el tipo de usuario
         if (usuario instanceof Estudiante) {
             costo *= 0.90; // 10% de descuento
         } else if (usuario instanceof TrabajadorUQ) {
             costo *= 0.80; // 20% de descuento
         }
 
-        // Crear y devolver la membresía correcta
         if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
             return new MembresiaBasica(costo, fechaInicio, fechaFin);
         } else if (tier.equals("premium")) {
@@ -448,5 +449,43 @@ public class GimnasioUQ {
 
     public int contarTotalClasesReservadas() {
         return obtenerReservasDeUsuarios().size();
+    }
+
+    public boolean puedeAccederSpa(String identificacion) {
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacion);
+        if (usuario == null || usuario.getMembresiaActiva() == null) {
+            return false;
+        }
+        return "VIP".equalsIgnoreCase(usuario.getMembresiaActiva().getTipo());
+    }
+
+    public boolean validarIngresoUsuario(String identificacion) {
+        Usuario u = buscarUsuarioPorIdentificacion(identificacion);
+        return u != null && u.tieneMembresiaActiva();
+    }
+
+    public boolean registrarIngresoUsuario(String identificacion) {
+        Usuario u = buscarUsuarioPorIdentificacion(identificacion);
+        if (u == null || !u.tieneMembresiaActiva()) {
+            return false;
+        }
+
+        ControlAcceso registro = new ControlAcceso(
+                LocalDate.now(),
+                LocalTime.now(),
+                u.getNombre(),
+                u.getIdentificacion(),
+                u.getTipoMembresia(),
+                u.getEstadoMembresia()
+        );
+        return agregarRegistroAcceso(registro);
+    }
+
+    public boolean validarMembresia(Membresia membresia) {
+        if (membresia == null) return false;
+        if (membresia.getInicio() == null || membresia.getFin() == null) return false;
+        if (membresia.getInicio().isAfter(membresia.getFin())) return false;
+        if (membresia.getCosto() < 0) return false;
+        return true;
     }
 }

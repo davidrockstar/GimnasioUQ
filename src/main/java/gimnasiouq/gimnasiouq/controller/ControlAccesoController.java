@@ -5,35 +5,18 @@ import gimnasiouq.gimnasiouq.model.ControlAcceso;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.collections.ObservableList;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class ControlAccesoController {
 
     private final ModelFactory modelFactory = ModelFactory.getInstance();
 
     public boolean validarIngreso(String identificacion) {
         if (identificacion == null || identificacion.trim().isEmpty()) return false;
-        Usuario u = modelFactory.buscarUsuario(identificacion.trim());
-        return u != null && u.tieneMembresiaActiva();
+        return modelFactory.validarIngresoUsuario(identificacion.trim());
     }
 
     public boolean registrarIngreso(String identificacion) {
         if (identificacion == null || identificacion.trim().isEmpty()) return false;
-        Usuario u = modelFactory.buscarUsuario(identificacion.trim());
-        if (u == null) return false;
-        if (!u.tieneMembresiaActiva()) return false;
-
-        ControlAcceso registro = new ControlAcceso(
-                LocalDate.now(),
-                LocalTime.now(),
-                u.getNombre(),
-                u.getIdentificacion(),
-                u.getTipoMembresia(),
-                u.getEstadoMembresia()
-        );
-
-        return modelFactory.agregarRegistroAcceso(registro);
+        return modelFactory.registrarIngresoUsuario(identificacion.trim());
     }
 
     public boolean eliminarRegistro(ControlAcceso registro) {
@@ -48,5 +31,10 @@ public class ControlAccesoController {
     public Usuario buscarUsuario(String identificacion) {
         if (identificacion == null) return null;
         return modelFactory.buscarUsuario(identificacion);
+    }
+
+    public boolean puedeAccederSpa(String identificacion) {
+        if (identificacion == null || identificacion.trim().isEmpty()) return false;
+        return modelFactory.puedeAccederSpa(identificacion.trim());
     }
 }

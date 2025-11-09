@@ -158,13 +158,17 @@ public class ModelFactory {
 
     public boolean agregarRegistroAcceso(ControlAcceso registro) {
         boolean ok = gimnasioUQ.agregarRegistroAcceso(registro);
-        if (ok) listaRegistrosAccesoObservable.add(registro);
+        if (ok) {
+            listaRegistrosAccesoObservable.add(registro);
+        }
         return ok;
     }
 
     public boolean eliminarRegistroAcceso(ControlAcceso registro) {
         boolean ok = gimnasioUQ.eliminarRegistroAcceso(registro);
-        if (ok) listaRegistrosAccesoObservable.remove(registro);
+        if (ok) {
+            listaRegistrosAccesoObservable.remove(registro);
+        }
         return ok;
     }
 
@@ -238,6 +242,22 @@ public class ModelFactory {
 
     public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
         return gimnasioUQ.calcularMembresiaPorPlan(tipoPlan, tipoMembresia, usuario);
+    }
+
+    public boolean puedeAccederSpa(String identificacion) {
+        return gimnasioUQ.puedeAccederSpa(identificacion);
+    }
+
+    public boolean validarIngresoUsuario(String identificacion) {
+        return gimnasioUQ.validarIngresoUsuario(identificacion);
+    }
+
+    public boolean registrarIngresoUsuario(String identificacion) {
+        boolean ok = gimnasioUQ.registrarIngresoUsuario(identificacion);
+        if (ok) {
+            listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso());
+        }
+        return ok;
     }
 
     // REPORTES MEMBRESIAS

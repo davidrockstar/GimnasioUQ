@@ -12,7 +12,6 @@ public class ReportesMembresiasController {
         this.modelFactory = ModelFactory.getInstance();
     }
 
-    // Exponer properties para binding
     public IntegerProperty membresiasTotalesProperty() {
         return modelFactory.membresiasTotalesProperty();
     }
