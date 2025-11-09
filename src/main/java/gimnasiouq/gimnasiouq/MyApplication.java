@@ -43,4 +43,12 @@ public class MyApplication extends Application {
         mainStage.setScene(sceneAdministrador);
         mainStage.setTitle("Panel de Administrador");
     }
+
+    public static void cambiarEscena(String tipoUsuario) {
+        if (tipoUsuario.equals("Administrador")) {
+            goToAdministrador();
+        } else if (tipoUsuario.equals("Recepcionista")) {
+            goToRecepcionista();
+        }
+    }
 }

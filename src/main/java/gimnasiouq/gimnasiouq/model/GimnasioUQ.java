@@ -13,20 +13,20 @@ import java.util.stream.Collectors;
 
 public class GimnasioUQ {
 
-    String nombre;
-    String direccion;
+    private final String nombre;
+    private final String direccion;
 
+    private Administrador administrador;
+    private Recepcionista recepcionista;
     private List<Usuario> listaUsuarios;
-    private List<Recepcionista> listaRecepcionista;
-    private List<Administador> listaAdministrador;
     private List<ReservaClase> listaReservaClases;
     private List<Entrenador> listaEntrenador;
     private List<ControlAcceso> listaRegistrosAcceso;
 
-    public GimnasioUQ() {
+    public GimnasioUQ(String nombre, String direccion) {
+        this.nombre = nombre;
+        this.direccion = direccion;
         this.listaUsuarios = new ArrayList<>();
-        this.listaRecepcionista = new ArrayList<>();
-        this.listaAdministrador = new ArrayList<>();
         this.listaReservaClases = new ArrayList<>();
         this.listaEntrenador = new ArrayList<>();
         this.listaRegistrosAcceso = new ArrayList<>();
@@ -44,28 +44,40 @@ public class GimnasioUQ {
         }
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public Administrador getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(Administrador administrador) {
+        this.administrador = administrador;
+    }
+
+    public Recepcionista getRecepcionista() {
+        return recepcionista;
+    }
+
+    public void setRecepcionista(Recepcionista recepcionista) {
+        this.recepcionista = recepcionista;
+    }
+
+    public void setListaReservaClases(List<ReservaClase> listaReservaClases) {
+        this.listaReservaClases = listaReservaClases;
+    }
+
     public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
 
     public void setListaUsuarios(List<Usuario> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
-    }
-
-    public List<Recepcionista> getListaRecepcionista() {
-        return listaRecepcionista;
-    }
-
-    public void setListaRecepcionista(List<Recepcionista> listaRecepcionista) {
-        this.listaRecepcionista = listaRecepcionista;
-    }
-
-    public List<Administador> getListaAdministrador() {
-        return listaAdministrador;
-    }
-
-    public void setListaAdministrador(List<Administador> listaAdministrador) {
-        this.listaAdministrador = listaAdministrador;
     }
 
     public List<ReservaClase> getListaReservaClases() {

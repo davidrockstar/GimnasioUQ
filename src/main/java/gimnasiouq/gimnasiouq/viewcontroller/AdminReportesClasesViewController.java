@@ -5,7 +5,6 @@ import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.ReservaClase;
 import gimnasiouq.gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,26 +25,29 @@ public class AdminReportesClasesViewController {
     private Label lblTotalClasesReservadas;
 
     @FXML
-    private TableView<Usuario> tableView;
+    private TableView<ReservaClase> tableView;
 
     @FXML
-    private TableColumn<Usuario, String> tcClase;
+    private TableColumn<ReservaClase, String> tcClase;
 
     @FXML
-    private TableColumn<Usuario, String> tcHorario;
+    private TableColumn<ReservaClase, String> tcHorario;
 
     @FXML
-    private TableColumn<Usuario, String> tcFecha;
+    private TableColumn<ReservaClase, String> tcFecha;
 
     @FXML
-    private TableColumn<Usuario, String> tcEntrenador;
+    private TableColumn<ReservaClase, String> tcEntrenador;
 
     @FXML
-    private TableColumn<Usuario, String> tcIdUsuario;
+    private TableColumn<ReservaClase, String> tcIdUsuario;
 
-    ObservableList<Usuario> listaUsuarios;
+    @FXML
+    private TableColumn<ReservaClase, String> tcNombreUsuario;
 
-    private final ReportesClasesController reportesClasesController = new ReportesClasesController();
+
+    @FXML
+    void onExportarPdf(ActionEvent event) {}
 
     @FXML
     void initialize() {
@@ -55,52 +57,36 @@ public class AdminReportesClasesViewController {
 
     private void initView() {
         initDataBinding();
-        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
-        listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
-            cargarIndicadores();
-            tableView.refresh();
-        });
-        tableView.setItems(listaUsuarios);
-
+        if (tableView != null) {
+            ObservableList<ReservaClase> listaReservaClases = ModelFactory.getInstance().obtenerReservasObservable();
+            tableView.setItems(listaReservaClases);
+        }
     }
 
     private void initDataBinding() {
         if (tcClase != null) {
-            tcClase.setCellValueFactory(cellData -> {
-                if (cellData.getValue().getReservas().isEmpty()) {
-                    return new SimpleStringProperty("Sin reserva");
-                }
-                return new SimpleStringProperty(cellData.getValue().getReservas().get(0).getClase());
-            });
+            tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
         }
         if (tcHorario != null) {
-            tcHorario.setCellValueFactory(cellData -> {
-                if (cellData.getValue().getReservas().isEmpty()) {
-                    return new SimpleStringProperty("Sin reserva");
-                }
-                return new SimpleStringProperty(cellData.getValue().getReservas().get(0).getHorario());
-            });
+            tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
         }
         if (tcFecha != null) {
-            tcFecha.setCellValueFactory(cellData -> {
-                if (cellData.getValue().getReservas().isEmpty()) {
-                    return new SimpleStringProperty("Sin reserva");
-                }
-                return new SimpleStringProperty(cellData.getValue().getReservas().get(0).getFecha());
-            });
+            tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
         }
         if (tcEntrenador != null) {
-            tcEntrenador.setCellValueFactory(cellData -> {
-                if (cellData.getValue().getReservas().isEmpty()) {
-                    return new SimpleStringProperty("Sin reserva");
-                }
-                return new SimpleStringProperty(cellData.getValue().getReservas().get(0).getEntrenador());
-            });
+            tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
         }
         if (tcIdUsuario != null) {
             tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
         }
+        if (tcNombreUsuario != null) {
+            tcNombreUsuario.setCellValueFactory(cellData -> {
+                Usuario u = ModelFactory.getInstance().buscarUsuario(cellData.getValue().getIdentificacion());
+                return new SimpleStringProperty(u != null ? u.getNombre() : "Desconocido");
+            });
+        }
     }
+    private final ReportesClasesController reportesClasesController = new ReportesClasesController();
 
     private void cargarIndicadores() {
         if (lblClaseMasReservada != null)

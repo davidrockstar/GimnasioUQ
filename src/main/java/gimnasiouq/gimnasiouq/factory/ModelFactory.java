@@ -69,6 +69,14 @@ public class ModelFactory {
 
     }
 
+    public String getNombreGimnasio() {
+        return gimnasioUQ.getNombre();
+    }
+
+    public String getDireccionGimnasio() {
+        return gimnasioUQ.getDireccion();
+    }
+
     public List<Usuario> obtenerUsuarios() { return gimnasioUQ.getListaUsuarios(); }
 
     public ObservableList<Usuario> obtenerUsuariosObservable() {
@@ -152,10 +160,6 @@ public class ModelFactory {
         return gimnasioUQ.buscarEntrenadorPorIdentificacion(identificacion);
     }
 
-    public List<ControlAcceso> getListaRegistrosAcceso() {
-        return gimnasioUQ.getListaRegistrosAcceso();
-    }
-
     public boolean agregarRegistroAcceso(ControlAcceso registro) {
         boolean ok = gimnasioUQ.agregarRegistroAcceso(registro);
         if (ok) {
@@ -175,13 +179,6 @@ public class ModelFactory {
     public ObservableList<ControlAcceso> obtenerRegistrosAccesoObservable() {
         listaRegistrosAccesoObservable.setAll(gimnasioUQ.getListaRegistrosAcceso());
         return listaRegistrosAccesoObservable;
-    }
-
-    public ObservableList<ReservaClase> obtenerReservasDeUsuarios() {
-        ObservableList<ReservaClase> reservas = FXCollections.observableArrayList();
-        List<ReservaClase> lista = gimnasioUQ.obtenerReservasDeUsuarios();
-        reservas.addAll(lista);
-        return reservas;
     }
 
     public boolean agregarReservaAUsuario(String identificacionUsuario, ReservaClase reserva) {

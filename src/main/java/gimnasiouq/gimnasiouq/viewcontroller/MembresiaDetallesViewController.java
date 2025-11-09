@@ -44,52 +44,54 @@ public class MembresiaDetallesViewController {
     private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("hh:mm:ss a");
 
-    /**
-     * Inicializa la ventana con los datos del usuario seleccionado.
-     * Este método debe ser llamado por el controlador que abre esta ventana.
-     * @param usuario El usuario del cual se mostrarán los detalles.
-     */
     public void initData(Usuario usuario) {
         if (usuario == null) return;
 
-        lblNombre.setText(usuario.getNombre());
-        lblIdentificacion.setText(usuario.getIdentificacion());
+        if (lblNombre != null) lblNombre.setText(usuario.getNombre());
+        if (lblIdentificacion != null) lblIdentificacion.setText(usuario.getIdentificacion());
 
-        // Determinar el tipo de usuario
-        if (usuario instanceof Estudiante) {
-            lblTipoUsuario.setText("Estudiante");
-        } else if (usuario instanceof TrabajadorUQ) {
-            lblTipoUsuario.setText("Trabajador UQ");
-        } else {
-            lblTipoUsuario.setText("Externo");
+        if (lblTipoUsuario != null) {
+            if (usuario instanceof Estudiante) {
+                lblTipoUsuario.setText("Estudiante");
+            } else if (usuario instanceof TrabajadorUQ) {
+                lblTipoUsuario.setText("Trabajador UQ");
+            } else {
+                lblTipoUsuario.setText("Externo");
+            }
         }
 
         Membresia membresia = usuario.getMembresiaActiva();
 
-        // Mostrar detalles de la membresía
         if (membresia != null) {
-            lblPlan.setText(usuario.getPlanMembresia());
-            lblCosto.setText(usuario.getCostoMembresiaFormateado());
-            lblFechaInicio.setText(usuario.getFechaInicioFormateada());
-            lblFechaFin.setText(usuario.getFechaFinFormateada());
-            lblEstado.setText(usuario.getEstadoMembresia());
-
-            // Mostrar fecha y hora de pago
-            if (membresia.getFechaPago() != null) {
+            if (lblPlan != null) lblPlan.setText(usuario.getPlanMembresia());
+            if (lblCosto != null) lblCosto.setText(usuario.getCostoMembresiaFormateado());
+            if (lblFechaInicio != null) lblFechaInicio.setText(usuario.getFechaInicioFormateada());
+            if (lblFechaFin != null) lblFechaFin.setText(usuario.getFechaFinFormateada());
+            if (lblEstado != null) {
+                lblEstado.setText(usuario.getEstadoMembresia());
+                if ("ACTIVA".equals(usuario.getEstadoMembresia())) {
+                    lblEstado.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                } else {
+                    lblEstado.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                }
+            }
+            if (lblFechaPago != null && membresia.getFechaPago() != null) {
                 lblFechaPago.setText(membresia.getFechaPago().format(formatoFecha));
             }
-            if (membresia.getHoraPago() != null) {
+            if (lblHoraPago != null && membresia.getHoraPago() != null) {
                 lblHoraPago.setText(membresia.getHoraPago().format(formatoHora));
             }
         } else {
-            // Estado si no tiene una membresía asignada
-            lblPlan.setText("N/A");
-            lblCosto.setText("N/A");
-            lblFechaInicio.setText("N/A");
-            lblFechaFin.setText("N/A");
-            lblEstado.setText("Sin membresía");
-            lblFechaPago.setText("N/A");
-            lblHoraPago.setText("N/A");
+            if (lblPlan != null) lblPlan.setText("N/A");
+            if (lblCosto != null) lblCosto.setText("N/A");
+            if (lblFechaInicio != null) lblFechaInicio.setText("N/A");
+            if (lblFechaFin != null) lblFechaFin.setText("N/A");
+            if (lblEstado != null) {
+                lblEstado.setText("Sin membresía");
+                lblEstado.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+            }
+            if (lblFechaPago != null) lblFechaPago.setText("N/A");
+            if (lblHoraPago != null) lblHoraPago.setText("N/A");
         }
     }
 }

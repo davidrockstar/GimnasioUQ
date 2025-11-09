@@ -1,59 +1,72 @@
 package gimnasiouq.gimnasiouq.viewcontroller;
 
 import gimnasiouq.gimnasiouq.MyApplication;
+import gimnasiouq.gimnasiouq.controller.GimnasioController;
+import gimnasiouq.gimnasiouq.controller.LoginController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class LoginViewController {
 
-    @FXML private Button loginButton;
-    @FXML private Label txtAdvertencia;
-    @FXML private PasswordField txtPasswordLogin;
-    @FXML private ComboBox <String> comboBoxUser;
+    private final LoginController loginController = new LoginController();
+    private final GimnasioController gimnasioController = new GimnasioController();
+
     @FXML
-    public void initialize() {
+    private Button btnIngresar;
+
+    @FXML
+    private PasswordField txtContrasena;
+
+    @FXML
+    private ComboBox<String> comboBoxUser;
+
+    @FXML
+    private Label lblGimnasioNombre;
+
+    @FXML
+    private Label lblGimnasioDireccion;
+
+    @FXML
+    void onIngresar(ActionEvent event) {
+        String usuario = comboBoxUser.getValue();
+        String contrasena = txtContrasena.getText();
+        String resultado = loginController.procesarLogin(usuario, contrasena);
+
+        switch (resultado) {
+            case "ADMINISTRADOR":
+                MyApplication.cambiarEscena("Administrador");
+                break;
+            case "RECEPCIONISTA":
+                MyApplication.cambiarEscena("Recepcionista");
+                break;
+            case "ERROR_USUARIO_VACIO":
+                mostrarAlerta("Error de Validación", "El campo de usuario no puede estar vacío.", Alert.AlertType.WARNING);
+                break;
+            case "ERROR_PASSWORD_VACIO":
+                mostrarAlerta("Error de Validación", "El campo de contraseña no puede estar vacío.", Alert.AlertType.WARNING);
+                break;
+            case "ERROR_CREDENCIALES":
+                mostrarAlerta("Datos Incorrectos", "El usuario o la contraseña no son válidos.", Alert.AlertType.ERROR);
+                break;
+        }
+    }
+
+    @FXML
+    void initialize() {
         comboBoxUser.getItems().addAll("Administrador", "Recepcionista");
-    }
-
-    @FXML
-    void login(ActionEvent event) {
-
-        String user = comboBoxUser.getValue();
-        String pass = txtPasswordLogin.getText();
-        String resultado = procesarLogin(user, pass);
-        
-        if ("ADMINISTRADOR".equals(resultado)) {
-            MyApplication.goToAdministrador();
-        } else if ("RECEPCIONISTA".equals(resultado)) {
-            MyApplication.goToRecepcionista();
-        } else {
-            mostrarVentanaEmergente("Error de autenticación", null, "Credenciales incorrectas", Alert.AlertType.ERROR);
+        if (lblGimnasioNombre != null) {
+            lblGimnasioNombre.setText(gimnasioController.getNombreGimnasio());
+        }
+        if (lblGimnasioDireccion != null) {
+            lblGimnasioDireccion.setText(gimnasioController.getDireccionGimnasio());
         }
     }
 
-    protected String procesarLogin(String user, String pass) {
-        // Validación de campos vacíos
-        if (user == null || user.trim().isEmpty()) {
-            return "ERROR_USUARIO_VACIO";
-        }
-        
-        if (pass == null || pass.trim().isEmpty()) {
-            return "ERROR_PASSWORD_VACIO";
-        }
-        if (AdminViewController.validarCredenciales(user, pass)) {
-            return "ADMINISTRADOR";
-        } else if (RecepViewController.validarCredenciales(user, pass)) {
-            return "RECEPCIONISTA";
-        } else {
-            return "ERROR_CREDENCIALES";
-        }
-    }
-
-    private void mostrarVentanaEmergente(String titulo, String header, String contenido, Alert.AlertType alertType){
-        Alert alert = new Alert(alertType);
+    private void mostrarAlerta(String titulo, String contenido, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(header);
+        alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
     }
