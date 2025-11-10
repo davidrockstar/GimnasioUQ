@@ -1,5 +1,6 @@
 package gimnasiouq.gimnasiouq.model;
 
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult; // Importar el enum
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -36,11 +37,8 @@ public class GimnasioUQ {
         try {
             return LocalDate.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
-            try {
-                return LocalDate.parse(fechaStr, DateTimeFormatter.ISO_LOCAL_DATE); // yyyy-MM-dd
-            } catch (DateTimeParseException ex) {
-                return null;
-            }
+            // El requisito es formato dd/MM/yyyy, si falla, no es válido.
+            return null;
         }
     }
 
@@ -68,10 +66,6 @@ public class GimnasioUQ {
         this.recepcionista = recepcionista;
     }
 
-    public void setListaReservaClases(List<ReservaClase> listaReservaClases) {
-        this.listaReservaClases = listaReservaClases;
-    }
-
     public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
@@ -84,7 +78,7 @@ public class GimnasioUQ {
         return listaReservaClases;
     }
 
-    public void setListaClases(List<ReservaClase> listaReservaClases) {
+    public void setListaReservaClases(List<ReservaClase> listaReservaClases) {
         this.listaReservaClases = listaReservaClases;
     }
 
@@ -234,92 +228,144 @@ public class GimnasioUQ {
     }
 
     private boolean validarReserva(ReservaClase reserva) {
-        if (reserva == null) return false;
-        if (reserva.getClase() == null || reserva.getClase().isEmpty()) return false;
-        if (reserva.getHorario() == null || reserva.getHorario().isEmpty()) return false;
-        if (reserva.getFecha() == null) return false;
-        if (reserva.getIdentificacion() == null || reserva.getIdentificacion().isEmpty()) return false;
-        return true;
+        // Esta validación es para datos básicos de la reserva, no para la lógica de negocio
+        return reserva != null &&
+               reserva.getClase() != null && !reserva.getClase().isEmpty() &&
+               reserva.getHorario() != null && !reserva.getHorario().isEmpty() &&
+               reserva.getFecha() != null &&
+               reserva.getIdentificacion() != null && !reserva.getIdentificacion().isEmpty();
     }
 
-    public boolean agregarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
-        if (!validarReserva(reserva)) return false;
-        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+    public ReservaValidationResult agregarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
+        if (!validarReserva(reserva) || identificacionUsuario == null || identificacionUsuario.isEmpty()) {
+            return ReservaValidationResult.DATOS_RESERVA_INVALIDOS;
+        }
 
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
-        if (usuario == null) return false;
-
-        if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
-            return false;
+        if (usuario == null) {
+            return ReservaValidationResult.USUARIO_NO_ENCONTRADO;
         }
 
-        long count = obtenerReservasDeUsuarios().stream().filter(r -> r.getClase().equals(reserva.getClase())).count();
-        if (count >= 5) {
-            return false;
-        }
-
-        if (!usuario.tieneMembresiaActiva()) return false;
-
-        LocalDate inicio = usuario.getFechaInicioMembresia();
-        LocalDate fin = usuario.getFechaFinMembresia();
-
+        // Validar formato de fecha
         LocalDate fecha = parseFecha(reserva.getFecha());
-        if (fecha == null) return false;
+        if (fecha == null) {
+            return ReservaValidationResult.FORMATO_FECHA_INVALIDO;
+        }
 
-        if (inicio == null || fin == null) return false;
-        if (fecha.isBefore(inicio) || fecha.isAfter(fin)) return false;
+        // Validar que la fecha no sea inferior a la actual
+        if (fecha.isBefore(LocalDate.now())) {
+            return ReservaValidationResult.FECHA_EN_PASADO;
+        }
 
-        return usuario.getReservas().add(reserva);
+        // Validar límite de 3 reservas por clase (solo por nombre de clase)
+        long count = listaReservaClases.stream()
+                .filter(r -> r.getClase().equals(reserva.getClase()))
+                .count();
+        if (count >= 3) {
+            return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
+        }
+
+        // Validar membresía activa
+        if (!usuario.tieneMembresiaActiva()) {
+            return ReservaValidationResult.MEMBRESIA_INACTIVA;
+        }
+
+        // Validar que la fecha de la reserva esté dentro del período de la membresía
+        LocalDate inicioMembresia = usuario.getFechaInicioMembresia();
+        LocalDate finMembresia = usuario.getFechaFinMembresia();
+
+        if (inicioMembresia == null || finMembresia == null || fecha.isBefore(inicioMembresia) || fecha.isAfter(finMembresia)) {
+            return ReservaValidationResult.FECHA_FUERA_MEMBRESIA;
+        }
+
+        if (listaReservaClases.add(reserva)) {
+            return ReservaValidationResult.EXITO;
+        }
+        return ReservaValidationResult.ERROR_DESCONOCIDO;
     }
 
-    public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
-        if (!validarReserva(reserva)) return false;
-        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
-
-        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
-        if (usuario == null) return false;
-
-        if ("Basica".equalsIgnoreCase(usuario.getTipoMembresia())) {
-            return false;
+    public ReservaValidationResult actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
+        if (!validarReserva(reserva) || identificacionUsuario == null || identificacionUsuario.isEmpty()) {
+            return ReservaValidationResult.DATOS_RESERVA_INVALIDOS;
         }
 
-        LocalDate inicio = usuario.getFechaInicioMembresia();
-        LocalDate fin = usuario.getFechaFinMembresia();
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) {
+            return ReservaValidationResult.USUARIO_NO_ENCONTRADO;
+        }
 
+        // Validar formato de fecha
         LocalDate fecha = parseFecha(reserva.getFecha());
-        if (fecha == null) return false;
+        if (fecha == null) {
+            return ReservaValidationResult.FORMATO_FECHA_INVALIDO;
+        }
 
-        if (inicio == null || fin == null) return false;
-        if (fecha.isBefore(inicio) || fecha.isAfter(fin)) return false;
+        // Validar que la fecha no sea inferior a la actual
+        if (fecha.isBefore(LocalDate.now())) {
+            return ReservaValidationResult.FECHA_EN_PASADO;
+        }
 
-        if (usuario.getReservas().isEmpty()) {
-            usuario.getReservas().add(reserva);
+        // Validar membresía activa
+        if (!usuario.tieneMembresiaActiva()) {
+            return ReservaValidationResult.MEMBRESIA_INACTIVA;
+        }
+
+        // Validar que la fecha de la reserva esté dentro del período de la membresía
+        LocalDate inicioMembresia = usuario.getFechaInicioMembresia();
+        LocalDate finMembresia = usuario.getFechaFinMembresia();
+
+        if (inicioMembresia == null || finMembresia == null || fecha.isBefore(inicioMembresia) || fecha.isAfter(finMembresia)) {
+            return ReservaValidationResult.FECHA_FUERA_MEMBRESIA;
+        }
+
+        boolean updated = false;
+        for (int i = 0; i < listaReservaClases.size(); i++) {
+            if (listaReservaClases.get(i).getIdentificacion().equals(identificacionUsuario)) {
+                ReservaClase oldReserva = listaReservaClases.get(i);
+
+                // Si la clase de la reserva está cambiando, o si es una nueva reserva,
+                // necesitamos verificar el límite de 3 reservas para la nueva clase.
+                if (!oldReserva.getClase().equals(reserva.getClase())) {
+                    long count = listaReservaClases.stream()
+                            .filter(r -> r != oldReserva) // Excluir la reserva antigua del conteo
+                            .filter(r -> r.getClase().equals(reserva.getClase()))
+                            .count();
+                    if (count >= 3) {
+                        return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
+                    }
+                }
+                listaReservaClases.set(i, reserva);
+                updated = true;
+                break;
+            }
+        }
+
+        if (updated) {
+            return ReservaValidationResult.EXITO;
         } else {
-            usuario.getReservas().set(0, reserva);
+            // Si no se encontró una reserva existente para actualizar, se añade como nueva
+            // Aquí también se debe verificar el límite de 3 reservas
+            long count = listaReservaClases.stream()
+                    .filter(r -> r.getClase().equals(reserva.getClase()))
+                    .count();
+
+            if (count >= 3) {
+                return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
+            }
+            if (listaReservaClases.add(reserva)) {
+                return ReservaValidationResult.EXITO;
+            }
         }
-        return true;
+        return ReservaValidationResult.ERROR_DESCONOCIDO;
     }
 
     public boolean eliminarReservasUsuario(String identificacionUsuario) {
         if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
-        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
-        if (usuario == null) return false;
-        if (usuario.getReservas() == null || usuario.getReservas().isEmpty()) return false;
-        usuario.getReservas().clear();
-        return true;
+        return listaReservaClases.removeIf(reserva -> reserva.getIdentificacion().equals(identificacionUsuario));
     }
 
     public List<ReservaClase> obtenerReservasDeUsuarios() {
-        List<ReservaClase> reservas = new ArrayList<>();
-        for (Usuario u : listaUsuarios) {
-            if (u.getReservas() != null && !u.getReservas().isEmpty()) {
-                for (ReservaClase r : u.getReservas()) {
-                    r.setIdentificacion(u.getIdentificacion());
-                    reservas.add(r);
-                }
-            }
-        }
-        return reservas;
+        return new ArrayList<>(listaReservaClases);
     }
 
     public boolean asignarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
@@ -449,7 +495,7 @@ public class GimnasioUQ {
     }
 
     public String contarClaseMasReservada() {
-        Map<String, Long> conteoClases = obtenerReservasDeUsuarios().stream()
+        Map<String, Long> conteoClases = listaReservaClases.stream()
                 .map(ReservaClase::getClase)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -460,7 +506,7 @@ public class GimnasioUQ {
     }
 
     public int contarTotalClasesReservadas() {
-        return obtenerReservasDeUsuarios().size();
+        return listaReservaClases.size();
     }
 
     public boolean puedeAccederSpa(String identificacion) {

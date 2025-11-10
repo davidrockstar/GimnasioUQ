@@ -15,7 +15,6 @@ public abstract class Usuario {
     private String celular;
     private String tipoMembresia;
     private Membresia membresiaObj;
-    private final List<ReservaClase> reservas = new ArrayList<>();
 
     public Usuario(String nombre, String identificacion, String edad, String celular, String tipoMembresia) {
         this.nombre = nombre;
@@ -127,10 +126,6 @@ public abstract class Usuario {
         if (meses <= 3) return "Trimestral";
         if (meses <= 12) return "Anual";
         return "Personalizado";
-    }
-
-    public List<ReservaClase> getReservas() {
-        return reservas;
     }
 
     public boolean tieneMembresiaActiva() {

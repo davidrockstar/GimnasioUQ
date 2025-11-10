@@ -2,6 +2,7 @@ package gimnasiouq.gimnasiouq.factory;
 
 import gimnasiouq.gimnasiouq.model.*;
 import gimnasiouq.gimnasiouq.util.DataUtil;
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult; // Importar el enum
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -48,7 +49,7 @@ public class ModelFactory {
 
         listaUsuariosObservable.addListener((ListChangeListener.Change<? extends Usuario> c) -> {
             actualizarIndicadores();
-            listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios());
+            // Ya no es necesario actualizar listaReservaClasesObservable aquí, se hará directamente en los métodos de reserva
         });
         actualizarIndicadores();
     }
@@ -94,6 +95,7 @@ public class ModelFactory {
     }
 
     public ObservableList<ReservaClase> obtenerReservasObservable(){
+        listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios()); // Asegurar que siempre esté actualizada
         return listaReservaClasesObservable;
     }
 
@@ -181,28 +183,30 @@ public class ModelFactory {
         return listaRegistrosAccesoObservable;
     }
 
-    public boolean agregarReservaAUsuario(String identificacionUsuario, ReservaClase reserva) {
-        boolean ok = gimnasioUQ.agregarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) {
-            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+    public ReservaValidationResult agregarReservaAUsuario(String identificacionUsuario, ReservaClase reserva) {
+        ReservaValidationResult result = gimnasioUQ.agregarReservaUsuario(identificacionUsuario, reserva);
+        if (result == ReservaValidationResult.EXITO) {
+            listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios()); // Actualizar la observable
             actualizarIndicadores();
         }
-        return ok;
+        return result;
     }
 
-    public boolean actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
-        boolean ok = gimnasioUQ.actualizarReservaUsuario(identificacionUsuario, reserva);
-        if (ok) {
-            listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
+    public ReservaValidationResult actualizarReservaUsuario(String identificacionUsuario, ReservaClase reserva) {
+        ReservaValidationResult result = gimnasioUQ.actualizarReservaUsuario(identificacionUsuario, reserva);
+        if (result == ReservaValidationResult.EXITO) {
+            listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios()); // Actualizar la observable
             actualizarIndicadores();
         }
-        return ok;
+        return result;
     }
 
     public boolean eliminarReservasUsuario(String identificacionUsuario) {
         boolean ok = gimnasioUQ.eliminarReservasUsuario(identificacionUsuario);
-        if (ok) listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
-        if (ok) actualizarIndicadores();
+        if (ok) {
+            listaReservaClasesObservable.setAll(gimnasioUQ.obtenerReservasDeUsuarios()); // Actualizar la observable
+            actualizarIndicadores();
+        }
         return ok;
     }
 

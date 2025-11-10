@@ -2,20 +2,22 @@ package gimnasiouq.gimnasiouq.controller;
 
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.ReservaClase;
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult;
 
 public class ReservaClaseController {
 
-    public boolean agregarReserva(ReservaClase reserva) {
-        if (reserva == null) return false;
-        return ModelFactory.getInstance().agregarReservaAUsuario(reserva.getIdentificacion(), reserva);
+    public ReservaValidationResult agregarReserva(String identificacionUsuario, ReservaClase reserva) {
+        if (reserva == null || identificacionUsuario == null || identificacionUsuario.isEmpty()) return ReservaValidationResult.DATOS_RESERVA_INVALIDOS;
+        return ModelFactory.getInstance().agregarReservaAUsuario(identificacionUsuario, reserva);
     }
 
     public boolean eliminarReserva(String identificacionUsuario) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
         return ModelFactory.getInstance().eliminarReservasUsuario(identificacionUsuario);
     }
 
-    public boolean actualizarReserva(ReservaClase reserva) {
-        if (reserva == null) return false;
-        return ModelFactory.getInstance().actualizarReservaUsuario(reserva.getIdentificacion(), reserva);
+    public ReservaValidationResult actualizarReserva(String identificacionUsuario, ReservaClase reserva) {
+        if (reserva == null || identificacionUsuario == null || identificacionUsuario.isEmpty()) return ReservaValidationResult.DATOS_RESERVA_INVALIDOS;
+        return ModelFactory.getInstance().actualizarReservaUsuario(identificacionUsuario, reserva);
     }
 }

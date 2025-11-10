@@ -9,14 +9,14 @@ public class ReservaClase {
     private String entrenador;
     private String fecha;
     private String identificacionUsuario;
-    private int cupoMaximo;
+    private static int cupoMaximo;
 
     public ReservaClase(String clase, String horario, String entrenador, String fecha) {
         this.clase = clase;
         this.horario = horario;
         this.entrenador = entrenador;
         this.fecha = fecha;
-        this.cupoMaximo = 5; // Cupo máximo predeterminado
+        cupoMaximo = 3; // Cupo máximo predeterminado
     }
 
     public String getClase() {
@@ -59,12 +59,8 @@ public class ReservaClase {
         this.identificacionUsuario = identificacionUsuario;
     }
 
-    public int getCupoMaximo() {
+    public static int getCupoMaximo() {
         return cupoMaximo;
-    }
-
-    public void setCupoMaximo(int cupoMaximo) {
-        this.cupoMaximo = cupoMaximo;
     }
 
     @Override
@@ -72,11 +68,7 @@ public class ReservaClase {
         if (this == o) return true;
         if (!(o instanceof ReservaClase)) return false;
         ReservaClase that = (ReservaClase) o;
-        return cupoMaximo == that.cupoMaximo &&
-               Objects.equals(clase, that.clase) &&
-               Objects.equals(horario, that.horario) &&
-               Objects.equals(fecha, that.fecha) &&
-               Objects.equals(identificacionUsuario, that.identificacionUsuario);
+        return Objects.equals(clase, that.clase) && Objects.equals(horario, that.horario) && Objects.equals(fecha, that.fecha) && Objects.equals(identificacionUsuario, that.identificacionUsuario);
     }
 
     @Override

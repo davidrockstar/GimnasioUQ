@@ -3,6 +3,7 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult; // Importar el enum
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.*;
 
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 public class RecepReservaClasesViewController {
 
@@ -78,6 +80,13 @@ public class RecepReservaClasesViewController {
         cargarEntrenadoresDisponibles();
     }
 
+    private ReservaClase getReservaForUser(String identificacion) {
+        return ModelFactory.getInstance().obtenerReservasObservable().stream()
+                .filter(r -> r.getIdentificacion().equals(identificacion))
+                .findFirst()
+                .orElse(null);
+    }
+
     private void initDataBinding() {
         if (tcNombre != null) {
             tcNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
@@ -89,16 +98,28 @@ public class RecepReservaClasesViewController {
             tcTipo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMembresia()));
         }
         if (tcClase != null) {
-            tcClase.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin clase" : c.getValue().getReservas().get(0).getClase()));
+            tcClase.setCellValueFactory(c -> {
+                ReservaClase reserva = getReservaForUser(c.getValue().getIdentificacion());
+                return new SimpleStringProperty(reserva == null ? "Sin clase" : reserva.getClase());
+            });
         }
         if (tcHorarior != null) {
-            tcHorarior.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin horario" : c.getValue().getReservas().get(0).getHorario()));
+            tcHorarior.setCellValueFactory(c -> {
+                ReservaClase reserva = getReservaForUser(c.getValue().getIdentificacion());
+                return new SimpleStringProperty(reserva == null ? "Sin horario" : reserva.getHorario());
+            });
         }
         if (tcFecha != null) {
-            tcFecha.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin fecha" : c.getValue().getReservas().get(0).getFecha()));
+            tcFecha.setCellValueFactory(c -> {
+                ReservaClase reserva = getReservaForUser(c.getValue().getIdentificacion());
+                return new SimpleStringProperty(reserva == null ? "Sin fecha" : reserva.getFecha());
+            });
         }
         if (tcEntrenador != null) {
-            tcEntrenador.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReservas().isEmpty() ? "Sin entrenador" : c.getValue().getReservas().get(0).getEntrenador()));
+            tcEntrenador.setCellValueFactory(c -> {
+                ReservaClase reserva = getReservaForUser(c.getValue().getIdentificacion());
+                return new SimpleStringProperty(reserva == null ? "Sin entrenador" : reserva.getEntrenador());
+            });
         }
         if (tcEstado != null) {
             tcEstado.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEstadoMembresia()));
@@ -122,17 +143,26 @@ public class RecepReservaClasesViewController {
             if (newSel != null) {
                 mostrarBeneficios(newSel);
                 prepararEntrenadoresSegunMembresia(newSel);
+                ReservaClase reserva = getReservaForUser(newSel.getIdentificacion());
+                if (reserva != null) {
+                    comboBoxClase.setValue(reserva.getClase());
+                    comboBoxHorario.setValue(reserva.getHorario());
+                    txtFecha.setText(reserva.getFecha());
+                    comboBoxEntrenador.setValue(reserva.getEntrenador());
+                } else {
+                    limpiarCamposReserva();
+                }
             } else {
                 lblBeneficios.setText("Seleccione un usuario");
                 comboBoxEntrenador.getItems().clear();
                 comboBoxEntrenador.setDisable(true);
+                limpiarCamposReserva();
             }
         });
     }
 
     private void cargarEntrenadoresDisponibles() {
         ObservableList<Entrenador> listaEntrenadores = ModelFactory.getInstance().obtenerEntrenadorObservable();
-        // Actualizar el listener para refrescar el comboBox cuando cambie la lista
         listaEntrenadores.addListener((javafx.collections.ListChangeListener.Change<? extends Entrenador> c) -> {
             if (usuarioSeleccionado != null) {
                 actualizarComboBoxEntrenadores();
@@ -247,14 +277,12 @@ public class RecepReservaClasesViewController {
             return;
         }
 
-        // Si es VIP y no seleccionó entrenador
         boolean esVIP = "VIP".equalsIgnoreCase(usuarioSeleccionado.getMembresia());
         if (esVIP && (entrenador == null || entrenador.isEmpty())) {
             mostrarAlerta("Error", "Los usuarios VIP deben seleccionar un entrenador.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Si no es VIP, no debe tener entrenador
         if (!esVIP) {
             entrenador = "Sin entrenador";
         }
@@ -262,15 +290,14 @@ public class RecepReservaClasesViewController {
         ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fechaIngresada);
         reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
 
-        boolean exito = reservaController.agregarReserva(reserva);
+        ReservaValidationResult result = reservaController.agregarReserva(usuarioSeleccionado.getIdentificacion(), reserva);
 
-        if (exito) {
+        if (result == ReservaValidationResult.EXITO) {
             mostrarAlerta("Éxito", "Reserva creada exitosamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
             tableUsuario.refresh();
         } else {
-            mostrarAlerta("Error", "Verifique si la fecha tiene formato dd/mm/yyyy y que no sea inferior a la actual.", Alert.AlertType.ERROR);
-            mostrarAlerta("Error", "Verifique que el usuario tenga una membresía activa y que sea Premium o VIP", Alert.AlertType.ERROR);
+            mostrarMensajeErrorReserva(result);
         }
     }
 
@@ -280,7 +307,8 @@ public class RecepReservaClasesViewController {
             return;
         }
 
-        if (usuarioSeleccionado.getReservas().isEmpty()) {
+        ReservaClase existingReserva = getReservaForUser(usuarioSeleccionado.getIdentificacion());
+        if (existingReserva == null) {
             mostrarAlerta("Error", "El usuario seleccionado no tiene reservas para actualizar.", Alert.AlertType.ERROR);
             return;
         }
@@ -318,14 +346,14 @@ public class RecepReservaClasesViewController {
         ReservaClase reserva = new ReservaClase(clase, horario, entrenador, fechaIngresada);
         reserva.setIdentificacion(usuarioSeleccionado.getIdentificacion());
 
-        boolean exito = reservaController.actualizarReserva(reserva);
+        ReservaValidationResult result = reservaController.actualizarReserva(usuarioSeleccionado.getIdentificacion(), reserva);
 
-        if (exito) {
+        if (result == ReservaValidationResult.EXITO) {
             mostrarAlerta("Éxito", "Reserva actualizada exitosamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-            tableUsuario.refresh();
+            tableUsuario.refresh(); // Refrescar la tabla para que se actualicen las columnas de reserva
         } else {
-            mostrarAlerta("Error", "No se pudo actualizar la reserva. Verifique los datos.", Alert.AlertType.ERROR);
+            mostrarMensajeErrorReserva(result);
         }
     }
 
@@ -335,7 +363,8 @@ public class RecepReservaClasesViewController {
             return;
         }
 
-        if (usuarioSeleccionado.getReservas().isEmpty()) {
+        ReservaClase existingReserva = getReservaForUser(usuarioSeleccionado.getIdentificacion());
+        if (existingReserva == null) {
             mostrarAlerta("Error", "El usuario seleccionado no tiene reservas para eliminar.", Alert.AlertType.ERROR);
             return;
         }
@@ -345,18 +374,22 @@ public class RecepReservaClasesViewController {
         if (exito) {
             mostrarAlerta("Éxito", "Reserva eliminada exitosamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-            tableUsuario.refresh();
+            tableUsuario.refresh(); // Refrescar la tabla para que se actualicen las columnas de reserva
         } else {
             mostrarAlerta("Error", "No se pudo eliminar la reserva.", Alert.AlertType.ERROR);
         }
     }
 
     private void limpiarCampos() {
+        limpiarCamposReserva();
+        lblBeneficios.setText("Seleccione un usuario");
+    }
+
+    private void limpiarCamposReserva() {
         comboBoxClase.setValue(null);
         comboBoxHorario.setValue(null);
         comboBoxEntrenador.setValue(null);
         txtFecha.clear();
-        lblBeneficios.setText("Seleccione un usuario");
     }
 
     private void mostrarAlerta(String titulo, String contenido, Alert.AlertType tipo) {
@@ -365,5 +398,37 @@ public class RecepReservaClasesViewController {
         alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
+    }
+
+    private void mostrarMensajeErrorReserva(ReservaValidationResult result) {
+        String mensaje = "";
+        switch (result) {
+            case FORMATO_FECHA_INVALIDO:
+                mensaje = "Error: La fecha ingresada no tiene el formato dd/MM/yyyy.";
+                break;
+            case FECHA_EN_PASADO:
+                mensaje = "Error: La fecha de la reserva no puede ser anterior a la fecha actual.";
+                break;
+            case EXCEDE_MAXIMO_RESERVAS:
+                mensaje = "Error: Se ha excedido el límite de 3 reservas para esta clase.";
+                break;
+            case USUARIO_NO_ENCONTRADO:
+                mensaje = "Error: Usuario no encontrado.";
+                break;
+            case MEMBRESIA_INACTIVA:
+                mensaje = "Error: El usuario no tiene una membresía activa.";
+                break;
+            case FECHA_FUERA_MEMBRESIA:
+                mensaje = "Error: La fecha de la reserva está fuera del período de validez de la membresía del usuario.";
+                break;
+            case DATOS_RESERVA_INVALIDOS:
+                mensaje = "Error: Datos de reserva incompletos o inválidos.";
+                break;
+            case ERROR_DESCONOCIDO:
+            default:
+                mensaje = "Error desconocido al procesar la reserva.";
+                break;
+        }
+        mostrarAlerta("Error de Reserva", mensaje, Alert.AlertType.ERROR);
     }
 }
