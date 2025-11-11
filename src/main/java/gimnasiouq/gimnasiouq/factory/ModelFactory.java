@@ -9,6 +9,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 public class ModelFactory {
 
@@ -120,7 +122,13 @@ public class ModelFactory {
     public boolean eliminarUsuario(String identificacion) {
         boolean ok = gimnasioUQ.eliminarUsuario(identificacion);
         if (ok) {
-            listaUsuariosObservable.removeIf(u -> u.getIdentificacion().equals(identificacion));
+            List<Usuario> aEliminar = new ArrayList<>();
+            for (Usuario u : listaUsuariosObservable) {
+                if (u.getIdentificacion().equals(identificacion)) {
+                    aEliminar.add(u);
+                }
+            }
+            listaUsuariosObservable.removeAll(aEliminar);
             actualizarIndicadores();
         }
         return ok;
@@ -153,7 +161,13 @@ public class ModelFactory {
     public boolean eliminarEntrenador(String identificacion) {
         boolean ok = gimnasioUQ.eliminarEntrenador(identificacion);
         if (ok) {
-            listaEntrenadorObservable.removeIf(e -> e.getIdentificacion().equals(identificacion));
+            List<Entrenador> aEliminar = new ArrayList<>();
+            for (Entrenador e : listaEntrenadorObservable) {
+                if (e.getIdentificacion().equals(identificacion)) {
+                    aEliminar.add(e);
+                }
+            }
+            listaEntrenadorObservable.removeAll(aEliminar);
         }
         return ok;
     }

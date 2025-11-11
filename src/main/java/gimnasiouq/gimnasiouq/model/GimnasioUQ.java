@@ -1,6 +1,6 @@
 package gimnasiouq.gimnasiouq.model;
 
-import gimnasiouq.gimnasiouq.util.ReservaValidationResult; // Importar el enum
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class GimnasioUQ {
 
@@ -37,7 +35,6 @@ public class GimnasioUQ {
         try {
             return LocalDate.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
-            // El requisito es formato dd/MM/yyyy, si falla, no es válido.
             return null;
         }
     }
@@ -144,10 +141,12 @@ public class GimnasioUQ {
     }
 
     public Usuario buscarUsuarioPorIdentificacion(String identificacion) {
-        return listaUsuarios.stream()
-                .filter(u -> u.getIdentificacion().equals(identificacion))
-                .findFirst()
-                .orElse(null);
+        for (Usuario usuario : listaUsuarios) {
+            if (usuario.getIdentificacion().equals(identificacion)) {
+                return usuario;
+            }
+        }
+        return null;
     }
 
     public boolean existeUsuario(String identificacion) {
@@ -178,10 +177,12 @@ public class GimnasioUQ {
     }
 
     public Entrenador buscarEntrenadorPorIdentificacion(String identificacion) {
-        return listaEntrenador.stream()
-                .filter(u -> u.getIdentificacion().equals(identificacion))
-                .findFirst()
-                .orElse(null);
+        for (Entrenador entrenador : listaEntrenador) {
+            if (entrenador.getIdentificacion().equals(identificacion)) {
+                return entrenador;
+            }
+        }
+        return null;
     }
 
     private boolean validarEntrenador(Entrenador entrenador) {
@@ -228,7 +229,6 @@ public class GimnasioUQ {
     }
 
     private boolean validarReserva(ReservaClase reserva) {
-        // Esta validación es para datos básicos de la reserva, no para la lógica de negocio
         return reserva != null &&
                reserva.getClase() != null && !reserva.getClase().isEmpty() &&
                reserva.getHorario() != null && !reserva.getHorario().isEmpty() &&
@@ -246,31 +246,29 @@ public class GimnasioUQ {
             return ReservaValidationResult.USUARIO_NO_ENCONTRADO;
         }
 
-        // Validar formato de fecha
         LocalDate fecha = parseFecha(reserva.getFecha());
         if (fecha == null) {
             return ReservaValidationResult.FORMATO_FECHA_INVALIDO;
         }
 
-        // Validar que la fecha no sea inferior a la actual
         if (fecha.isBefore(LocalDate.now())) {
             return ReservaValidationResult.FECHA_EN_PASADO;
         }
 
-        // Validar límite de 3 reservas por clase (solo por nombre de clase)
-        long count = listaReservaClases.stream()
-                .filter(r -> r.getClase().equals(reserva.getClase()))
-                .count();
+        int count = 0;
+        for (ReservaClase r : listaReservaClases) {
+            if (r.getClase().equals(reserva.getClase())) {
+                count++;
+            }
+        }
         if (count >= 3) {
             return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
         }
 
-        // Validar membresía activa
         if (!usuario.tieneMembresiaActiva()) {
             return ReservaValidationResult.MEMBRESIA_INACTIVA;
         }
 
-        // Validar que la fecha de la reserva esté dentro del período de la membresía
         LocalDate inicioMembresia = usuario.getFechaInicioMembresia();
         LocalDate finMembresia = usuario.getFechaFinMembresia();
 
@@ -294,23 +292,19 @@ public class GimnasioUQ {
             return ReservaValidationResult.USUARIO_NO_ENCONTRADO;
         }
 
-        // Validar formato de fecha
         LocalDate fecha = parseFecha(reserva.getFecha());
         if (fecha == null) {
             return ReservaValidationResult.FORMATO_FECHA_INVALIDO;
         }
 
-        // Validar que la fecha no sea inferior a la actual
         if (fecha.isBefore(LocalDate.now())) {
             return ReservaValidationResult.FECHA_EN_PASADO;
         }
 
-        // Validar membresía activa
         if (!usuario.tieneMembresiaActiva()) {
             return ReservaValidationResult.MEMBRESIA_INACTIVA;
         }
 
-        // Validar que la fecha de la reserva esté dentro del período de la membresía
         LocalDate inicioMembresia = usuario.getFechaInicioMembresia();
         LocalDate finMembresia = usuario.getFechaFinMembresia();
 
@@ -321,19 +315,6 @@ public class GimnasioUQ {
         boolean updated = false;
         for (int i = 0; i < listaReservaClases.size(); i++) {
             if (listaReservaClases.get(i).getIdentificacion().equals(identificacionUsuario)) {
-                ReservaClase oldReserva = listaReservaClases.get(i);
-
-                // Si la clase de la reserva está cambiando, o si es una nueva reserva,
-                // necesitamos verificar el límite de 3 reservas para la nueva clase.
-                if (!oldReserva.getClase().equals(reserva.getClase())) {
-                    long count = listaReservaClases.stream()
-                            .filter(r -> r != oldReserva) // Excluir la reserva antigua del conteo
-                            .filter(r -> r.getClase().equals(reserva.getClase()))
-                            .count();
-                    if (count >= 3) {
-                        return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
-                    }
-                }
                 listaReservaClases.set(i, reserva);
                 updated = true;
                 break;
@@ -343,25 +324,19 @@ public class GimnasioUQ {
         if (updated) {
             return ReservaValidationResult.EXITO;
         } else {
-            // Si no se encontró una reserva existente para actualizar, se añade como nueva
-            // Aquí también se debe verificar el límite de 3 reservas
-            long count = listaReservaClases.stream()
-                    .filter(r -> r.getClase().equals(reserva.getClase()))
-                    .count();
-
-            if (count >= 3) {
-                return ReservaValidationResult.EXCEDE_MAXIMO_RESERVAS;
-            }
-            if (listaReservaClases.add(reserva)) {
-                return ReservaValidationResult.EXITO;
-            }
+            return agregarReservaUsuario(identificacionUsuario, reserva);
         }
-        return ReservaValidationResult.ERROR_DESCONOCIDO;
     }
 
     public boolean eliminarReservasUsuario(String identificacionUsuario) {
         if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
-        return listaReservaClases.removeIf(reserva -> reserva.getIdentificacion().equals(identificacionUsuario));
+        List<ReservaClase> aEliminar = new ArrayList<>();
+        for (ReservaClase reserva : listaReservaClases) {
+            if (reserva.getIdentificacion().equals(identificacionUsuario)) {
+                aEliminar.add(reserva);
+            }
+        }
+        return listaReservaClases.removeAll(aEliminar);
     }
 
     public List<ReservaClase> obtenerReservasDeUsuarios() {
@@ -405,31 +380,36 @@ public class GimnasioUQ {
         String tier = (tipoMembresia == null || tipoMembresia.isBlank()) ? "basica" : tipoMembresia.trim().toLowerCase();
 
         switch (plan) {
-            case "mensual" -> fechaFin = fechaInicio.plusMonths(1);
-            case "trimestral" -> fechaFin = fechaInicio.plusMonths(3);
-            case "anual" -> fechaFin = fechaInicio.plusYears(1);
-            default -> {
+            case "mensual":
+                fechaFin = fechaInicio.plusMonths(1);
+                break;
+            case "trimestral":
+                fechaFin = fechaInicio.plusMonths(3);
+                break;
+            case "anual":
+                fechaFin = fechaInicio.plusYears(1);
+                break;
+            default:
                 return null;
-            }
         }
 
         if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
             switch (plan) {
-                case "mensual" -> costo = 10000;
-                case "trimestral" -> costo = 30000;
-                case "anual" -> costo = 100000;
+                case "mensual": costo = 10000; break;
+                case "trimestral": costo = 30000; break;
+                case "anual": costo = 100000; break;
             }
         } else if (tier.equals("premium")) {
             switch (plan) {
-                case "mensual" -> costo = 15000;
-                case "trimestral" -> costo = 40000;
-                case "anual" -> costo = 150000;
+                case "mensual": costo = 15000; break;
+                case "trimestral": costo = 40000; break;
+                case "anual": costo = 150000; break;
             }
         } else if (tier.equals("vip")) {
             switch (plan) {
-                case "mensual" -> costo = 20000;
-                case "trimestral" -> costo = 50000;
-                case "anual" -> costo = 200000;
+                case "mensual": costo = 20000; break;
+                case "trimestral": costo = 50000; break;
+                case "anual": costo = 200000; break;
             }
         }
 
@@ -451,31 +431,43 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasTotales() {
-        return (int) listaUsuarios.stream()
-                .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank())
-                        || u.getMembresiaActiva() != null)
-                .count();
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if ((u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank()) || u.getMembresiaActiva() != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public int contarMembresiasConValor() {
-        return (int) listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() != null)
-                .filter(u -> u.getCostoMembresia() > 0)
-                .count();
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() != null && u.getCostoMembresia() > 0) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public int contarMembresiasSinValor() {
-        return (int) listaUsuarios.stream()
-                .filter(u -> (u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank()))
-                .filter(u -> u.getMembresiaActiva() == null)
-                .count();
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if ((u.getTipoMembresia() != null && !u.getTipoMembresia().isBlank()) && u.getMembresiaActiva() == null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public double calcularIngresosTotalesMembresias() {
-        return listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() != null)
-                .mapToDouble(Usuario::getCostoMembresia)
-                .sum();
+        double total = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() != null) {
+                total += u.getCostoMembresia();
+            }
+        }
+        return total;
     }
 
     public int contarTotalUsuarios() {
@@ -483,26 +475,44 @@ public class GimnasioUQ {
     }
 
     public int contarMembresiasUsuariosActivas() {
-        return (int) listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() != null)
-                .count();
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public int contarMembresiasUsuariosInactivas() {
-        return (int) listaUsuarios.stream()
-                .filter(u -> u.getMembresiaActiva() == null)
-                .count();
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() == null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public String contarClaseMasReservada() {
-        Map<String, Long> conteoClases = listaReservaClases.stream()
-                .map(ReservaClase::getClase)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        if (listaReservaClases.isEmpty()) {
+            return "Ninguna";
+        }
+        Map<String, Integer> conteoClases = new HashMap<>();
+        for (ReservaClase reserva : listaReservaClases) {
+            String clase = reserva.getClase();
+            conteoClases.put(clase, conteoClases.getOrDefault(clase, 0) + 1);
+        }
 
-        return conteoClases.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("Ninguna");
+        String claseMasReservada = null;
+        int maxReservas = 0;
+        for (Map.Entry<String, Integer> entry : conteoClases.entrySet()) {
+            if (entry.getValue() > maxReservas) {
+                maxReservas = entry.getValue();
+                claseMasReservada = entry.getKey();
+            }
+        }
+        return claseMasReservada;
     }
 
     public int contarTotalClasesReservadas() {

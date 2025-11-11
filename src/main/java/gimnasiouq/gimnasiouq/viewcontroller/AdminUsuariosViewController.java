@@ -110,10 +110,6 @@ public class AdminUsuariosViewController {
         listenerSelection();
     }
 
-    private void obtenerUsuarios() {
-        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
-    }
-
     private void initDataBinding() {
         if (tcNombre != null) {
             tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
@@ -157,54 +153,64 @@ public class AdminUsuariosViewController {
     }
 
     private void agregarUsuario() {
+        String nombre = txtNombre.getText();
+        String id = txtIdentificacion.getText();
+        String edad = txtEdad.getText();
+        String celular = txtCelular.getText();
+        String membresia = comboBoxMembresia.getValue();
+        String tipoUsuario = comboBoxUsuarios.getValue();
+
+        if (nombre == null || nombre.isEmpty() || id == null || id.isEmpty() || edad == null || edad.isEmpty() ||
+                celular == null || celular.isEmpty() || membresia == null || membresia.isEmpty() || tipoUsuario == null || tipoUsuario.isEmpty()) {
+            mostrarVentanaEmergente("Datos incompletos", "Error", "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            return;
+        }
+
         Usuario usuario = crearUsuario();
 
-        if (datosValidos(usuario)) {
-            if (usuarioController == null) {
-                usuarioController = new UsuarioController();
-            }
+        if (usuarioController == null) {
+            usuarioController = new UsuarioController();
+        }
 
-            if (usuarioController.agregarUsuario(usuario)) {
-                limpiarCampos();
-
-                mostrarVentanaEmergente("Usuario agregado", "Éxito",
-                        "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
-            } else {
-                mostrarVentanaEmergente("Usuario no agregado", "Error",
-                        "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
-            }
+        if (usuarioController.agregarUsuario(usuario)) {
+            limpiarCampos();
+            mostrarVentanaEmergente("Usuario agregado", "Éxito", "El usuario se agregó correctamente", Alert.AlertType.INFORMATION);
         } else {
-            mostrarVentanaEmergente("Datos incompletos", "Error",
-                    "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            mostrarVentanaEmergente("Usuario no agregado", "Error", "El usuario ya existe o los datos son inválidos", Alert.AlertType.ERROR);
         }
     }
 
     private void actualizarUsuario() {
-        if (usuarioSeleccionado != null) {
-            Usuario usuarioActualizado = crearUsuario();
+        if (usuarioSeleccionado == null) {
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia", "Debe seleccionar un usuario de la tabla para actualizarlo", Alert.AlertType.WARNING);
+            return;
+        }
 
-            if (datosValidos(usuarioActualizado)) {
-                if (usuarioController == null) {
-                    usuarioController = new UsuarioController();
-                }
+        String nombre = txtNombre.getText();
+        String id = txtIdentificacion.getText();
+        String edad = txtEdad.getText();
+        String celular = txtCelular.getText();
+        String membresia = comboBoxMembresia.getValue();
+        String tipoUsuario = comboBoxUsuarios.getValue();
 
-                if (usuarioController.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), usuarioActualizado)) {
-                    tableUsuario.refresh();
-                    limpiarCampos();
-                    mostrarVentanaEmergente("Usuario actualizado", "Éxito",
-                            "El usuario se actualizó correctamente", Alert.AlertType.INFORMATION);
-                } else {
-                    mostrarVentanaEmergente("Usuario no actualizado", "Error",
-                            "No se pudo actualizar el usuario. Verifique que la nueva identificación no exista",
-                            Alert.AlertType.ERROR);
-                }
-            } else {
-                mostrarVentanaEmergente("Datos incompletos", "Error",
-                        "Por favor complete todos los campos", Alert.AlertType.ERROR);
-            }
+        if (nombre == null || nombre.isEmpty() || id == null || id.isEmpty() || edad == null || edad.isEmpty() ||
+                celular == null || celular.isEmpty() || membresia == null || membresia.isEmpty() || tipoUsuario == null || tipoUsuario.isEmpty()) {
+            mostrarVentanaEmergente("Datos incompletos", "Error", "Por favor complete todos los campos", Alert.AlertType.ERROR);
+            return;
+        }
+
+        Usuario usuarioActualizado = crearUsuario();
+
+        if (usuarioController == null) {
+            usuarioController = new UsuarioController();
+        }
+
+        if (usuarioController.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), usuarioActualizado)) {
+            tableUsuario.refresh();
+            limpiarCampos();
+            mostrarVentanaEmergente("Usuario actualizado", "Éxito", "El usuario se actualizó correctamente", Alert.AlertType.INFORMATION);
         } else {
-            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla para actualizarlo", Alert.AlertType.WARNING);
+            mostrarVentanaEmergente("Usuario no actualizado", "Error", "No se pudo actualizar el usuario. Verifique que la nueva identificación no exista", Alert.AlertType.ERROR);
         }
     }
 
@@ -249,15 +255,6 @@ public class AdminUsuariosViewController {
         comboBoxUsuarios.setValue(null);
     }
 
-    private boolean datosValidos(Usuario usuario) {
-        return usuario != null &&
-                usuario.getNombre() != null && !usuario.getNombre().isEmpty() &&
-                usuario.getIdentificacion() != null && !usuario.getIdentificacion().isEmpty() &&
-                usuario.getEdad() != null && !usuario.getEdad().isEmpty() &&
-                usuario.getCelular() != null && !usuario.getCelular().isEmpty() &&
-                usuario.getMembresia() != null && !usuario.getMembresia().isEmpty();
-    }
-
     private Usuario crearUsuario() {
         String tipoUsuario = comboBoxUsuarios.getValue();
         if (tipoUsuario == null) {
@@ -284,9 +281,6 @@ public class AdminUsuariosViewController {
                 nuevoUsuario = new Externo(nombre, id, edad, celular, membresia);
                 break;
         }
-
-        // Asignar el tipo de membresía seleccionado en la UI.
-        // Esto corrige el valor temporal que pudo haber sido asignado por el constructor.
         nuevoUsuario.setTipoMembresia(membresia);
 
         return nuevoUsuario;

@@ -7,9 +7,9 @@ import java.time.LocalDate;
 public class DataUtil {
 
     public static final String ADMINISTRADOR = "Administrador";
-    public static final String ADMIN_CONTRASENA = "hola000";
+    public static final String ADMIN_CONTRASENA = "1";
     public static final String RECEPCIONISTA = "Recepcionista";
-    public static final String RECEP_CONTRASENA = "hola000";
+    public static final String RECEP_CONTRASENA = "1";
 
     public static GimnasioUQ inicializarDatos() {
         GimnasioUQ gimnasioUQ = new GimnasioUQ(

@@ -182,58 +182,44 @@ public class RecepMembresiasViewController {
 
     private void asignarMembresia() {
         if (usuarioSeleccionado == null) {
-            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla para asignarle una membresía",
-                    Alert.AlertType.WARNING);
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.WARNING);
+            return;
+        }
+        if (comboBoxPlanMembresia.getValue() == null || comboBoxPlanMembresia.getValue().isEmpty() ||
+                txtFechaInicio.getText().isEmpty() || txtFechaFin.getText().isEmpty() || txtCosto.getText().isEmpty()) {
+            mostrarVentanaEmergente("Campos incompletos", "Error", "Por favor complete todos los campos de la membresía.", Alert.AlertType.ERROR);
             return;
         }
 
-        if (comboBoxPlanMembresia.getValue() == null || comboBoxPlanMembresia.getValue().isEmpty()) {
-            mostrarVentanaEmergente("Seleccione un plan", "Advertencia",
-                    "Debe seleccionar un plan de membresía", Alert.AlertType.WARNING);
-            return;
-        }
-
-        try {
-            if (txtFechaInicio.getText() == null || txtFechaInicio.getText().isEmpty() ||
-                    txtFechaFin.getText() == null || txtFechaFin.getText().isEmpty() ||
-                    txtCosto.getText() == null || txtCosto.getText().isEmpty()) {
-                mostrarVentanaEmergente("Campos incompletos", "Error",
-                        "Todos los campos son obligatorios. Seleccione un plan primero.",
-                        Alert.AlertType.ERROR);
-                return;
-            }
-
-            Membresia membresia = crearMembresia();
-
-            if (!membresiaController.asignarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), membresia)) {
-                mostrarVentanaEmergente("Error al asignar", "Error",
-                        "No se pudo asignar la membresía. Verifique los datos.", Alert.AlertType.ERROR);
-                return;
-            }
-
+        Membresia membresia = crearMembresia();
+        if (membresiaController.asignarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), membresia)) {
             tableUsuario.refresh();
-
-            mostrarVentanaEmergente("Membresía asignada", "Éxito",
-                    "La membresía se asignó correctamente al usuario " + usuarioSeleccionado.getNombre(),
-                    Alert.AlertType.INFORMATION);
+            mostrarVentanaEmergente("Membresía asignada", "Éxito", "La membresía se asignó correctamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-
-        } catch (Exception e) {
-            mostrarVentanaEmergente("Error de datos", "Error",
-                    "Verifique que todos los campos sean válidos: " + e.getMessage(),
-                    Alert.AlertType.ERROR);
+        } else {
+            mostrarVentanaEmergente("Error al asignar", "Error", "No se pudo asignar la membresía.", Alert.AlertType.ERROR);
         }
     }
 
     private void actualizarMembresia() {
         if (usuarioSeleccionado == null) {
-            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia",
-                    "Debe seleccionar un usuario de la tabla", Alert.AlertType.WARNING);
+            mostrarVentanaEmergente("Seleccione un usuario", "Advertencia", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.WARNING);
+            return;
+        }
+        if (comboBoxPlanMembresia.getValue() == null || comboBoxPlanMembresia.getValue().isEmpty() ||
+                txtFechaInicio.getText().isEmpty() || txtFechaFin.getText().isEmpty() || txtCosto.getText().isEmpty()) {
+            mostrarVentanaEmergente("Campos incompletos", "Error", "Por favor complete todos los campos de la membresía.", Alert.AlertType.ERROR);
             return;
         }
 
-        asignarMembresia();
+        Membresia membresia = crearMembresia();
+        if (membresiaController.actualizarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), membresia)) {
+            tableUsuario.refresh();
+            mostrarVentanaEmergente("Membresía actualizada", "Éxito", "La membresía se actualizó correctamente.", Alert.AlertType.INFORMATION);
+            limpiarCampos();
+        } else {
+            mostrarVentanaEmergente("Error al actualizar", "Error", "No se pudo actualizar la membresía.", Alert.AlertType.ERROR);
+        }
     }
 
     private void eliminarMembresia() {
@@ -288,7 +274,6 @@ public class RecepMembresiasViewController {
         String plan = comboBoxPlanMembresia.getValue();
         String tipoMembresia = usuarioSeleccionado != null ? usuarioSeleccionado.getTipoMembresia() : null;
 
-        // Delegar siempre a la lógica de negocio para asegurar que los descuentos se apliquen
         return membresiaController.calcularMembresiaPorPlan(plan, tipoMembresia, usuarioSeleccionado);
     }
 

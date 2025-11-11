@@ -3,16 +3,14 @@ package gimnasiouq.gimnasiouq.viewcontroller;
 import gimnasiouq.gimnasiouq.controller.ReservaClaseController;
 import gimnasiouq.gimnasiouq.factory.ModelFactory;
 import gimnasiouq.gimnasiouq.model.*;
-import gimnasiouq.gimnasiouq.util.ReservaValidationResult; // Importar el enum
+import gimnasiouq.gimnasiouq.util.ReservaValidationResult;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 
 public class RecepReservaClasesViewController {
 
@@ -57,6 +55,18 @@ public class RecepReservaClasesViewController {
     @FXML
     private TableColumn<Usuario, String> tcEstado;
 
+    @FXML
+    void onNuevo(ActionEvent event) {nuevaReserva();}
+
+    @FXML
+    void onConfirmar(ActionEvent event) {confirmarReserva();}
+
+    @FXML
+    void onActualizar(ActionEvent event) {actualizarReserva();}
+
+    @FXML
+    void onEliminar(ActionEvent event) {eliminarReserva();}
+
 
     private Usuario usuarioSeleccionado;
 
@@ -81,10 +91,7 @@ public class RecepReservaClasesViewController {
     }
 
     private ReservaClase getReservaForUser(String identificacion) {
-        return ModelFactory.getInstance().obtenerReservasObservable().stream()
-                .filter(r -> r.getIdentificacion().equals(identificacion))
-                .findFirst()
-                .orElse(null);
+        return reservaController.obtenerReservaPorUsuario(identificacion);
     }
 
     private void initDataBinding() {
@@ -225,26 +232,6 @@ public class RecepReservaClasesViewController {
         lblBeneficios.setText(beneficios);
     }
 
-    @FXML
-    void onNuevo(ActionEvent event) {
-        nuevaReserva();
-    }
-
-    @FXML
-    void onConfirmar(ActionEvent event) {
-        confirmarReserva();
-    }
-
-    @FXML
-    void onActualizar(ActionEvent event) {
-        actualizarReserva();
-    }
-
-    @FXML
-    void onEliminar(ActionEvent event) {
-        eliminarReserva();
-    }
-
     private void nuevaReserva() {
         limpiarCampos();
         tableUsuario.getSelectionModel().clearSelection();
@@ -262,18 +249,8 @@ public class RecepReservaClasesViewController {
         String fechaIngresada = txtFecha.getText();
         String entrenador = comboBoxEntrenador.getValue();
 
-        if (clase == null || clase.isEmpty()) {
-            mostrarAlerta("Error", "Debe seleccionar una clase.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (horario == null || horario.isEmpty()) {
-            mostrarAlerta("Error", "Debe seleccionar un horario.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (fechaIngresada == null || fechaIngresada.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formato: dd/MM/yyyy).", Alert.AlertType.ERROR);
+        if (clase == null || clase.isEmpty() || horario == null || horario.isEmpty() || fechaIngresada == null || fechaIngresada.isEmpty()) {
+            mostrarAlerta("Error", "Debe completar todos los campos de la reserva.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -318,18 +295,8 @@ public class RecepReservaClasesViewController {
         String fechaIngresada = txtFecha.getText();
         String entrenador = comboBoxEntrenador.getValue();
 
-        if (clase == null || clase.isEmpty()) {
-            mostrarAlerta("Error", "Debe seleccionar una clase.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (horario == null || horario.isEmpty()) {
-            mostrarAlerta("Error", "Debe seleccionar un horario.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (fechaIngresada == null || fechaIngresada.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar una fecha (formato: dd/MM/yyyy).", Alert.AlertType.ERROR);
+        if (clase == null || clase.isEmpty() || horario == null || horario.isEmpty() || fechaIngresada == null || fechaIngresada.isEmpty()) {
+            mostrarAlerta("Error", "Debe completar todos los campos de la reserva.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -351,7 +318,7 @@ public class RecepReservaClasesViewController {
         if (result == ReservaValidationResult.EXITO) {
             mostrarAlerta("Éxito", "Reserva actualizada exitosamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-            tableUsuario.refresh(); // Refrescar la tabla para que se actualicen las columnas de reserva
+            tableUsuario.refresh();
         } else {
             mostrarMensajeErrorReserva(result);
         }
@@ -374,7 +341,7 @@ public class RecepReservaClasesViewController {
         if (exito) {
             mostrarAlerta("Éxito", "Reserva eliminada exitosamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-            tableUsuario.refresh(); // Refrescar la tabla para que se actualicen las columnas de reserva
+            tableUsuario.refresh();
         } else {
             mostrarAlerta("Error", "No se pudo eliminar la reserva.", Alert.AlertType.ERROR);
         }
@@ -409,6 +376,7 @@ public class RecepReservaClasesViewController {
             case FECHA_EN_PASADO:
                 mensaje = "Error: La fecha de la reserva no puede ser anterior a la fecha actual.";
                 break;
+
             case EXCEDE_MAXIMO_RESERVAS:
                 mensaje = "Error: Se ha excedido el límite de 3 reservas para esta clase.";
                 break;
