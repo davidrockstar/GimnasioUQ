@@ -39,7 +39,7 @@
                </rowConstraints>
                <children>
                   <Label text="Identificación" />
-                  <TextField fx:id="txtfieldIdentificacion" GridPane.columnIndex="1" />
+                  <TextField fx:id="txtfieldIdentificacion" maxWidth="-Infinity" GridPane.columnIndex="1" />
                   <Label text="Nombre:" GridPane.columnIndex="2" />
                   <Label fx:id="lblNombreEncontrado" text="nombreEncontrado" GridPane.columnIndex="3" />
                   <Label text="Membresía:" GridPane.rowIndex="1" />

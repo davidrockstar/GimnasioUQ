@@ -26,12 +26,12 @@
                     </font>
                 </Text>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
-                <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+                <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="NEVER">
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="38.200006103515626" prefWidth="42.200006103515626" />
-                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="254.40002441406253" prefWidth="310.1999938964844" />
-                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="39.20005493164069" prefWidth="71.19998779296873" />
-                        <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="167.99997558593748" prefWidth="304.8000122070313" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="38.200006103515626" percentWidth="15.0" prefWidth="42.200006103515626" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="254.40002441406253" percentWidth="50.0" prefWidth="310.1999938964844" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="39.20005493164069" percentWidth="15.0" prefWidth="71.19998779296873" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="167.99997558593748" percentWidth="50.0" prefWidth="304.8000122070313" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="1.7976931348623157E308" />
@@ -39,27 +39,27 @@
                     </rowConstraints>
                     <children>
                         <Label text="Plan:" />
-                        <ComboBox fx:id="comboBoxPlanMembresia" maxWidth="1.7976931348623157E308" promptText="Seleccione un plan de membresía" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <ComboBox fx:id="comboBoxPlanMembresia" maxWidth="-Infinity" prefWidth="215.0" promptText="Seleccione un plan de membresía" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></ComboBox>
                         <Label text="Costo:" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtCosto" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                        <TextField fx:id="txtCosto" editable="false" maxWidth="-Infinity" prefWidth="215.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></TextField>
-                        <TextField fx:id="txtFechaInicio" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3">
+                        <TextField fx:id="txtFechaInicio" editable="false" maxWidth="-Infinity" prefWidth="215.0" GridPane.columnIndex="3">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></TextField>
                         <Label text="Fecha Inicio:" textAlignment="JUSTIFY" GridPane.columnIndex="2">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin></Label>
                         <Label text="Fecha Fin:" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtFechaFin" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="txtFechaFin" editable="false" maxWidth="-Infinity" prefWidth="215.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></TextField>
                     </children>
                     <VBox.margin>
@@ -72,6 +72,7 @@
                         <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
                         <ColumnConstraints halignment="CENTER" />
                         <ColumnConstraints halignment="CENTER" />
+                        <ColumnConstraints halignment="CENTER" />
                         <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -82,6 +83,7 @@
                         <Button fx:id="btnAsignar" mnemonicParsing="false" onAction="#onAsignar" prefWidth="80.0" text="Asignar" GridPane.columnIndex="1" />
                         <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2" />
                         <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
+                        <Button fx:id="btnDetalles" mnemonicParsing="false" onAction="#onDetalles" text="Detalles" GridPane.columnIndex="4" />
                     </children>
                 </GridPane>
                 <Separator prefHeight="18.0" prefWidth="682.0" />

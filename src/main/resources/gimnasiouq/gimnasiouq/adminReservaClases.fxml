@@ -26,12 +26,12 @@
                     </font>
                 </Text>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
-                <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+                <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="NEVER">
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-                        <ColumnConstraints halignment="CENTER" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints halignment="LEFT" percentWidth="15.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="-Infinity" percentWidth="50.0" />
+                        <ColumnConstraints halignment="LEFT" percentWidth="15.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" valignment="CENTER" />
@@ -39,24 +39,24 @@
                     </rowConstraints>
                     <children>
                         <Label text="Clase:" textAlignment="JUSTIFY" />
-                        <ComboBox fx:id="comboBoxClase" maxWidth="1.7976931348623157E308" promptText="Seleccione una clase" GridPane.columnIndex="1">
+                        <ComboBox fx:id="comboBoxClase" maxWidth="-Infinity" prefWidth="210.0" promptText="Seleccione una clase" GridPane.columnIndex="1">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></ComboBox>
                         <Label text="Horario:" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="comboBoxHorario" maxWidth="1.7976931348623157E308" promptText="Seleccione un horario" GridPane.columnIndex="3">
+                        <ComboBox fx:id="comboBoxHorario" maxWidth="-Infinity" prefWidth="210.0" promptText="Seleccione un horario" GridPane.columnIndex="3">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></ComboBox>
                         <Label text="Entrenador:" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="comboBoxEntrenador" maxWidth="1.7976931348623157E308" promptText="Seleccione un entrenador" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <ComboBox fx:id="comboBoxEntrenador" maxWidth="-Infinity" prefWidth="210.0" promptText="Seleccione un entrenador" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin></ComboBox>
                         <Label text="Fecha" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtFecha" maxWidth="1.7976931348623157E308" promptText="dd/mm/yyyy" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="txtFecha" maxWidth="-Infinity" prefWidth="210.0" promptText="dd/mm/yyyy" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <GridPane.margin>
-                                <Insets left="10.0" right="10.0" />
+                                <Insets />
                             </GridPane.margin>
                         </TextField>
                     </children>
@@ -64,10 +64,12 @@
                         <Insets />
                     </VBox.margin>
                 </GridPane>
-                <GridPane>
+                <GridPane hgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="LEFT" percentWidth="15.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -102,7 +104,7 @@
                     </VBox.margin>
                 </GridPane>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
-                <TableView fx:id="tableUsuario" prefHeight="238.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableUsuario" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="730.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="tcUsuario" prefWidth="83.19997864961624" text="Usuario" />
                         <TableColumn fx:id="tcNombre" prefWidth="97.60003662109375" text="Nombre" />
